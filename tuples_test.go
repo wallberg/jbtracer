@@ -231,6 +231,55 @@ func equalsTupleMagnitudeSquareRoot(t1name string, expected float32) error {
 	return equalsTupleMagnitude(t1name, expected)
 }
 
+func normalize(t1name string, t2name string) error {
+	if t2, ok = symbols[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t2name)
+	}
+	symbols[t1name] = t2.Normalize()
+	return nil
+}
+
+func equalsVectorNormalize(t1name string, x, y, z float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	expected = NewVector(x, y, z)
+	got = t1.Normalize()
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected normalize(%s)=%v; got %v", t1name, expected, got)
+	}
+	return nil
+}
+
+func equalsVectorDot(t1name string, t2name string, expected float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	if t2, ok = symbols[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t2name)
+	}
+	got := t1.Dot(t2)
+	if got != expected {
+		return fmt.Errorf("Expected dot(%s, %s)=%v; got %v", t1name, t2name, expected, got)
+	}
+	return nil
+}
+
+func equalsVectorCross(t1name string, t2name string, x, y, z float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	if t2, ok = symbols[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t2name)
+	}
+	expected = NewVector(x, y, z)
+	got = t1.Cross(t2)
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected cross(%s, %s)=%v; got %v", t1name, t2name, expected, got)
+	}
+	return nil
+}
+
 func InitializeTestSuite(ctx *godog.TestSuiteContext) {}
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
@@ -253,6 +302,10 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) / (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleDivide)
 	ctx.Step(`^magnitude\((\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsTupleMagnitude)
 	ctx.Step(`^magnitude\((\w+)\) = √(-?\d+(?:\.\d+)?)$`, equalsTupleMagnitudeSquareRoot)
+	ctx.Step(`^(\w+) ← normalize\((\w+)\)$`, normalize)
+	ctx.Step(`^normalize\((\w+)\) = (?:approximately )?vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorNormalize)
+	ctx.Step(`^dot\((\w+), (\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsVectorDot)
+	ctx.Step(`^cross\((\w+), (\w+)\) = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorCross)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 

@@ -86,6 +86,31 @@ func (a *Tuple) Magnitude() float32 {
 	return (float32)(math.Sqrt(x*x + y*y + z*z + w*w))
 }
 
+// Normalize returns a normalized unit vector
+func (a *Tuple) Normalize() *Tuple {
+	m := a.Magnitude()
+	return &Tuple{
+		X: a.X / m,
+		Y: a.Y / m,
+		Z: a.Z / m,
+		W: a.W / m,
+	}
+}
+
+// Dot returns the dot product of this vector with the providee vector
+func (a *Tuple) Dot(b *Tuple) float32 {
+	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
+}
+
+// Cross returns the cross product of this vector with the provided vector
+func (a *Tuple) Cross(b *Tuple) *Tuple {
+	return NewVector(
+		a.Y*b.Z-a.Z*b.Y,
+		a.Z*b.X-a.X*b.Z,
+		a.X*b.Y-a.Y*b.X,
+	)
+}
+
 // EqualFloat determines if two float32 values are the within Epsilon of each other
 func EqualFloat32(a, b float32) bool {
 	return math.Abs((float64)(a)-(float64)(b)) < Epsilon
