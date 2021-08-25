@@ -15,8 +15,8 @@ import (
 var opts = godog.Options{Output: colors.Colored(os.Stdout)}
 
 var (
-	t1 *Tuple
-	ok bool
+	t1, t2, expected, got *Tuple
+	ok                    bool
 )
 var symbols map[string]*Tuple
 
@@ -42,8 +42,8 @@ func isPoint(t1name string) error {
 	if t1, ok = symbols[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t1.W != 1.0 {
-		return fmt.Errorf("Expected tuple a=%v is a point; got not a point", t1)
+	if !t1.IsPoint() {
+		return fmt.Errorf("Expected %s.isPoint()=true; got false", t1name)
 	}
 	return nil
 }
@@ -52,8 +52,8 @@ func isVector(t1name string) error {
 	if t1, ok = symbols[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t1.W != 0.0 {
-		return fmt.Errorf("Expected tuple a=%v is a vector; got not a vector", t1)
+	if !t1.IsVector() {
+		return fmt.Errorf("Expected %s.isVector()=true; got false", t1name)
 	}
 	return nil
 }
@@ -62,8 +62,8 @@ func isNotPoint(t1name string) error {
 	if t1, ok = symbols[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t1.W == 1.0 {
-		return fmt.Errorf("Expected tuple a=%v is not a point; got a point", t1)
+	if t1.IsPoint() {
+		return fmt.Errorf("Expected %s.isPoint()=false; got true", t1name)
 	}
 	return nil
 }
@@ -72,16 +72,13 @@ func isNotVector(t1name string) error {
 	if t1, ok = symbols[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t1.W == 0.0 {
-		return fmt.Errorf("Expected tuple a=%v is not a vector; got a vector", t1)
+	if t1.IsVector() {
+		return fmt.Errorf("Expected %s.isVector()=false; got true", t1name)
 	}
 	return nil
 }
 
 func tuple(t1name string, x, y, z, w float32) error {
-	if w != 0.0 && w != 1.0 {
-		return fmt.Errorf("Expected w to be 0.0 or 1.0; got %f", w)
-	}
 	symbols[t1name] = &Tuple{X: x, Y: y, Z: z, W: w}
 	return nil
 }
@@ -147,6 +144,52 @@ func equalsTuple(t1name string, x, y, z, w float32) error {
 	return nil
 }
 
+func equalsTupleAdd(t1name string, t2name string, x, y, z, w float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	if t2, ok = symbols[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t2name)
+	}
+	expected := &Tuple{X: x, Y: y, Z: z, W: w}
+	got := t1.Add(t2)
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s + %s=%v; got %v", t1name, t2name, expected, got)
+	}
+	return nil
+}
+
+func equalsTupleSubtract(t1name string, t2name string, ttype string, x, y, z float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	if t2, ok = symbols[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t2name)
+	}
+	if ttype == "point" {
+		expected = NewPoint(x, y, z)
+	} else {
+		expected = NewVector(x, y, z)
+	}
+	got = t1.Subtract(t2)
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s + %s=%v; got %v", t1name, t2name, expected, got)
+	}
+	return nil
+}
+
+func equalsTupleNegate(t1name string, x, y, z, w float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	expected = &Tuple{X: x, Y: y, Z: z, W: w}
+	got = t1.Negate()
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s=%v; got %v", t1name, expected, got)
+	}
+	return nil
+}
+
 func InitializeTestSuite(ctx *godog.TestSuiteContext) {}
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
@@ -162,6 +205,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, point)
 	ctx.Step(`^(\w+) ← vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, vector)
 	ctx.Step(`^(\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTuple)
+	ctx.Step(`^(\w+) \+ (\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleAdd)
+	ctx.Step(`^(\w+) - (\w+) = (point|vector)\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleSubtract)
+	ctx.Step(`^-(\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleNegate)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
