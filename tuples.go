@@ -47,7 +47,7 @@ func (a *Tuple) Subtract(b *Tuple) *Tuple {
 	}
 }
 
-// Negate negates a single tuple
+// Negate negates a tuple
 func (a *Tuple) Negate() *Tuple {
 	return &Tuple{
 		X: a.X * -1.0,
@@ -55,6 +55,35 @@ func (a *Tuple) Negate() *Tuple {
 		Z: a.Z * -1.0,
 		W: a.W * -1.0,
 	}
+}
+
+// Multiply multiplies a tuple by a scalar
+func (a *Tuple) Multiply(scalar float32) *Tuple {
+	return &Tuple{
+		X: a.X * scalar,
+		Y: a.Y * scalar,
+		Z: a.Z * scalar,
+		W: a.W * scalar,
+	}
+}
+
+// Divide divides a tuple by a scalar
+func (a *Tuple) Divide(scalar float32) *Tuple {
+	return &Tuple{
+		X: a.X / scalar,
+		Y: a.Y / scalar,
+		Z: a.Z / scalar,
+		W: a.W / scalar,
+	}
+}
+
+// Magnitude returns the magnitude (or length) of the tuple
+func (a *Tuple) Magnitude() float32 {
+	x := (float64)(a.X)
+	y := (float64)(a.Y)
+	z := (float64)(a.Z)
+	w := (float64)(a.W)
+	return (float32)(math.Sqrt(x*x + y*y + z*z + w*w))
 }
 
 // EqualFloat determines if two float32 values are the within Epsilon of each other

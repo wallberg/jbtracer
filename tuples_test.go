@@ -3,6 +3,7 @@ package jbtracer
 import (
 	"context"
 	"fmt"
+	"math"
 	"os"
 	"testing"
 
@@ -190,6 +191,46 @@ func equalsTupleNegate(t1name string, x, y, z, w float32) error {
 	return nil
 }
 
+func equalsTupleMultiply(t1name string, scalar float32, x, y, z, w float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	expected := &Tuple{X: x, Y: y, Z: z, W: w}
+	got := t1.Multiply(scalar)
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s + %f=%v; got %v", t1name, scalar, expected, got)
+	}
+	return nil
+}
+
+func equalsTupleDivide(t1name string, scalar float32, x, y, z, w float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	expected := &Tuple{X: x, Y: y, Z: z, W: w}
+	got := t1.Divide(scalar)
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s + %f=%v; got %v", t1name, scalar, expected, got)
+	}
+	return nil
+}
+
+func equalsTupleMagnitude(t1name string, expected float32) error {
+	if t1, ok = symbols[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	got := t1.Magnitude()
+	if math.Abs((float64)(got)-(float64)(expected)) >= Epsilon {
+		return fmt.Errorf("Expected %s=%f; got %f", t1name, expected, got)
+	}
+	return nil
+}
+
+func equalsTupleMagnitudeSquareRoot(t1name string, expected float32) error {
+	expected = (float32)(math.Sqrt((float64)(expected)))
+	return equalsTupleMagnitude(t1name, expected)
+}
+
 func InitializeTestSuite(ctx *godog.TestSuiteContext) {}
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
@@ -208,6 +249,10 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) \+ (\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleAdd)
 	ctx.Step(`^(\w+) - (\w+) = (point|vector)\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleSubtract)
 	ctx.Step(`^-(\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleNegate)
+	ctx.Step(`^(\w+) \* (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleMultiply)
+	ctx.Step(`^(\w+) / (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleDivide)
+	ctx.Step(`^magnitude\((\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsTupleMagnitude)
+	ctx.Step(`^magnitude\((\w+)\) = √(-?\d+(?:\.\d+)?)$`, equalsTupleMagnitudeSquareRoot)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
