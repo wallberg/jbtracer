@@ -68,11 +68,18 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, color)
 	ctx.Step(`^(\w+) ([+\-*]) (\w+) = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsColorOp)
 	ctx.Step(`^(\w+)\.(red|green|blue) = (-?\d+(?:\.\d+)?)$`, equalsColorField)
+	ctx.Step(`^c ← canvas\((\d+), (\d+)\)$`, canvas)
+	ctx.Step(`^c\.(width|height) = (\d+)$`, equalsCanvasField)
+	ctx.Step(`^every pixel of c is color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, allCanvasColors)
+	ctx.Step(`^pixel_at\(c, (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\) = (\w+)$`, pixelAt)
+	ctx.Step(`^write_pixel\(c, (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (\w+)\)$`, writePixel)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
+		// Reset values before each scenario
 		tuples = make(map[string]*Tuple)
 		colors = make(map[string]*Color)
+		c = nil
 
 		return ctx, nil
 	})
