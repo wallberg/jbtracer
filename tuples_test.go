@@ -226,11 +226,6 @@ func equalsTupleMagnitude(t1name string, expected float32) error {
 	return nil
 }
 
-func equalsTupleMagnitudeSquareRoot(t1name string, expected float32) error {
-	expected = (float32)(math.Sqrt((float64)(expected)))
-	return equalsTupleMagnitude(t1name, expected)
-}
-
 func normalize(t1name string, t2name string) error {
 	if t2, ok = symbols[t2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t2name)
@@ -301,7 +296,6 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) \* (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleMultiply)
 	ctx.Step(`^(\w+) / (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleDivide)
 	ctx.Step(`^magnitude\((\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsTupleMagnitude)
-	ctx.Step(`^magnitude\((\w+)\) = √(-?\d+(?:\.\d+)?)$`, equalsTupleMagnitudeSquareRoot)
 	ctx.Step(`^(\w+) ← normalize\((\w+)\)$`, normalize)
 	ctx.Step(`^normalize\((\w+)\) = (?:approximately )?vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorNormalize)
 	ctx.Step(`^dot\((\w+), (\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsVectorDot)
