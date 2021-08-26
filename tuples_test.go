@@ -1,47 +1,10 @@
 package jbtracer
 
 import (
-	"context"
 	"fmt"
 	"math"
-	"os"
 	"strconv"
-	"testing"
-
-	"github.com/cucumber/godog"
-	godogcolors "github.com/cucumber/godog/colors"
-	"github.com/cucumber/messages-go/v16"
-	"github.com/spf13/pflag"
 )
-
-var opts = godog.Options{Output: godogcolors.Colored(os.Stdout)}
-
-var (
-	t1, t2, expected, got *Tuple
-	c1, c2                *Color
-	ok                    bool
-)
-var tuples map[string]*Tuple
-
-var colors map[string]*Color
-
-func init() {
-	godog.BindCommandLineFlags("godog.", &opts)
-}
-
-func TestMain(m *testing.M) {
-	pflag.Parse()
-	opts.Paths = pflag.Args()
-
-	status := godog.TestSuite{
-		Name:                 "tuples",
-		TestSuiteInitializer: InitializeTestSuite,
-		ScenarioInitializer:  InitializeScenario,
-		Options:              &opts,
-	}.Run()
-
-	os.Exit(status)
-}
 
 func isPoint(t1name string) error {
 	if t1, ok = tuples[t1name]; !ok {
@@ -346,42 +309,4 @@ func equalsColorField(c1name string, field string, expected float32) error {
 		return fmt.Errorf("Expected %s.%s = %f; got %f", c1name, field, expected, got)
 	}
 	return nil
-}
-
-func InitializeTestSuite(ctx *godog.TestSuiteContext) {}
-
-func InitializeScenario(ctx *godog.ScenarioContext) {
-	ctx.Step(`^(\w+) is a point$`, isPoint)
-	ctx.Step(`^(\w+) is a vector$`, isVector)
-	ctx.Step(`^(\w+) is not a point$`, isNotPoint)
-	ctx.Step(`^(\w+) is not a vector$`, isNotVector)
-	ctx.Step(`^(\w+) ← tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, tuple)
-	ctx.Step(`^(\w+)\.x = (-?\d+(?:\.\d+)?)$`, equalsTupleX)
-	ctx.Step(`^(\w+)\.y = (-?\d+(?:\.\d+)?)$`, equalsTupleY)
-	ctx.Step(`^(\w+)\.z = (-?\d+(?:\.\d+)?)$`, equalsTupleZ)
-	ctx.Step(`^(\w+)\.w = (-?\d+(?:\.\d+)?)$`, equalsTupleW)
-	ctx.Step(`^(\w+) ← point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, point)
-	ctx.Step(`^(\w+) ← vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, vector)
-	ctx.Step(`^(\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTuple)
-	ctx.Step(`^(\w+) \+ (\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleAdd)
-	ctx.Step(`^(\w+) - (\w+) = (point|vector)\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleSubtract)
-	ctx.Step(`^-(\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleNegate)
-	ctx.Step(`^(\w+) \* (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleMultiply)
-	ctx.Step(`^(\w+) / (-?\d+(?:\.\d+)?) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsTupleDivide)
-	ctx.Step(`^magnitude\((\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsTupleMagnitude)
-	ctx.Step(`^(\w+) ← normalize\((\w+)\)$`, normalize)
-	ctx.Step(`^normalize\((\w+)\) = (?:approximately )?vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorNormalize)
-	ctx.Step(`^dot\((\w+), (\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsVectorDot)
-	ctx.Step(`^cross\((\w+), (\w+)\) = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorCross)
-	ctx.Step(`^(\w+) ← color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, color)
-	ctx.Step(`^(\w+) ([+\-*]) (\w+) = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsColorOp)
-	ctx.Step(`^(\w+)\.(red|green|blue) = (-?\d+(?:\.\d+)?)$`, equalsColorField)
-
-	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
-
-		tuples = make(map[string]*Tuple)
-		colors = make(map[string]*Color)
-
-		return ctx, nil
-	})
 }
