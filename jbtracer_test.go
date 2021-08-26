@@ -17,6 +17,7 @@ var (
 	t1, t2, expected, got *Tuple
 	c1, c2                *Color
 	c                     *Canvas
+	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
 	colors                map[string]*Color
@@ -73,6 +74,10 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^every pixel of c is color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, allCanvasColors)
 	ctx.Step(`^pixel_at\(c, (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\) = (\w+)$`, pixelAt)
 	ctx.Step(`^write_pixel\(c, (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (\w+)\)$`, writePixel)
+	ctx.Step(`^ppm ← canvas_to_ppm\(c\)$`, canvasToPPM)
+	ctx.Step(`^lines (\d+)-(\d+) of ppm are$`, linesOfPPM)
+	ctx.Step(`^every pixel of c is set to color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, assignCanvasAllColors)
+	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
@@ -80,6 +85,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		tuples = make(map[string]*Tuple)
 		colors = make(map[string]*Color)
 		c = nil
+		ppm = nil
 
 		return ctx, nil
 	})
