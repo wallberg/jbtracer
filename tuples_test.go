@@ -5,21 +5,25 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/colors"
+	godogcolors "github.com/cucumber/godog/colors"
 	"github.com/cucumber/messages-go/v16"
 	"github.com/spf13/pflag"
 )
 
-var opts = godog.Options{Output: colors.Colored(os.Stdout)}
+var opts = godog.Options{Output: godogcolors.Colored(os.Stdout)}
 
 var (
 	t1, t2, expected, got *Tuple
+	c1, c2                *Color
 	ok                    bool
 )
-var symbols map[string]*Tuple
+var tuples map[string]*Tuple
+
+var colors map[string]*Color
 
 func init() {
 	godog.BindCommandLineFlags("godog.", &opts)
@@ -40,7 +44,7 @@ func TestMain(m *testing.M) {
 }
 
 func isPoint(t1name string) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if !t1.IsPoint() {
@@ -50,7 +54,7 @@ func isPoint(t1name string) error {
 }
 
 func isVector(t1name string) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if !t1.IsVector() {
@@ -60,7 +64,7 @@ func isVector(t1name string) error {
 }
 
 func isNotPoint(t1name string) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if t1.IsPoint() {
@@ -70,7 +74,7 @@ func isNotPoint(t1name string) error {
 }
 
 func isNotVector(t1name string) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if t1.IsVector() {
@@ -80,12 +84,12 @@ func isNotVector(t1name string) error {
 }
 
 func tuple(t1name string, x, y, z, w float32) error {
-	symbols[t1name] = &Tuple{X: x, Y: y, Z: z, W: w}
+	tuples[t1name] = &Tuple{X: x, Y: y, Z: z, W: w}
 	return nil
 }
 
 func equalsTupleX(t1name string, x float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if t1.X != x {
@@ -95,7 +99,7 @@ func equalsTupleX(t1name string, x float32) error {
 }
 
 func equalsTupleY(t1name string, y float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if t1.Y != y {
@@ -105,7 +109,7 @@ func equalsTupleY(t1name string, y float32) error {
 }
 
 func equalsTupleZ(t1name string, z float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if t1.Z != z {
@@ -115,7 +119,7 @@ func equalsTupleZ(t1name string, z float32) error {
 }
 
 func equalsTupleW(t1name string, w float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if t1.W != w {
@@ -125,17 +129,17 @@ func equalsTupleW(t1name string, w float32) error {
 }
 
 func point(t1name string, x, y, z float32) error {
-	symbols[t1name] = NewPoint(x, y, z)
+	tuples[t1name] = NewPoint(x, y, z)
 	return nil
 }
 
 func vector(t1name string, x, y, z float32) error {
-	symbols[t1name] = NewVector(x, y, z)
+	tuples[t1name] = NewVector(x, y, z)
 	return nil
 }
 
 func equalsTuple(t1name string, x, y, z, w float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	expected := &Tuple{X: x, Y: y, Z: z, W: w}
@@ -146,10 +150,10 @@ func equalsTuple(t1name string, x, y, z, w float32) error {
 }
 
 func equalsTupleAdd(t1name string, t2name string, x, y, z, w float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t2, ok = symbols[t2name]; !ok {
+	if t2, ok = tuples[t2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t2name)
 	}
 	expected := &Tuple{X: x, Y: y, Z: z, W: w}
@@ -161,10 +165,10 @@ func equalsTupleAdd(t1name string, t2name string, x, y, z, w float32) error {
 }
 
 func equalsTupleSubtract(t1name string, t2name string, ttype string, x, y, z float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t2, ok = symbols[t2name]; !ok {
+	if t2, ok = tuples[t2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t2name)
 	}
 	if ttype == "point" {
@@ -180,7 +184,7 @@ func equalsTupleSubtract(t1name string, t2name string, ttype string, x, y, z flo
 }
 
 func equalsTupleNegate(t1name string, x, y, z, w float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	expected = &Tuple{X: x, Y: y, Z: z, W: w}
@@ -192,7 +196,7 @@ func equalsTupleNegate(t1name string, x, y, z, w float32) error {
 }
 
 func equalsTupleMultiply(t1name string, scalar float32, x, y, z, w float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	expected := &Tuple{X: x, Y: y, Z: z, W: w}
@@ -204,7 +208,7 @@ func equalsTupleMultiply(t1name string, scalar float32, x, y, z, w float32) erro
 }
 
 func equalsTupleDivide(t1name string, scalar float32, x, y, z, w float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	expected := &Tuple{X: x, Y: y, Z: z, W: w}
@@ -216,7 +220,7 @@ func equalsTupleDivide(t1name string, scalar float32, x, y, z, w float32) error 
 }
 
 func equalsTupleMagnitude(t1name string, expected float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	got := t1.Magnitude()
@@ -227,15 +231,15 @@ func equalsTupleMagnitude(t1name string, expected float32) error {
 }
 
 func normalize(t1name string, t2name string) error {
-	if t2, ok = symbols[t2name]; !ok {
+	if t2, ok = tuples[t2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t2name)
 	}
-	symbols[t1name] = t2.Normalize()
+	tuples[t1name] = t2.Normalize()
 	return nil
 }
 
 func equalsVectorNormalize(t1name string, x, y, z float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	expected = NewVector(x, y, z)
@@ -247,10 +251,10 @@ func equalsVectorNormalize(t1name string, x, y, z float32) error {
 }
 
 func equalsVectorDot(t1name string, t2name string, expected float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t2, ok = symbols[t2name]; !ok {
+	if t2, ok = tuples[t2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t2name)
 	}
 	got := t1.Dot(t2)
@@ -261,16 +265,85 @@ func equalsVectorDot(t1name string, t2name string, expected float32) error {
 }
 
 func equalsVectorCross(t1name string, t2name string, x, y, z float32) error {
-	if t1, ok = symbols[t1name]; !ok {
+	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
-	if t2, ok = symbols[t2name]; !ok {
+	if t2, ok = tuples[t2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t2name)
 	}
 	expected = NewVector(x, y, z)
 	got = t1.Cross(t2)
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected cross(%s, %s)=%v; got %v", t1name, t2name, expected, got)
+	}
+	return nil
+}
+
+func color(t1name string, red, green, blue float32) error {
+	colors[t1name] = &Color{red, green, blue}
+	return nil
+}
+
+func equalsColorOp(c1name string, op string, c2name string, red, green, blue float32) error {
+
+	if c1, ok = colors[c1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", c1name)
+	}
+
+	var scalar float32
+	if c2, ok = colors[c2name]; !ok {
+		// Not a known symbol, see if this is a scalar
+		if f, err := strconv.ParseFloat(c2name, 32); err == nil {
+			// It's a scalar
+			scalar = (float32)(f)
+			if op != "*" {
+				return fmt.Errorf("Can't perform %s operation on scalar", op)
+			}
+		} else {
+			// Not a scalar
+			return fmt.Errorf("Unknown symbol %s", c2name)
+		}
+	}
+
+	expected := &Color{red, green, blue}
+	var got *Color
+
+	if c2 != nil {
+		switch op {
+		case "+":
+			got = c1.Add(c2)
+		case "-":
+			got = c1.Subtract(c2)
+		case "*":
+			got = c1.Multiply(c2)
+		}
+	} else {
+		got = c1.MultiplyScalar(scalar)
+
+	}
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s %s %s=%v; got %v", c1name, op, c2name, expected, got)
+	}
+	return nil
+}
+
+func equalsColorField(c1name string, field string, expected float32) error {
+	if c1, ok = colors[c1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", c1name)
+	}
+
+	var got float32
+	switch field {
+	case "red":
+		got = c1.Red
+	case "green":
+		got = c1.Green
+	case "blue":
+		got = c1.Blue
+	}
+
+	if got != expected {
+		return fmt.Errorf("Expected %s.%s = %f; got %f", c1name, field, expected, got)
 	}
 	return nil
 }
@@ -300,10 +373,14 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^normalize\((\w+)\) = (?:approximately )?vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorNormalize)
 	ctx.Step(`^dot\((\w+), (\w+)\) = (-?\d+(?:\.\d+)?)$`, equalsVectorDot)
 	ctx.Step(`^cross\((\w+), (\w+)\) = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsVectorCross)
+	ctx.Step(`^(\w+) ← color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, color)
+	ctx.Step(`^(\w+) ([+\-*]) (\w+) = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, equalsColorOp)
+	ctx.Step(`^(\w+)\.(red|green|blue) = (-?\d+(?:\.\d+)?)$`, equalsColorField)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
-		symbols = make(map[string]*Tuple)
+		tuples = make(map[string]*Tuple)
+		colors = make(map[string]*Color)
 
 		return ctx, nil
 	})

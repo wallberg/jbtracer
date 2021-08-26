@@ -139,3 +139,48 @@ func NewVector(X, Y, Z float32) *Tuple {
 
 	return vector
 }
+
+type Color struct {
+	Red, Green, Blue float32
+}
+
+// Equal determines if two Colors are the same
+func (a *Color) Equal(b *Color) bool {
+	return EqualFloat32(a.Red, b.Red) && EqualFloat32(a.Green, b.Green) && EqualFloat32(a.Blue, b.Blue)
+}
+
+// Add adds one Color to another
+func (a *Color) Add(b *Color) *Color {
+	return &Color{
+		Red:   a.Red + b.Red,
+		Green: a.Green + b.Green,
+		Blue:  a.Blue + b.Blue,
+	}
+}
+
+// Add subtracts one Color from another
+func (a *Color) Subtract(b *Color) *Color {
+	return &Color{
+		Red:   a.Red - b.Red,
+		Green: a.Green - b.Green,
+		Blue:  a.Blue - b.Blue,
+	}
+}
+
+// Multiply multiplies this Color by another Color
+func (a *Color) Multiply(b *Color) *Color {
+	return &Color{
+		Red:   a.Red * b.Red,
+		Green: a.Green * b.Green,
+		Blue:  a.Blue * b.Blue,
+	}
+}
+
+// MultiplyScalar multiplies this Color by a scalar
+func (a *Color) MultiplyScalar(scalar float32) *Color {
+	return &Color{
+		Red:   a.Red * scalar,
+		Green: a.Green * scalar,
+		Blue:  a.Blue * scalar,
+	}
+}
