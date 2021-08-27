@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 
 	"github.com/wallberg/jbtracer"
 )
@@ -34,8 +33,8 @@ func main() {
 
 	for t := 0; p.position.Y > 0; t++ {
 
-		x := int(math.Round((float64)(p.position.X)))
-		y := height - int(math.Round((float64)(p.position.Y)))
+		x := int(p.position.X)
+		y := height - int(p.position.Y)
 
 		if x >= 0 && x < width && y >= 0 && y < height {
 			c.Grid[x][y] = color
