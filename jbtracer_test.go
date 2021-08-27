@@ -17,10 +17,12 @@ var (
 	t1, t2, expected, got *Tuple
 	c1, c2                *Color
 	c                     *Canvas
+	m1, m2                *Matrix
 	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
 	colors                map[string]*Color
+	matrices              map[string]*Matrix
 )
 
 func init() {
@@ -78,12 +80,16 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^lines (\d+)-(\d+) of ppm are$`, linesOfPPM)
 	ctx.Step(`^every pixel of c is set to color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, assignCanvasAllColors)
 	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
+	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
+	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, equalsMatrixCell)
+	ctx.Step(`^(\w+) (!?=) (\w+)$`, equalsMatrix)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
 		// Reset values before each scenario
 		tuples = make(map[string]*Tuple)
 		colors = make(map[string]*Color)
+		matrices = make(map[string]*Matrix)
 		c = nil
 		ppm = nil
 
