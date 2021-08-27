@@ -91,3 +91,20 @@ func matrixMultiply(m1name, m2name string, table *godog.Table) error {
 	}
 	return nil
 }
+
+func matrixMultiplyTuple(m1name, t1name string, x, y, z, w float32) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m1name)
+	}
+	if t1, ok = tuples[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+
+	expected := &Tuple{x, y, z, w}
+	got := m1.MultiplyTuple(t1)
+
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s * %s = %v; got %v", m1name, t1name, expected, got)
+	}
+	return nil
+}

@@ -84,6 +84,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, matrixCellEquals)
 	ctx.Step(`^(\w+) (!?=) (\w+)$`, matrixEquals)
 	ctx.Step(`^(\w+) \* (\w+) is the following 4x4 matrix:$`, matrixMultiply)
+	ctx.Step(`^(\w+) \* (\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixMultiplyTuple)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 

@@ -54,3 +54,29 @@ func (a *Matrix) Multiply(b *Matrix) *Matrix {
 	}
 	return c
 }
+
+// MultiplyTuple multiplies this matrix with the provided tuple
+// Assumes a 4x4 matrix, since Tuple is fixed with a size of 4
+func (a *Matrix) MultiplyTuple(b *Tuple) *Tuple {
+	c := &Tuple{}
+
+	// Iterate over the rows of A
+	for i := 0; i < a.size; i++ {
+		value := a.Get(i, 0) * b.X
+		value += a.Get(i, 1) * b.Y
+		value += a.Get(i, 2) * b.Z
+		value += a.Get(i, 3) * b.W
+		switch i {
+		case 0:
+			c.X = value
+		case 1:
+			c.Y = value
+		case 2:
+			c.Z = value
+		case 3:
+			c.W = value
+		}
+	}
+
+	return c
+}
