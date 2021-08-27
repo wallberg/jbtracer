@@ -35,3 +35,22 @@ func (a *Matrix) Equal(b *Matrix) bool {
 	}
 	return true
 }
+
+// Multiply multiplies this matrix with the provided matrix
+func (a *Matrix) Multiply(b *Matrix) *Matrix {
+	c := NewMatrix(a.size)
+
+	// Iterate over the cells of matrix C
+	for i := 0; i < c.size; i++ {
+		for j := 0; j < c.size; j++ {
+			var value float32 = 0.0
+			// Iterate over a row of A and a column of C
+			for k := 0; k < c.size; k++ {
+				value += a.Get(i, k) * b.Get(k, j)
+			}
+			// Set the new cell value
+			c.Set(i, j, value)
+		}
+	}
+	return c
+}

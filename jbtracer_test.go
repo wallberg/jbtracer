@@ -81,8 +81,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^every pixel of c is set to color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, assignCanvasAllColors)
 	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
-	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, equalsMatrixCell)
-	ctx.Step(`^(\w+) (!?=) (\w+)$`, equalsMatrix)
+	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, matrixCellEquals)
+	ctx.Step(`^(\w+) (!?=) (\w+)$`, matrixEquals)
+	ctx.Step(`^(\w+) \* (\w+) is the following 4x4 matrix:$`, matrixMultiply)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
