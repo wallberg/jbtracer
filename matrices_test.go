@@ -39,7 +39,7 @@ func matrix(m1name string, table *godog.Table) error {
 	return nil
 }
 
-func matrixCellEquals(m1name string, i, j int, expected float32) error {
+func matrixCellEqual(m1name string, i, j int, expected float32) error {
 	if m1, ok = matrices[m1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
@@ -50,7 +50,7 @@ func matrixCellEquals(m1name string, i, j int, expected float32) error {
 	return nil
 }
 
-func matrixEquals(m1name, op, m2name string) error {
+func matrixEqual(m1name, op, m2name string) error {
 	if m1, ok = matrices[m1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
@@ -67,7 +67,7 @@ func matrixEquals(m1name, op, m2name string) error {
 	got := m1.Equal(m2)
 
 	if got != expected {
-		return fmt.Errorf("Expected %s = %s is %t; got %t", m1name, m2name, expected, got)
+		return fmt.Errorf("Expected %s %s %v; got %v", m1name, op, m1, m2)
 	}
 	return nil
 }
@@ -117,5 +117,54 @@ func matrixTranspose(m1name, m2name string) error {
 	}
 
 	matrices[m1name] = m2.Transpose()
+	return nil
+}
+
+func matrixDeterminant(s1name, m1name string) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m1name)
+	}
+
+	scalars[s1name] = m1.Determinant()
+	return nil
+}
+
+func scalar(s1name string, value float32) error {
+	scalars[s1name] = value
+	return nil
+}
+
+func scalarEqual(s1name, s2name string) error {
+	if s1, ok = scalars[s1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", s1name)
+	}
+	if s2, ok = scalars[s2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", s2name)
+	}
+
+	expected := true
+	got := s1 == s2
+
+	if got != expected {
+		return fmt.Errorf("Expected %s = %s is %t; got %t", s1name, s2name, expected, got)
+	}
+	return nil
+}
+
+func submatrix(m1name, m2name string, i, j int) error {
+	if m2, ok = matrices[m2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m2name)
+	}
+
+	matrices[m1name] = m2.Submatrix(i, j)
+	return nil
+}
+
+func matrixMinor(s1name, m1name string, i, j int) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m1name)
+	}
+
+	scalars[s1name] = m1.Minor(i, j)
 	return nil
 }

@@ -18,12 +18,14 @@ var (
 	c1, c2                *Color
 	c                     *Canvas
 	m1, m2, m3            *Matrix
+	s1, s2                float32
 	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
 	colors                map[string]*Color
 	matrices              map[string]*Matrix
 	identityMatrix        *Matrix
+	scalars               map[string]float32
 )
 
 func init() {
@@ -83,11 +85,16 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^every pixel of c is set to color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, assignCanvasAllColors)
 	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
-	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, matrixCellEquals)
-	ctx.Step(`^(\w+) (!?=) (\w+)$`, matrixEquals)
+	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, matrixCellEqual)
+	ctx.Step(`^(\w+) (!?=) matrix (\w+)$`, matrixEqual)
 	ctx.Step(`^(\w+) \* (\w+) = matrix (\w+)$`, matrixMultiply)
 	ctx.Step(`^(\w+) \* (\w+) = tuple (\w+)$`, matrixMultiplyTuple)
 	ctx.Step(`^(\w+) ← transpose\((\w+)\)$`, matrixTranspose)
+	ctx.Step(`^(\w+) ← determinant\((\w+)\)$`, matrixDeterminant)
+	ctx.Step(`^(\w+) = scalar (\w+)$`, scalarEqual)
+	ctx.Step(`^(\w+) ← scalar\((-?\d+(?:\.\d+)?)\)$`, scalar)
+	ctx.Step(`^(\w+) ← submatrix\((\w+), (\d+), (\d+)\)$`, submatrix)
+	ctx.Step(`^(\w+) ← minor\((\w+), (\d+), (\d+)\)$`, matrixMinor)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
@@ -96,6 +103,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		colors = make(map[string]*Color)
 		matrices = make(map[string]*Matrix)
 		matrices["identity_matrix"] = identityMatrix
+		scalars = make(map[string]float32)
 		c = nil
 		ppm = nil
 

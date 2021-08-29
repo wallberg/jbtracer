@@ -43,7 +43,7 @@ Scenario: Matrix equality with identical matrices
       | 5 | 6 | 7 | 8 |
       | 9 | 8 | 7 | 6 |
       | 5 | 4 | 3 | 2 |
-  Then A = B
+  Then A = matrix B
 
 Scenario: Matrix equality with different matrices
   Given the following matrix A:
@@ -56,7 +56,7 @@ Scenario: Matrix equality with different matrices
       | 6 | 7 | 8 | 9 |
       | 8 | 7 | 6 | 5 |
       | 4 | 3 | 2 | 1 |
-  Then A != B
+  Then A != matrix B
 
 Scenario: Multiplying two matrices
   Given the following matrix A:
@@ -110,9 +110,52 @@ Scenario: Transposing a matrix
       | 3 | 0 | 5 | 5 |
       | 0 | 8 | 3 | 8 |
     And C ← transpose(A)
-  Then B = C
+  Then B = matrix C
 
 Scenario: Transposing the identity matrix
   Given A ← transpose(identity_matrix)
-  Then A = identity_matrix
+  Then A = matrix identity_matrix
 
+Scenario: Calculating the determinant of a 2x2 matrix
+  Given the following matrix A:
+      |  1 | 5 |
+      | -3 | 2 |
+    And b ← determinant(A)
+    And c ← scalar(17)
+  Then b = scalar c
+
+Scenario: A submatrix of a 3x3 matrix is a 2x2 matrix
+  Given the following matrix A:
+      |  1 | 5 |  0 |
+      | -3 | 2 |  7 |
+      |  0 | 6 | -3 |
+    And the following matrix B:
+      | -3 | 2 |
+      |  0 | 6 |
+    And C ← submatrix(A, 0, 2)
+  Then B = matrix C
+
+Scenario: A submatrix of a 4x4 matrix is a 3x3 matrix
+  Given the following matrix A:
+      | -6 |  1 |  1 |  6 |
+      | -8 |  5 |  8 |  6 |
+      | -1 |  0 |  8 |  2 |
+      | -7 |  1 | -1 |  1 |
+    And the following matrix B:
+      | -6 |  1 | 6 |
+      | -8 |  8 | 6 |
+      | -7 | -1 | 1 |
+    And C ← submatrix(A, 2, 1)
+  Then B = matrix C
+
+Scenario: Calculating a minor of a 3x3 matrix
+  Given the following matrix A:
+      |  3 |  5 |  0 |
+      |  2 | -1 | -7 |
+      |  6 | -1 |  5 |
+    And B ← submatrix(A, 1, 0)
+    And b ← determinant(B)
+    And c ← minor(A, 1, 0)
+    And d ← scalar(25)
+  Then b = scalar d
+      And c = scalar d

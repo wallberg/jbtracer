@@ -100,3 +100,41 @@ func (a *Matrix) Transpose() *Matrix {
 	}
 	return b
 }
+
+// Determinant returns the determinant of this matrix
+func (a *Matrix) Determinant() float32 {
+	switch a.size {
+	case 2:
+		return a.Get(0, 0)*a.Get(1, 1) - a.Get(0, 1)*a.Get(1, 0)
+	default:
+		return 0
+	}
+}
+
+// Submatrix returns a copy of this matrix, but with row i
+// column j removed
+func (a *Matrix) Submatrix(i, j int) *Matrix {
+	b := NewMatrix(a.size - 1)
+	for ai := 0; ai < a.size; ai++ {
+		for aj := 0; aj < a.size; aj++ {
+			if ai != i && aj != j {
+				bi := ai
+				if bi > i {
+					bi--
+				}
+				bj := aj
+				if bj > j {
+					bj--
+				}
+				b.Set(bi, bj, a.Get(ai, aj))
+			}
+		}
+	}
+	return b
+}
+
+// Minor returns the determinant of the submatrix at row i
+// and column j
+func (a *Matrix) Minor(i, j int) float32 {
+	return a.Submatrix(i, j).Determinant()
+}
