@@ -80,3 +80,23 @@ func (a *Matrix) MultiplyTuple(b *Tuple) *Tuple {
 
 	return c
 }
+
+// IdentityMatrix returns an identity matrix of size 4x4
+func IdentityMatrix() *Matrix {
+	m := NewMatrix(4)
+	for i := 0; i < 4; i++ {
+		m.Set(i, i, 1.0)
+	}
+	return m
+}
+
+// Transpose returns the transpose of this matrix
+func (a *Matrix) Transpose() *Matrix {
+	b := NewMatrix(a.size)
+	for i := 0; i < a.size; i++ {
+		for j := 0; j < a.size; j++ {
+			b.Set(j, i, a.Get(i, j))
+		}
+	}
+	return b
+}

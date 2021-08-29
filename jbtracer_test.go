@@ -17,16 +17,18 @@ var (
 	t1, t2, expected, got *Tuple
 	c1, c2                *Color
 	c                     *Canvas
-	m1, m2                *Matrix
+	m1, m2, m3            *Matrix
 	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
 	colors                map[string]*Color
 	matrices              map[string]*Matrix
+	identityMatrix        *Matrix
 )
 
 func init() {
 	godog.BindCommandLineFlags("godog.", &opts)
+	identityMatrix = IdentityMatrix()
 }
 
 func TestMain(m *testing.M) {
@@ -83,8 +85,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
 	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, matrixCellEquals)
 	ctx.Step(`^(\w+) (!?=) (\w+)$`, matrixEquals)
-	ctx.Step(`^(\w+) \* (\w+) is the following 4x4 matrix:$`, matrixMultiply)
-	ctx.Step(`^(\w+) \* (\w+) = tuple\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixMultiplyTuple)
+	ctx.Step(`^(\w+) \* (\w+) = matrix (\w+)$`, matrixMultiply)
+	ctx.Step(`^(\w+) \* (\w+) = tuple (\w+)$`, matrixMultiplyTuple)
+	ctx.Step(`^(\w+) ← transpose\((\w+)\)$`, matrixTranspose)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
@@ -92,6 +95,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		tuples = make(map[string]*Tuple)
 		colors = make(map[string]*Color)
 		matrices = make(map[string]*Matrix)
+		matrices["identity_matrix"] = identityMatrix
 		c = nil
 		ppm = nil
 

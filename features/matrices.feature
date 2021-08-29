@@ -69,11 +69,12 @@ Scenario: Multiplying two matrices
       |  3 | 2 | 1 | -1 |
       |  4 | 3 | 6 |  5 |
       |  1 | 2 | 7 |  8 |
-  Then A * B is the following 4x4 matrix:
+    And the following matrix C:
       | 20|  22 |  50 |  48 |
       | 44|  54 | 114 | 108 |
       | 40|  58 | 110 | 102 |
       | 16|  26 |  46 |  42 |
+  Then A * B = matrix C
 
 Scenario: A matrix multiplied by a tuple
   Given the following matrix A:
@@ -82,4 +83,36 @@ Scenario: A matrix multiplied by a tuple
       | 8 | 6 | 4 | 1 |
       | 0 | 0 | 0 | 1 |
     And b ← tuple(1, 2, 3, 1)
-  Then A * b = tuple(18, 24, 33, 1)
+    And c ← tuple(18, 24, 33, 1)
+  Then A * b = tuple c
+
+Scenario: Multiplying a matrix by the identity matrix
+  Given the following matrix A:
+    | 0 | 1 |  2 |  4 |
+    | 1 | 2 |  4 |  8 |
+    | 2 | 4 |  8 | 16 |
+    | 4 | 8 | 16 | 32 |
+  Then A * identity_matrix = matrix A
+
+Scenario: Multiplying the identity matrix by a tuple
+  Given a ← tuple(1, 2, 3, 4)
+  Then identity_matrix * a = tuple a
+
+Scenario: Transposing a matrix
+  Given the following matrix A:
+      | 0 | 9 | 3 | 0 |
+      | 9 | 8 | 0 | 8 |
+      | 1 | 8 | 5 | 3 |
+      | 0 | 0 | 5 | 8 |
+    And the following matrix B:
+      | 0 | 9 | 1 | 0 |
+      | 9 | 8 | 8 | 0 |
+      | 3 | 0 | 5 | 5 |
+      | 0 | 8 | 3 | 8 |
+    And C ← transpose(A)
+  Then B = C
+
+Scenario: Transposing the identity matrix
+  Given A ← transpose(identity_matrix)
+  Then A = identity_matrix
+

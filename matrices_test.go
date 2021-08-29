@@ -72,39 +72,50 @@ func matrixEquals(m1name, op, m2name string) error {
 	return nil
 }
 
-func matrixMultiply(m1name, m2name string, table *godog.Table) error {
+func matrixMultiply(m1name, m2name, m3name string) error {
 	if m1, ok = matrices[m1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
 	if m2, ok = matrices[m2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m2name)
 	}
-
-	var m3 *Matrix
-	var err error
-	if m3, err = tableToMatrix(table); err != nil {
-		return err
+	if m3, ok = matrices[m3name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m3name)
 	}
 
-	if !m1.Multiply(m2).Equal(m3) {
-		return fmt.Errorf("Expected %s * %s is the provided matrix; but it wasn't", m1name, m2name)
+	expected := m3
+	got := m1.Multiply(m2)
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s * %s = %v; got %v", m1name, m2name, expected, got)
 	}
 	return nil
 }
 
-func matrixMultiplyTuple(m1name, t1name string, x, y, z, w float32) error {
+func matrixMultiplyTuple(m1name, t1name, t2name string) error {
 	if m1, ok = matrices[m1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
+	if t2, ok = tuples[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t2name)
+	}
 
-	expected := &Tuple{x, y, z, w}
+	expected := t2
 	got := m1.MultiplyTuple(t1)
 
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected %s * %s = %v; got %v", m1name, t1name, expected, got)
 	}
+	return nil
+}
+
+func matrixTranspose(m1name, m2name string) error {
+	if m2, ok = matrices[m2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m2name)
+	}
+
+	matrices[m1name] = m2.Transpose()
 	return nil
 }
