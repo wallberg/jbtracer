@@ -44,7 +44,7 @@ func matrixCellEqual(m1name string, i, j int, expected float32) error {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
 	got := m1.Get(i, j)
-	if got != expected {
+	if !EqualFloat32(got, expected) {
 		return fmt.Errorf("Expected %s[%d,%d] = %v; got %v", m1name, i, j, expected, got)
 	}
 	return nil
@@ -88,6 +88,17 @@ func matrixMultiply(m1name, m2name, m3name string) error {
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected %s * %s = %v; got %v", m1name, m2name, expected, got)
 	}
+	return nil
+}
+
+func matrixMultiplyAssign(m3name, m1name, m2name string) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m1name)
+	}
+	if m2, ok = matrices[m2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m2name)
+	}
+	matrices[m3name] = m1.Multiply(m2)
 	return nil
 }
 
@@ -139,19 +150,23 @@ func scalarEqual(s1name, s2name string) error {
 		return fmt.Errorf("Unknown symbol %s", s1name)
 	}
 	if s2, ok = scalars[s2name]; !ok {
-		return fmt.Errorf("Unknown symbol %s", s2name)
+		if f, err := strconv.ParseFloat(s2name, 32); err != nil {
+			return fmt.Errorf("Unknown symbol %s", s2name)
+		} else {
+			s2 = (float32)(f)
+		}
 	}
 
-	expected := true
-	got := s1 == s2
+	expected := s2
+	got := s1
 
 	if got != expected {
-		return fmt.Errorf("Expected %s = %s is %t; got %t", s1name, s2name, expected, got)
+		return fmt.Errorf("Expected %s = %f; got %f", s1name, expected, got)
 	}
 	return nil
 }
 
-func submatrix(m1name, m2name string, i, j int) error {
+func matrixSubmatrix(m1name, m2name string, i, j int) error {
 	if m2, ok = matrices[m2name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m2name)
 	}
@@ -166,5 +181,47 @@ func matrixMinor(s1name, m1name string, i, j int) error {
 	}
 
 	scalars[s1name] = m1.Minor(i, j)
+	return nil
+}
+
+func matrixCofactor(s1name, m1name string, i, j int) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m1name)
+	}
+
+	scalars[s1name] = m1.Cofactor(i, j)
+	return nil
+}
+
+func matrixInvertible(m1name, op string) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m1name)
+	}
+
+	var expected bool
+	if op == "is" {
+		expected = true
+	} else {
+		expected = false
+	}
+	_, err := m1.Inverse()
+	got := err == nil
+
+	if got != expected {
+		return fmt.Errorf("Expected %s=%v %s invertible; got the opposite", m1name, m1, op)
+	}
+	return nil
+}
+
+func matrixInverse(m1name, m2name string) error {
+	if m2, ok = matrices[m2name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", m2name)
+	}
+
+	var err error
+	matrices[m1name], err = m2.Inverse()
+	if err != nil {
+		return fmt.Errorf("Matrix %v is not invertible", m2)
+	}
 	return nil
 }

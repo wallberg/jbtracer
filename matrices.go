@@ -1,5 +1,9 @@
 package jbtracer
 
+import (
+	"fmt"
+)
+
 type Matrix struct {
 	size  int
 	cells []float32
@@ -29,7 +33,7 @@ func (a *Matrix) Equal(b *Matrix) bool {
 		return false
 	}
 	for i, value := range a.cells {
-		if b.cells[i] != value {
+		if !EqualFloat32(b.cells[i], value) {
 			return false
 		}
 	}
@@ -103,12 +107,15 @@ func (a *Matrix) Transpose() *Matrix {
 
 // Determinant returns the determinant of this matrix
 func (a *Matrix) Determinant() float32 {
-	switch a.size {
-	case 2:
+	if a.size == 2 {
 		return a.Get(0, 0)*a.Get(1, 1) - a.Get(0, 1)*a.Get(1, 0)
-	default:
-		return 0
 	}
+
+	var d float32 = 0
+	for j := 0; j < a.size; j++ {
+		d += a.Get(0, j) * a.Cofactor(0, j)
+	}
+	return d
 }
 
 // Submatrix returns a copy of this matrix, but with row i
@@ -137,4 +144,33 @@ func (a *Matrix) Submatrix(i, j int) *Matrix {
 // and column j
 func (a *Matrix) Minor(i, j int) float32 {
 	return a.Submatrix(i, j).Determinant()
+}
+
+// Cofactor returns the cofactor of this matrix
+func (a *Matrix) Cofactor(i, j int) float32 {
+	m := a.Minor(i, j)
+	if (i+j)%2 == 1 {
+		m *= -1
+	}
+	return m
+}
+
+// Inverse returns the inverse of this matrix, which is obtained by
+// creating a matrix of cofactors, transponsing it, then dividing it
+// by the determinant.
+// Return an error if the determinant is 0, which means the matrix
+// is not invertible
+func (a *Matrix) Inverse() (*Matrix, error) {
+	d := a.Determinant()
+	if EqualFloat32(d, 0) {
+		return nil, fmt.Errorf("matrix is not invertible")
+	}
+
+	b := NewMatrix(a.size)
+	for i := 0; i < a.size; i++ {
+		for j := 0; j < a.size; j++ {
+			b.Set(j, i, a.Cofactor(i, j)/d)
+		}
+	}
+	return b, nil
 }

@@ -89,12 +89,16 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) (!?=) matrix (\w+)$`, matrixEqual)
 	ctx.Step(`^(\w+) \* (\w+) = matrix (\w+)$`, matrixMultiply)
 	ctx.Step(`^(\w+) \* (\w+) = tuple (\w+)$`, matrixMultiplyTuple)
+	ctx.Step(`^(\w+) ← (\w+) \* (\w+)$`, matrixMultiplyAssign)
 	ctx.Step(`^(\w+) ← transpose\((\w+)\)$`, matrixTranspose)
 	ctx.Step(`^(\w+) ← determinant\((\w+)\)$`, matrixDeterminant)
-	ctx.Step(`^(\w+) = scalar (\w+)$`, scalarEqual)
+	ctx.Step(`^(\w+) = scalar ((?:\w|\-)+)$`, scalarEqual)
 	ctx.Step(`^(\w+) ← scalar\((-?\d+(?:\.\d+)?)\)$`, scalar)
-	ctx.Step(`^(\w+) ← submatrix\((\w+), (\d+), (\d+)\)$`, submatrix)
+	ctx.Step(`^(\w+) ← submatrix\((\w+), (\d+), (\d+)\)$`, matrixSubmatrix)
 	ctx.Step(`^(\w+) ← minor\((\w+), (\d+), (\d+)\)$`, matrixMinor)
+	ctx.Step(`^(\w+) ← cofactor\((\w+), (\d+), (\d+)\)$`, matrixCofactor)
+	ctx.Step(`^(\w+) (is(?: not)?) invertible$`, matrixInvertible)
+	ctx.Step(`^(\w+) ← inverse\((\w+)\)$`, matrixInverse)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
