@@ -50,6 +50,7 @@ func TestMain(m *testing.M) {
 func InitializeTestSuite(ctx *godog.TestSuiteContext) {}
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
+	// tuples
 	ctx.Step(`^(\w+) is a point$`, isPoint)
 	ctx.Step(`^(\w+) is a vector$`, isVector)
 	ctx.Step(`^(\w+) is not a point$`, isNotPoint)
@@ -84,6 +85,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^lines (\d+)-(\d+) of ppm are$`, linesOfPPM)
 	ctx.Step(`^every pixel of c is set to color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, assignCanvasAllColors)
 	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
+
+	// matrices
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
 	ctx.Step(`^(\w+)\[(\d+),(\d+)\] = (-?\d+(?:\.\d+)?)$`, matrixCellEqual)
 	ctx.Step(`^(\w+) (!?=) matrix (\w+)$`, matrixEqual)
@@ -99,6 +102,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← cofactor\((\w+), (\d+), (\d+)\)$`, matrixCofactor)
 	ctx.Step(`^(\w+) (is(?: not)?) invertible$`, matrixInvertible)
 	ctx.Step(`^(\w+) ← inverse\((\w+)\)$`, matrixInverse)
+
+	// transformations
+	ctx.Step(`^(\w+) ← translation\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixTranslation)
+	ctx.Step(`^(\w+) ← scaling\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixScaling)
+	ctx.Step(`^(\w+) ← rotation_([xyz])\((-?\d+(?:\.\d+)?)\)$`, matrixRotation)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 

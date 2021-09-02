@@ -243,9 +243,9 @@ Scenario: Calculating the inverse of a matrix
     And cof23 = scalar -160
     And cof32 = scalar 105
                # 105/532
-    And B[2,3] = 0.19736842
+    And B[2,3] = 0.19736
                # -160/532
-    And B[3,2] = -0.30075187
+    And B[3,2] = -0.30075
 
 Scenario: Calculating the inverse of another matrix
   Given the following 4x4 matrix A:
