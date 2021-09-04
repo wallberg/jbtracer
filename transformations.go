@@ -52,3 +52,15 @@ func Rotation(axis int, radians float32) *Matrix {
 	}
 	return a
 }
+
+// Shearing returns the shearing matrix
+func Shearing(xY, xZ, yX, yZ, zX, zY float32) *Matrix {
+	a := IdentityMatrix()
+	a.Set(0, 1, xY)
+	a.Set(0, 2, xZ)
+	a.Set(1, 0, yX)
+	a.Set(1, 2, yZ)
+	a.Set(2, 0, zX)
+	a.Set(2, 1, zY)
+	return a
+}

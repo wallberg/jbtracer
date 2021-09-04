@@ -107,6 +107,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← translation\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixTranslation)
 	ctx.Step(`^(\w+) ← scaling\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixScaling)
 	ctx.Step(`^(\w+) ← rotation_([xyz])\((-?\d+(?:\.\d+)?)\)$`, matrixRotation)
+	ctx.Step(`^(\w+) ← shearing\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixShearing)
+	ctx.Step(`^(\w+) ← (\w+) \* tuple (\w+)$`, tupleMatrixAssign)
+	ctx.Step(`^(\w+) = tuple (\w+)$`, tupleEqual)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 

@@ -83,7 +83,7 @@ Scenario: Rotating a point around the y axis
                                 # π / 4
     And half_quarter ← rotation_y(0.78539)
                                 # π / 2
-    And full_quarter ← rotation_y(1.57079)
+    And full_quarter ← rotation_y(1.570796)
                               # √2/2         √2/2
     And e1 ← point(0.707106, 0, 0.707106)
     And e2 ← point(1, 0, 0)
@@ -105,4 +105,70 @@ Scenario: Rotating a point around the z axis
     And e1 is a point
     And full_quarter * p = tuple e2
     And e2 is a point
+
+Scenario: A shearing transformation moves x in proportion to y
+  Given transform ← shearing(1, 0, 0, 0, 0, 0)
+    And p ← point(2, 3, 4)
+    And e ← point(5, 3, 4)
+  Then transform * p = tuple e
+
+Scenario: A shearing transformation moves x in proportion to z
+  Given transform ← shearing(0, 1, 0, 0, 0, 0)
+    And p ← point(2, 3, 4)
+    And e ← point(6, 3, 4)
+  Then transform * p = tuple e
+
+Scenario: A shearing transformation moves y in proportion to x
+  Given transform ← shearing(0, 0, 1, 0, 0, 0)
+    And p ← point(2, 3, 4)
+    And e ← point(2, 5, 4)
+  Then transform * p = tuple e
+
+Scenario: A shearing transformation moves y in proportion to z
+  Given transform ← shearing(0, 0, 0, 1, 0, 0)
+    And p ← point(2, 3, 4)
+    And e ← point(2, 7, 4)
+  Then transform * p = tuple e
+
+Scenario: A shearing transformation moves z in proportion to x
+  Given transform ← shearing(0, 0, 0, 0, 1, 0)
+    And p ← point(2, 3, 4)
+    And e ← point(2, 3, 6)
+  Then transform * p = tuple e
+
+Scenario: A shearing transformation moves z in proportion to y
+  Given transform ← shearing(0, 0, 0, 0, 0, 1)
+    And p ← point(2, 3, 4)
+    And e ← point(2, 3, 7)
+  Then transform * p = tuple e
+
+Scenario: Individual transformations are applied in sequence
+  Given p ← point(1, 0, 1)
+                     # π / 2
+    And A ← rotation_x(1.570796)
+    And B ← scaling(5, 5, 5)
+    And C ← translation(10, 5, 7)
+  # apply rotation first
+  When p2 ← A * tuple p
+    And e2 ← point(1, -1, 0)
+  Then p2 = tuple e2
+  # then apply scaling
+  When p3 ← B * tuple p2
+    And e3 ← point(5, -5, 0)
+  Then p3 = tuple e3
+  # then apply translation
+  When p4 ← C * tuple p3
+    And e4 ← point(15, 0, 7)
+  Then p4 = tuple e4
+
+Scenario: Chained transformations must be applied in reverse order
+  Given p ← point(1, 0, 1)
+                     # π / 2
+    And A ← rotation_x(1.570796)
+    And B ← scaling(5, 5, 5)
+    And C ← translation(10, 5, 7)
+  When T1 ← C * B
+    And T2 ← T1 * A
+    And e ← point(15, 0, 7)
+  Then T2 * p = tuple e
 
