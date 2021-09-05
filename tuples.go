@@ -1,6 +1,7 @@
 package jbtracer
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -10,6 +11,17 @@ const Epsilon = 0.00001
 type Tuple struct {
 	X, Y, Z float32 // 3D coordinates
 	W       float32 // 1.0 when a point, 0.0 when a vector
+}
+
+// String returns a string representation of the tuple
+func (a *Tuple) String() string {
+	var types string
+	if a.IsPoint() {
+		types = "point"
+	} else {
+		types = "vector"
+	}
+	return fmt.Sprintf("x=%+2.5f, y=%+2.5f, z=%+2.5f (%s)", a.X, a.Y, a.Z, types)
 }
 
 // IsPoint returns true if this Tuple is a point
