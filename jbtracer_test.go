@@ -19,6 +19,7 @@ var (
 	c                     *Canvas
 	m1, m2, m3            *Matrix
 	s1, s2                float32
+	r1, r2                *Ray
 	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
@@ -26,6 +27,7 @@ var (
 	matrices              map[string]*Matrix
 	identityMatrix        *Matrix
 	scalars               map[string]float32
+	rays                  map[string]*Ray
 )
 
 func init() {
@@ -110,6 +112,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← shearing\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixShearing)
 	ctx.Step(`^(\w+) ← (\w+) \* tuple (\w+)$`, tupleMatrixAssign)
 	ctx.Step(`^(\w+) = tuple (\w+)$`, tupleEqual)
+	ctx.Step(`^(\w+) ← ray\((\w+), (\w+)\)$`, ray)
+	ctx.Step(`^(\w+)\.(origin|direction) = (\w+)$`, rayEqualField)
+	ctx.Step(`^position\((\w+), (-?\d+(?:\.\d+)?)\) = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayPositionEqualPoint)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
@@ -119,6 +124,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		matrices = make(map[string]*Matrix)
 		matrices["identity_matrix"] = identityMatrix
 		scalars = make(map[string]float32)
+		rays = make(map[string]*Ray)
 		c = nil
 		ppm = nil
 
