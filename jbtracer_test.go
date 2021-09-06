@@ -19,7 +19,9 @@ var (
 	c                     *Canvas
 	m1, m2, m3            *Matrix
 	s1, s2                float32
-	r1, r2                *Ray
+	r1                    *Ray
+	sph1                  *Sphere
+	i1                    []*Intersection
 	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
@@ -28,6 +30,8 @@ var (
 	identityMatrix        *Matrix
 	scalars               map[string]float32
 	rays                  map[string]*Ray
+	spheres               map[string]*Sphere
+	intersections         map[string][]*Intersection
 )
 
 func init() {
@@ -116,6 +120,13 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.(origin|direction) = (\w+)$`, rayEqualField)
 	ctx.Step(`^position\((\w+), (-?\d+(?:\.\d+)?)\) = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayPositionEqualPoint)
 
+	// spheres
+	ctx.Step(`^(\w+) ← ray\(point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\), vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, rayPointVector)
+	ctx.Step(`^(\w+) ← sphere\(\)$`, sphere)
+	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
+	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
+	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionIndex)
+
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
 		// Reset values before each scenario
@@ -125,6 +136,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		matrices["identity_matrix"] = identityMatrix
 		scalars = make(map[string]float32)
 		rays = make(map[string]*Ray)
+		spheres = make(map[string]*Sphere)
+		intersections = make(map[string][]*Intersection)
+
 		c = nil
 		ppm = nil
 

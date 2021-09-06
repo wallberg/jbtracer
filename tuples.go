@@ -109,7 +109,7 @@ func (a *Tuple) Normalize() *Tuple {
 	}
 }
 
-// Dot returns the dot product of this vector with the providee vector
+// Dot returns the dot product of this vector with the provided vector
 func (a *Tuple) Dot(b *Tuple) float32 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
 }
