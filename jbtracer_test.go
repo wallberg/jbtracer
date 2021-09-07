@@ -126,6 +126,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
 	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionIndex)
+	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionObject)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 

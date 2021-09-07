@@ -48,3 +48,20 @@ func intersectionIndex(i1name string, index int, t float32) error {
 	}
 	return nil
 }
+
+func intersectionObject(i1name string, index int, sph1name string) error {
+	if i1, ok = intersections[i1name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
+	}
+	if sph1, ok = spheres[sph1name]; !ok {
+		return fmt.Errorf("Unknown symbol (sphere): %s", sph1name)
+	}
+	expected := sph1
+	var object = *(i1[index].object)
+	if got, ok := object.(*Sphere); ok {
+		if got != expected {
+			return fmt.Errorf("Expected %s[%d].object = %v; got %v", i1name, index, expected, got)
+		}
+	}
+	return nil
+}

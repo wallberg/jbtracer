@@ -7,26 +7,13 @@ import (
 type Sphere struct {
 }
 
-type Intersection struct {
-	sphere *Sphere
-	t      float32
-}
-
 // NewSphere creates a new Sphere
 func NewSphere() *Sphere {
 	return &Sphere{}
 }
 
-// NewIntersection creates a new Intersection
-func NewIntersection(sphere *Sphere, t float32) *Intersection {
-	return &Intersection{
-		sphere: sphere,
-		t:      t,
-	}
-}
-
-// Intersections returns the intersections of the provided
-// Sphere with a Ray
+// Intersections returns the intersections of the provided Ray
+// with the Sphere
 func (s *Sphere) Intersections(r *Ray) []*Intersection {
 	sphereToRay := r.origin.Subtract(NewPoint(0, 0, 0))
 	a := r.direction.Dot(r.direction)
@@ -43,12 +30,13 @@ func (s *Sphere) Intersections(r *Ray) []*Intersection {
 	t1 := (-1*b - discriminantRoot) / (2 * a)
 	t2 := (-1*b + discriminantRoot) / (2 * a)
 
+	var object Object = s
 	if t1 < t2 {
-		i = append(i, NewIntersection(s, t1))
-		i = append(i, NewIntersection(s, t2))
+		i = append(i, NewIntersection(&object, t1))
+		i = append(i, NewIntersection(&object, t2))
 	} else {
-		i = append(i, NewIntersection(s, t2))
-		i = append(i, NewIntersection(s, t1))
+		i = append(i, NewIntersection(&object, t2))
+		i = append(i, NewIntersection(&object, t1))
 
 	}
 	return i
