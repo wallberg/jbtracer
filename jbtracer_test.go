@@ -21,7 +21,8 @@ var (
 	s1, s2                float32
 	r1                    *Ray
 	sph1                  *Sphere
-	i1                    []*Intersection
+	i1, i2, i3, i4, i5    Intersections
+	o1                    *Object
 	ppm                   *PPM
 	ok                    bool
 	tuples                map[string]*Tuple
@@ -32,6 +33,7 @@ var (
 	rays                  map[string]*Ray
 	spheres               map[string]*Sphere
 	intersections         map[string][]*Intersection
+	objects               map[string]*Object
 )
 
 func init() {
@@ -125,8 +127,17 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← sphere\(\)$`, sphere)
 	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
-	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionIndex)
+	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionObject)
+
+	// intersections
+	ctx.Step(`^(\w+) ← intersection\((-?\d+(?:\.\d+)?), (\w+)\)$`, intersection)
+	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+)\)$`, intersectionConcat)
+	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+), (\w+), (\w+)\)$`, intersectionConcat4)
+	ctx.Step(`^(\w+)\[(\d+)\].t = (\w+)$`, intersectionT)
+	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
+	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
+	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
@@ -139,7 +150,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		rays = make(map[string]*Ray)
 		spheres = make(map[string]*Sphere)
 		intersections = make(map[string][]*Intersection)
-
+		objects = make(map[string]*Object)
 		c = nil
 		ppm = nil
 

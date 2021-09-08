@@ -1,15 +1,22 @@
 package jbtracer
 
 import (
+	"fmt"
 	"math"
 )
 
 type Sphere struct {
+	Radius float32
 }
 
 // NewSphere creates a new Sphere
 func NewSphere() *Sphere {
 	return &Sphere{}
+}
+
+// String returns a string representation of the Sphere
+func (a *Sphere) String() string {
+	return fmt.Sprintf("%+v", *a)
 }
 
 // Intersections returns the intersections of the provided Ray
