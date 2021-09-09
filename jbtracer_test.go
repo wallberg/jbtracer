@@ -19,7 +19,7 @@ var (
 	c                     *Canvas
 	m1, m2, m3            *Matrix
 	s1, s2                float32
-	r1                    *Ray
+	r1, r2                *Ray
 	sph1                  *Sphere
 	i1, i2, i3, i4, i5    Intersections
 	o1                    *Object
@@ -118,9 +118,14 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← shearing\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixShearing)
 	ctx.Step(`^(\w+) ← (\w+) \* tuple (\w+)$`, tupleMatrixAssign)
 	ctx.Step(`^(\w+) = tuple (\w+)$`, tupleEqual)
+
+	// rays
 	ctx.Step(`^(\w+) ← ray\((\w+), (\w+)\)$`, ray)
 	ctx.Step(`^(\w+)\.(origin|direction) = (\w+)$`, rayEqualField)
 	ctx.Step(`^position\((\w+), (-?\d+(?:\.\d+)?)\) = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayPositionEqualPoint)
+	ctx.Step(`^(\w+) ← transform\((\w+), (\w+)\)$`, transform)
+	ctx.Step(`(\w+)\.direction = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayEqualDirectionVector)
+	ctx.Step(`^(\w+)\.origin = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayEqualOriginPoint)
 
 	// spheres
 	ctx.Step(`^(\w+) ← ray\(point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\), vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, rayPointVector)

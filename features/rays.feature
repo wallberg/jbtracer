@@ -16,3 +16,18 @@ Scenario: Computing a point from a distance
     And position(r, -1) = point(1, 3, 4)
     And position(r, 2.5) = point(4.5, 3, 4)
 
+Scenario: Translating a ray
+  Given p ← point(1, 2, 3)
+    And v ← vector(0, 1, 0)
+    And r ← ray(p, v)
+    And m ← translation(3, 4, 5)
+  When r2 ← transform(r, m)
+  Then r2.origin = point(4, 6, 8)
+    And r2.direction = vector(0, 1, 0)
+
+Scenario: Scaling a ray
+  Given r ← ray(point(1, 2, 3), vector(0, 1, 0))
+    And m ← scaling(2, 3, 4)
+  When r2 ← transform(r, m)
+  Then r2.origin = point(2, 6, 12)
+    And r2.direction = vector(0, 3, 0)

@@ -62,6 +62,26 @@ func intersection(i1name string, t float32, o1name string) error {
 	return nil
 }
 
+func intersectionConcat4(i1name, i2name, i3name, i4name, i5name string) error {
+	if i2, ok = intersections[i2name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i2name)
+	}
+	if i3, ok = intersections[i3name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i3name)
+	}
+	if i4, ok = intersections[i4name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i4name)
+	}
+	if i5, ok = intersections[i5name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i5name)
+	}
+	is := append(i2, i3...)
+	is = append(is, i4...)
+	is = append(is, i5...)
+	intersections[i1name] = is
+	return nil
+}
+
 func intersectionConcat(i1name, i2name, i3name string) error {
 	if i2, ok = intersections[i2name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i2name)

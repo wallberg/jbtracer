@@ -20,3 +20,11 @@ func (a *Ray) String() string {
 func (a *Ray) Position(t float32) *Tuple {
 	return a.direction.Multiply(t).Add(a.origin)
 }
+
+// Transform transforms the Ray by the provided Matrix
+func (a *Ray) Transform(transform *Matrix) *Ray {
+	return NewRay(
+		transform.MultiplyTuple(a.origin),
+		transform.MultiplyTuple(a.direction),
+	)
+}

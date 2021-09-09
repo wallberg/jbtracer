@@ -43,3 +43,38 @@ func rayPositionEqualPoint(r1name string, t, x, y, z float32) error {
 	}
 	return nil
 }
+
+func transform(r1name, r2name, m1name string) error {
+	if r2, ok = rays[r2name]; !ok {
+		return fmt.Errorf("Unknown symbol (ray) %s", r2name)
+	}
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol (matrix) %s", m1name)
+	}
+	rays[r1name] = r2.Transform(m1)
+	return nil
+}
+
+func rayEqualOriginPoint(r1name string, x, y, z float32) error {
+	if r1, ok = rays[r1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", r1name)
+	}
+	expected := NewPoint(x, y, z)
+	got := r1.origin
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s.origin = %v; got %v", r1name, expected, got)
+	}
+	return nil
+}
+
+func rayEqualDirectionVector(r1name string, x, y, z float32) error {
+	if r1, ok = rays[r1name]; !ok {
+		return fmt.Errorf("Unknown symbol (ray) %s", r1name)
+	}
+	expected := NewVector(x, y, z)
+	got := r1.direction
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s.direction = %v; got %v", r1name, expected, got)
+	}
+	return nil
+}
