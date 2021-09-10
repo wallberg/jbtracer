@@ -2,16 +2,19 @@ package jbtracer
 
 import (
 	"fmt"
+	"log"
 	"math"
 )
 
 type Sphere struct {
-	Radius float32
+	Transform *Matrix
 }
 
 // NewSphere creates a new Sphere
 func NewSphere() *Sphere {
-	return &Sphere{}
+	return &Sphere{
+		Transform: IdentityMatrix(),
+	}
 }
 
 // String returns a string representation of the Sphere
@@ -22,6 +25,15 @@ func (a *Sphere) String() string {
 // Intersections returns the intersections of the provided Ray
 // with the Sphere
 func (s *Sphere) Intersections(r *Ray) []*Intersection {
+
+	// Instead of transforming the Sphere, apply the inverse
+	// of the transform to the Ray
+	if inv, err := s.Transform.Inverse(); err != nil {
+		log.Fatal(err)
+	} else {
+		r = r.Transform(inv)
+	}
+
 	sphereToRay := r.origin.Subtract(NewPoint(0, 0, 0))
 	a := r.direction.Dot(r.direction)
 	b := 2 * r.direction.Dot(sphereToRay)

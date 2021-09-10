@@ -143,6 +143,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
 	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
 	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
+	ctx.Step(`^(\w+)\.transform = (\w+)$`, sphereEqualTransform)
+	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, sphereTransform)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
