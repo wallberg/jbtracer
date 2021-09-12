@@ -60,3 +60,17 @@ func (s *Sphere) Intersections(r *Ray) []*Intersection {
 	}
 	return i
 }
+
+// NormalAt returns the surface normal to the sphere at the given Point.
+func (s *Sphere) NormalAt(worldPoint *Tuple) *Tuple {
+	transformInverse, err := s.Transform.Inverse()
+	if err != nil {
+		log.Fatalf("Matrix s.Transform=%v is not invertible", s.Transform)
+	}
+
+	objectPoint := transformInverse.MultiplyTuple(worldPoint)
+	objectNormal := objectPoint.Subtract(NewPoint(0, 0, 0))
+	worldNormal := transformInverse.Transpose().MultiplyTuple(objectNormal)
+	worldNormal.W = 0
+	return worldNormal.Normalize()
+}

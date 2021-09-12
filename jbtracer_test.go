@@ -93,6 +93,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^lines (\d+)-(\d+) of ppm are$`, linesOfPPM)
 	ctx.Step(`^every pixel of c is set to color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, assignCanvasAllColors)
 	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
+	ctx.Step(`^(\w+) = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, vectorEqual)
+	ctx.Step(`^(\w+) = normalize\((\w+)\)$`, tupleEqualNormalize)
 
 	// matrices
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
@@ -134,6 +136,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
 	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionObject)
+	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, sphereNormalAt)
 
 	// intersections
 	ctx.Step(`^(\w+) ← intersection\((-?\d+(?:\.\d+)?), (\w+)\)$`, intersection)

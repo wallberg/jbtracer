@@ -51,3 +51,13 @@ func sphereTransform(sph1name, m1name string) error {
 	return nil
 
 }
+
+func sphereNormalAt(t1name, sph1name string, x, y, z float32) error {
+	if sph1, ok = spheres[sph1name]; !ok {
+		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
+	}
+
+	tuples[t1name] = sph1.NormalAt(NewPoint(x, y, z))
+	return nil
+
+}

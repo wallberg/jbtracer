@@ -310,3 +310,30 @@ func equalsColorField(c1name string, field string, expected float32) error {
 	}
 	return nil
 }
+
+func vectorEqual(t1name string, x, y, z float32) error {
+	if t1, ok = tuples[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", t1name)
+	}
+	expected := NewVector(x, y, z)
+	got := t1
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s=%v; got %v", t1name, expected, got)
+	}
+	return nil
+}
+
+func tupleEqualNormalize(t1name, t2name string) error {
+	if t1, ok = tuples[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t1name)
+	}
+	if t2, ok = tuples[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t2name)
+	}
+	expected := t2.Normalize()
+	got := t1
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s=%v; got %v", t1name, expected, got)
+	}
+	return nil
+}
