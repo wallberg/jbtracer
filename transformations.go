@@ -30,8 +30,8 @@ func Scaling(x, y, z float64) *Matrix {
 // the provided radians
 func Rotation(axis int, radians float64) *Matrix {
 	a := IdentityMatrix()
-	sin := (float64)(math.Sin((float64)(radians)))
-	cos := (float64)(math.Cos((float64)(radians)))
+	sin := math.Sin(radians)
+	cos := math.Cos(radians)
 
 	switch axis {
 	case Axis_X:

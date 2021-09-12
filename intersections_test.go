@@ -31,7 +31,7 @@ func intersectionT(i1name string, index int, t float64) error {
 	}
 	expected := t
 	got := i1[index].t
-	if !EqualFloat32(got, expected) {
+	if !EqualFloat64(got, expected) {
 		return fmt.Errorf("Expected %s[%d].t = %f; got %f", i1name, index, expected, got)
 	}
 	return nil

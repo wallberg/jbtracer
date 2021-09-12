@@ -33,7 +33,7 @@ func (a *Matrix) Equal(b *Matrix) bool {
 		return false
 	}
 	for i, value := range a.cells {
-		if !EqualFloat32(b.cells[i], value) {
+		if !EqualFloat64(b.cells[i], value) {
 			return false
 		}
 	}
@@ -162,7 +162,7 @@ func (a *Matrix) Cofactor(i, j int) float64 {
 // is not invertible
 func (a *Matrix) Inverse() (*Matrix, error) {
 	d := a.Determinant()
-	if EqualFloat32(d, 0) {
+	if EqualFloat64(d, 0) {
 		return nil, fmt.Errorf("matrix is not invertible")
 	}
 

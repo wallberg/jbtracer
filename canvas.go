@@ -57,10 +57,10 @@ func (c *Canvas) NewPPM() *PPM {
 		for x := 0; x < c.Width; x++ {
 			color := c.Grid[x][y]
 			// Iteratve over RGB values of this pixel
-			for _, valueFloat32 := range []float64{color.Red, color.Green, color.Blue} {
+			for _, valueFloat := range []float64{color.Red, color.Green, color.Blue} {
 
 				// Scale the color value
-				valueInt := int(math.Round((float64)(valueFloat32 * 255)))
+				valueInt := int(math.Round(valueFloat * 255))
 
 				// Clamp to [0,255]
 				if valueInt < 0 {

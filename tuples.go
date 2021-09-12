@@ -26,7 +26,7 @@ func (a *Tuple) String() string {
 
 // IsPoint returns true if this Tuple is a point
 func (a *Tuple) IsPoint() bool {
-	return math.Abs((float64)(a.W)-1.0) < Epsilon
+	return math.Abs(a.W-1.0) < Epsilon
 }
 
 // IsVector returns true if this Tuple is a vector
@@ -36,7 +36,7 @@ func (a *Tuple) IsVector() bool {
 
 // Equal determines if two Tuples are the same
 func (a *Tuple) Equal(b *Tuple) bool {
-	return EqualFloat32(a.X, b.X) && EqualFloat32(a.Y, b.Y) && EqualFloat32(a.Z, b.Z) && EqualFloat32(a.W, b.W)
+	return EqualFloat64(a.X, b.X) && EqualFloat64(a.Y, b.Y) && EqualFloat64(a.Z, b.Z) && EqualFloat64(a.W, b.W)
 }
 
 // Add adds one tuple to another
@@ -91,11 +91,7 @@ func (a *Tuple) Divide(scalar float64) *Tuple {
 
 // Magnitude returns the magnitude (or length) of the tuple
 func (a *Tuple) Magnitude() float64 {
-	x := (float64)(a.X)
-	y := (float64)(a.Y)
-	z := (float64)(a.Z)
-	w := (float64)(a.W)
-	return (float64)(math.Sqrt(x*x + y*y + z*z + w*w))
+	return math.Sqrt(a.X*a.X + a.Y*a.Y + a.Z*a.Z + a.W*a.W)
 }
 
 // Normalize returns a normalized unit vector
@@ -123,9 +119,9 @@ func (a *Tuple) Cross(b *Tuple) *Tuple {
 	)
 }
 
-// EqualFloat determines if two float64 values are the within Epsilon of each other
-func EqualFloat32(a, b float64) bool {
-	return math.Abs((float64)(a)-(float64)(b)) < Epsilon
+// EqualFloat64 determines if two float64 values are the within Epsilon of each other
+func EqualFloat64(a, b float64) bool {
+	return math.Abs(a-b) < Epsilon
 }
 
 // NewPoint creates a new Tuple of type point
@@ -158,7 +154,7 @@ type Color struct {
 
 // Equal determines if two Colors are the same
 func (a *Color) Equal(b *Color) bool {
-	return EqualFloat32(a.Red, b.Red) && EqualFloat32(a.Green, b.Green) && EqualFloat32(a.Blue, b.Blue)
+	return EqualFloat64(a.Red, b.Red) && EqualFloat64(a.Green, b.Green) && EqualFloat64(a.Blue, b.Blue)
 }
 
 // Add adds one Color to another

@@ -2,7 +2,6 @@ package jbtracer
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 )
 
@@ -187,7 +186,7 @@ func equalsTupleMagnitude(t1name string, expected float64) error {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	got := t1.Magnitude()
-	if math.Abs((float64)(got)-(float64)(expected)) >= Epsilon {
+	if !EqualFloat64(got, expected) {
 		return fmt.Errorf("Expected %s=%f; got %f", t1name, expected, got)
 	}
 	return nil
@@ -256,9 +255,9 @@ func equalsColorOp(c1name string, op string, c2name string, red, green, blue flo
 	var scalar float64
 	if c2, ok = colors[c2name]; !ok {
 		// Not a known symbol, see if this is a scalar
-		if f, err := strconv.ParseFloat(c2name, 32); err == nil {
+		if f, err := strconv.ParseFloat(c2name, 64); err == nil {
 			// It's a scalar
-			scalar = (float64)(f)
+			scalar = f
 			if op != "*" {
 				return fmt.Errorf("Can't perform %s operation on scalar", op)
 			}

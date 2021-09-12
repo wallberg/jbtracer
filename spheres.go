@@ -45,7 +45,7 @@ func (s *Sphere) Intersections(r *Ray) []*Intersection {
 		return i
 	}
 
-	discriminantRoot := (float64)(math.Sqrt((float64)(discriminant)))
+	discriminantRoot := math.Sqrt(discriminant)
 	t1 := (-1*b - discriminantRoot) / (2 * a)
 	t2 := (-1*b + discriminantRoot) / (2 * a)
 

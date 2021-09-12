@@ -30,7 +30,7 @@ func (a *Intersection) Equal(b *Intersection) bool {
 		return false
 	} else if a.object != b.object {
 		return false
-	} else if !EqualFloat32(a.t, b.t) {
+	} else if !EqualFloat64(a.t, b.t) {
 		return false
 	}
 	return true
