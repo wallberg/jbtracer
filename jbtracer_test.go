@@ -18,7 +18,7 @@ var (
 	c1, c2                *Color
 	c                     *Canvas
 	m1, m2, m3            *Matrix
-	s1, s2                float32
+	s1, s2                float64
 	r1, r2                *Ray
 	sph1                  *Sphere
 	i1, i2, i3, i4, i5    Intersections
@@ -29,7 +29,7 @@ var (
 	colors                map[string]*Color
 	matrices              map[string]*Matrix
 	identityMatrix        *Matrix
-	scalars               map[string]float32
+	scalars               map[string]float64
 	rays                  map[string]*Ray
 	spheres               map[string]*Sphere
 	intersections         map[string][]*Intersection
@@ -156,7 +156,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		colors = make(map[string]*Color)
 		matrices = make(map[string]*Matrix)
 		matrices["identity_matrix"] = identityMatrix
-		scalars = make(map[string]float32)
+		scalars = make(map[string]float64)
 		rays = make(map[string]*Ray)
 		spheres = make(map[string]*Sphere)
 		intersections = make(map[string][]*Intersection)

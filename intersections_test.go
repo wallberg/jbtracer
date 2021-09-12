@@ -25,7 +25,7 @@ func intersectionCount(i1name string, count int) error {
 	return nil
 }
 
-func intersectionT(i1name string, index int, t float32) error {
+func intersectionT(i1name string, index int, t float64) error {
 	if i1, ok = intersections[i1name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
 	}
@@ -54,7 +54,7 @@ func intersectionObject(i1name string, index int, sph1name string) error {
 	return nil
 }
 
-func intersection(i1name string, t float32, o1name string) error {
+func intersection(i1name string, t float64, o1name string) error {
 	if o1, ok = objects[o1name]; !ok {
 		return fmt.Errorf("Unknown symbol (object) %s", o1name)
 	}

@@ -2,7 +2,7 @@ package jbtracer
 
 import "fmt"
 
-func rayPointVector(r1name string, xp, yp, zp, xv, yv, zv float32) error {
+func rayPointVector(r1name string, xp, yp, zp, xv, yv, zv float64) error {
 	p := NewPoint(xp, yp, zp)
 	v := NewVector(xv, yv, zv)
 	rays[r1name] = NewRay(p, v)
@@ -52,7 +52,7 @@ func sphereTransform(sph1name, m1name string) error {
 
 }
 
-func sphereNormalAt(t1name, sph1name string, x, y, z float32) error {
+func sphereNormalAt(t1name, sph1name string, x, y, z float64) error {
 	if sph1, ok = spheres[sph1name]; !ok {
 		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
 	}

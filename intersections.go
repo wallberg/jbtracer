@@ -6,13 +6,13 @@ import (
 
 type Intersection struct {
 	object *Object
-	t      float32
+	t      float64
 }
 
 type Intersections []*Intersection
 
 // NewIntersection creates a new Intersection
-func NewIntersection(object *Object, t float32) *Intersection {
+func NewIntersection(object *Object, t float64) *Intersection {
 	return &Intersection{
 		object: object,
 		t:      t,

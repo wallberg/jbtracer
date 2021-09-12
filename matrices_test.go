@@ -20,7 +20,7 @@ func tableToMatrix(table *godog.Table) (*Matrix, error) {
 			if f, err := strconv.ParseFloat(col.Value, 32); err != nil {
 				return nil, err
 			} else {
-				m.Set(i, j, (float32)(f))
+				m.Set(i, j, (float64)(f))
 			}
 		}
 	}
@@ -39,7 +39,7 @@ func matrix(m1name string, table *godog.Table) error {
 	return nil
 }
 
-func matrixCellEqual(m1name string, i, j int, expected float32) error {
+func matrixCellEqual(m1name string, i, j int, expected float64) error {
 	if m1, ok = matrices[m1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
@@ -140,7 +140,7 @@ func matrixDeterminant(s1name, m1name string) error {
 	return nil
 }
 
-func scalar(s1name string, value float32) error {
+func scalar(s1name string, value float64) error {
 	scalars[s1name] = value
 	return nil
 }
@@ -153,7 +153,7 @@ func scalarEqual(s1name, s2name string) error {
 		if f, err := strconv.ParseFloat(s2name, 32); err != nil {
 			return fmt.Errorf("Unknown symbol %s", s2name)
 		} else {
-			s2 = (float32)(f)
+			s2 = (float64)(f)
 		}
 	}
 
