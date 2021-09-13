@@ -128,6 +128,11 @@ func EqualFloat32(a, b float32) bool {
 	return math.Abs((float64)(a)-(float64)(b)) < Epsilon
 }
 
+// Reflect reflects vector v around the normal n
+func (v *Tuple) Reflect(n *Tuple) *Tuple {
+	return v.Subtract(n.Multiply(2 * v.Dot(n)))
+}
+
 // NewPoint creates a new Tuple of type point
 func NewPoint(X, Y, Z float32) *Tuple {
 	point := &Tuple{

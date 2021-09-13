@@ -14,27 +14,27 @@ import (
 var opts = godog.Options{Output: godogcolors.Colored(os.Stdout)}
 
 var (
-	t1, t2, expected, got *Tuple
-	c1, c2                *Color
-	c                     *Canvas
-	m1, m2, m3            *Matrix
-	s1, s2                float32
-	r1, r2                *Ray
-	sph1                  *Sphere
-	i1, i2, i3, i4, i5    Intersections
-	o1                    *Object
-	ppm                   *PPM
-	ok                    bool
-	tuples                map[string]*Tuple
-	colors                map[string]*Color
-	matrices              map[string]*Matrix
-	identityMatrix        *Matrix
-	scalars               map[string]float32
-	rays                  map[string]*Ray
-	spheres               map[string]*Sphere
-	intersections         map[string][]*Intersection
-	objects               map[string]*Object
-	light                 *PointLight
+	t1, t2, t3, expected, got *Tuple
+	c1, c2                    *Color
+	c                         *Canvas
+	m1, m2, m3                *Matrix
+	s1, s2                    float32
+	r1, r2                    *Ray
+	sph1                      *Sphere
+	i1, i2, i3, i4, i5        Intersections
+	o1                        *Object
+	ppm                       *PPM
+	ok                        bool
+	tuples                    map[string]*Tuple
+	colors                    map[string]*Color
+	matrices                  map[string]*Matrix
+	identityMatrix            *Matrix
+	scalars                   map[string]float32
+	rays                      map[string]*Ray
+	spheres                   map[string]*Sphere
+	intersections             map[string][]*Intersection
+	objects                   map[string]*Object
+	light                     *PointLight
 )
 
 func init() {
@@ -96,6 +96,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^ppm ends with a newline character$`, ppmEndsWithANewlineCharacter)
 	ctx.Step(`^(\w+) = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, vectorEqual)
 	ctx.Step(`^(\w+) = normalize\((\w+)\)$`, tupleEqualNormalize)
+	ctx.Step(`^(\w+) ← reflect\((\w+), (\w+)\)$`, vectorReflect)
 
 	// matrices
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)

@@ -337,3 +337,14 @@ func tupleEqualNormalize(t1name, t2name string) error {
 	}
 	return nil
 }
+
+func vectorReflect(t1name, t2name, t3name string) error {
+	if t2, ok = tuples[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t2name)
+	}
+	if t3, ok = tuples[t3name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t3name)
+	}
+	tuples[t1name] = t2.Reflect(t3)
+	return nil
+}
