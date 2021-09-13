@@ -34,6 +34,7 @@ var (
 	spheres               map[string]*Sphere
 	intersections         map[string][]*Intersection
 	objects               map[string]*Object
+	light                 *PointLight
 )
 
 func init() {
@@ -149,6 +150,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.transform = (\w+)$`, sphereEqualTransform)
 	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, sphereTransform)
 
+	// lights
+	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
+	ctx.Step(`^light\.intensity = (\w+)$`, pointLightIntensity)
+	ctx.Step(`^light\.position = (\w+)$`, pointLightPosition)
+
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
 		// Reset values before each scenario
@@ -161,6 +167,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		spheres = make(map[string]*Sphere)
 		intersections = make(map[string][]*Intersection)
 		objects = make(map[string]*Object)
+		light = nil
 		c = nil
 		ppm = nil
 
