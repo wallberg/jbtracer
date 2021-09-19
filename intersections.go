@@ -5,8 +5,8 @@ import (
 )
 
 type Intersection struct {
-	object *Object
-	t      float32
+	Object *Object
+	T      float32
 }
 
 type Intersections []*Intersection
@@ -14,8 +14,8 @@ type Intersections []*Intersection
 // NewIntersection creates a new Intersection
 func NewIntersection(object *Object, t float32) *Intersection {
 	return &Intersection{
-		object: object,
-		t:      t,
+		Object: object,
+		T:      t,
 	}
 }
 
@@ -28,9 +28,9 @@ func (a *Intersection) String() string {
 func (a *Intersection) Equal(b *Intersection) bool {
 	if a == nil || b == nil {
 		return false
-	} else if a.object != b.object {
+	} else if a.Object != b.Object {
 		return false
-	} else if !EqualFloat32(a.t, b.t) {
+	} else if !EqualFloat32(a.T, b.T) {
 		return false
 	}
 	return true
@@ -45,7 +45,7 @@ func (a *Intersections) String() string {
 func (is Intersections) Hit() *Intersection {
 	var hit *Intersection
 	for _, i := range is {
-		if i.t > 0 && (hit == nil || i.t < hit.t) {
+		if i.T > 0 && (hit == nil || i.T < hit.T) {
 			hit = i
 		}
 	}

@@ -21,12 +21,12 @@ func rayEqualField(r1name, op, t1name string) error {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	if op == "origin" {
-		if !r1.origin.Equal(t1) {
-			return fmt.Errorf("Expected %s.origin = %v; got %v", r1name, t1, r1.origin)
+		if !r1.Origin.Equal(t1) {
+			return fmt.Errorf("Expected %s.origin = %v; got %v", r1name, t1, r1.Origin)
 		}
 	} else {
-		if !r1.direction.Equal(t1) {
-			return fmt.Errorf("Expected %s.direction = %v; got %v", r1name, t1, r1.direction)
+		if !r1.Direction.Equal(t1) {
+			return fmt.Errorf("Expected %s.direction = %v; got %v", r1name, t1, r1.Direction)
 		}
 	}
 	return nil
@@ -60,7 +60,7 @@ func rayEqualOriginPoint(r1name string, x, y, z float32) error {
 		return fmt.Errorf("Unknown symbol %s", r1name)
 	}
 	expected := NewPoint(x, y, z)
-	got := r1.origin
+	got := r1.Origin
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected %s.origin = %v; got %v", r1name, expected, got)
 	}
@@ -72,7 +72,7 @@ func rayEqualDirectionVector(r1name string, x, y, z float32) error {
 		return fmt.Errorf("Unknown symbol (ray) %s", r1name)
 	}
 	expected := NewVector(x, y, z)
-	got := r1.direction
+	got := r1.Direction
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected %s.direction = %v; got %v", r1name, expected, got)
 	}

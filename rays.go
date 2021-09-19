@@ -3,28 +3,29 @@ package jbtracer
 import "fmt"
 
 type Ray struct {
-	origin, direction *Tuple
+	Origin, Direction *Tuple
 }
 
 func NewRay(origin, direction *Tuple) *Ray {
 	return &Ray{
-		origin:    origin,
-		direction: direction,
+		Origin:    origin,
+		Direction: direction,
 	}
 }
 
 func (a *Ray) String() string {
-	return fmt.Sprintf("origin=%v, direction=%v", a.origin, a.direction)
+	return fmt.Sprintf("origin=%v, direction=%v", a.Origin, a.Direction)
 }
 
+// Position returns the Point at time t along the Ray
 func (a *Ray) Position(t float32) *Tuple {
-	return a.direction.Multiply(t).Add(a.origin)
+	return a.Direction.Multiply(t).Add(a.Origin)
 }
 
 // Transform transforms the Ray by the provided Matrix
 func (a *Ray) Transform(transform *Matrix) *Ray {
 	return NewRay(
-		transform.MultiplyTuple(a.origin),
-		transform.MultiplyTuple(a.direction),
+		transform.MultiplyTuple(a.Origin),
+		transform.MultiplyTuple(a.Direction),
 	)
 }

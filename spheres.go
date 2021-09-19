@@ -8,20 +8,30 @@ import (
 
 type Sphere struct {
 	Transform *Matrix
-	Material  *Material
+	material  *Material
 }
 
 // NewSphere creates a new Sphere
 func NewSphere() *Sphere {
 	return &Sphere{
 		Transform: IdentityMatrix(),
-		Material:  NewMaterial(),
+		material:  NewMaterial(),
 	}
 }
 
 // String returns a string representation of the Sphere
 func (a *Sphere) String() string {
 	return fmt.Sprintf("%+v", *a)
+}
+
+// Material returns the material for this Sphere
+func (a *Sphere) Material() *Material {
+	return a.material
+}
+
+// SetMaterial sets the material for this Sphere
+func (a *Sphere) SetMaterial(material *Material) {
+	a.material = material
 }
 
 // Intersections returns the intersections of the provided Ray
@@ -36,9 +46,9 @@ func (s *Sphere) Intersections(r *Ray) []*Intersection {
 		r = r.Transform(inv)
 	}
 
-	sphereToRay := r.origin.Subtract(NewPoint(0, 0, 0))
-	a := r.direction.Dot(r.direction)
-	b := 2 * r.direction.Dot(sphereToRay)
+	sphereToRay := r.Origin.Subtract(NewPoint(0, 0, 0))
+	a := r.Direction.Dot(r.Direction)
+	b := 2 * r.Direction.Dot(sphereToRay)
 	c := sphereToRay.Dot(sphereToRay) - 1
 	discriminant := b*b - 4*a*c
 

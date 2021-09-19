@@ -30,7 +30,7 @@ func intersectionT(i1name string, index int, t float32) error {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
 	}
 	expected := t
-	got := i1[index].t
+	got := i1[index].T
 	if !EqualFloat32(got, expected) {
 		return fmt.Errorf("Expected %s[%d].t = %f; got %f", i1name, index, expected, got)
 	}
@@ -45,7 +45,7 @@ func intersectionObject(i1name string, index int, sph1name string) error {
 		return fmt.Errorf("Unknown symbol (sphere): %s", sph1name)
 	}
 	expected := sph1
-	var object = *(i1[index].object)
+	var object = *(i1[index].Object)
 	if got, ok := object.(*Sphere); ok {
 		if got != expected {
 			return fmt.Errorf("Expected %s[%d].object = %v; got %v", i1name, index, expected, got)
