@@ -23,6 +23,7 @@ var (
 	sph1                      *Sphere
 	i1, i2, i3, i4, i5        Intersections
 	o1                        *Object
+	mat1, mat2                *Material
 	ppm                       *PPM
 	ok                        bool
 	tuples                    map[string]*Tuple
@@ -35,6 +36,7 @@ var (
 	intersections             map[string][]*Intersection
 	objects                   map[string]*Object
 	light                     *PointLight
+	materials                 map[string]*Material
 )
 
 func init() {
@@ -97,6 +99,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, vectorEqual)
 	ctx.Step(`^(\w+) = normalize\((\w+)\)$`, tupleEqualNormalize)
 	ctx.Step(`^(\w+) ← reflect\((\w+), (\w+)\)$`, vectorReflect)
+	ctx.Step(`^(\w+) = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, colorEqual)
 
 	// matrices
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
@@ -139,6 +142,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, sphereNormalAt)
+	ctx.Step(`^(\w+) ← (\w+)\.material$`, sphereMaterial)
+	ctx.Step(`^(\w+)\.material ← (\w+)$`, sphereMaterial2)
 
 	// intersections
 	ctx.Step(`^(\w+) ← intersection\((-?\d+(?:\.\d+)?), (\w+)\)$`, intersection)
@@ -155,6 +160,18 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
 	ctx.Step(`^light\.intensity = (\w+)$`, pointLightIntensity)
 	ctx.Step(`^light\.position = (\w+)$`, pointLightPosition)
+	ctx.Step(`^light ← point_light\(point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\), color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, pointLight2)
+
+	// materials
+	ctx.Step(`^(\w+) ← material\(\)$`, material)
+	ctx.Step(`^(\w+)\.color = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, materialEqualColor)
+	ctx.Step(`^(\w+)\.ambient = (-?\d+(?:\.\d+)?)$`, materialEqualAmbient)
+	ctx.Step(`^(\w+)\.diffuse = (-?\d+(?:\.\d+)?)$`, materialEqualDiffuse)
+	ctx.Step(`^(\w+)\.shininess = (-?\d+(?:\.\d+)?)$`, materialEqualShininess)
+	ctx.Step(`^(\w+)\.specular = (-?\d+(?:\.\d+)?)$`, materialEqualSpecular)
+	ctx.Step(`^(\w+) = material (\w+)$`, materialEqual)
+	ctx.Step(`^(\w+)\.ambient ← (-?\d+(?:\.\d+)?)$`, materialAmbient)
+	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+)\)$`, lighting)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
@@ -171,7 +188,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		light = nil
 		c = nil
 		ppm = nil
-
+		materials = make(map[string]*Material)
 		return ctx, nil
 	})
 }

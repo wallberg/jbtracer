@@ -118,3 +118,23 @@ Scenario: Computing the normal on a transformed sphere
   When n ← normal_at(s, point(0, 0.707106, -0.707106))
   Then n = vector(0, 0.97014, -0.24254)
 
+Scenario: A sphere has a default material
+  Given s ← sphere()
+  When m1 ← s.material
+    And m2 ← material()
+  Then m1 = material m2
+
+Scenario: A sphere may be assigned a material
+  Given s ← sphere()
+    And m ← material()
+    And m.ambient ← 1
+  When s.material ← m
+    And m2 ← s.material
+  Then m = material m2
+
+# Scenario: A helper for producing a sphere with a glassy material
+#   Given s ← glass_sphere()
+#   Then s.transform = identity_matrix
+#     And s.material.transparency = 1.0
+#     And s.material.refractive_index = 1.5
+

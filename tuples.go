@@ -161,6 +161,19 @@ type Color struct {
 	Red, Green, Blue float32
 }
 
+var (
+	Black *Color = &Color{0, 0, 0}
+	White *Color = &Color{1, 1, 1}
+)
+
+func NewColor(red, green, blue float32) *Color {
+	return &Color{
+		Red:   red,
+		Green: green,
+		Blue:  blue,
+	}
+}
+
 // Equal determines if two Colors are the same
 func (a *Color) Equal(b *Color) bool {
 	return EqualFloat32(a.Red, b.Red) && EqualFloat32(a.Green, b.Green) && EqualFloat32(a.Blue, b.Blue)

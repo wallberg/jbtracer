@@ -311,6 +311,18 @@ func equalsColorField(c1name string, field string, expected float32) error {
 	return nil
 }
 
+func colorEqual(c1name string, red, green, blue float32) error {
+	if c1, ok = colors[c1name]; !ok {
+		return fmt.Errorf("Unknown symbol (color) %s", c1name)
+	}
+	expected := &Color{red, green, blue}
+	got := c1
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s = %v; got %v", c1name, expected, got)
+	}
+	return nil
+}
+
 func vectorEqual(t1name string, x, y, z float32) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)

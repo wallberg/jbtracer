@@ -8,12 +8,14 @@ import (
 
 type Sphere struct {
 	Transform *Matrix
+	Material  *Material
 }
 
 // NewSphere creates a new Sphere
 func NewSphere() *Sphere {
 	return &Sphere{
 		Transform: IdentityMatrix(),
+		Material:  NewMaterial(),
 	}
 }
 

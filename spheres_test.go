@@ -61,3 +61,22 @@ func sphereNormalAt(t1name, sph1name string, x, y, z float32) error {
 	return nil
 
 }
+
+func sphereMaterial(mat1name, sph1name string) error {
+	if sph1, ok = spheres[sph1name]; !ok {
+		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
+	}
+	materials[mat1name] = sph1.Material
+	return nil
+}
+
+func sphereMaterial2(sph1name, mat1name string) error {
+	if sph1, ok = spheres[sph1name]; !ok {
+		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
+	}
+	if mat1, ok = materials[mat1name]; !ok {
+		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
+	}
+	sph1.Material = mat1
+	return nil
+}

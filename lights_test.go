@@ -36,3 +36,10 @@ func pointLightPosition(t1name string) error {
 	}
 	return nil
 }
+
+func pointLight2(x, y, z, red, green, blue float32) error {
+	c1 = &Color{red, green, blue}
+	t1 = NewPoint(x, y, z)
+	light = NewPointLight(c1, t1)
+	return nil
+}
