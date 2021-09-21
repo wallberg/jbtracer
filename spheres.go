@@ -25,8 +25,12 @@ func (a *Sphere) String() string {
 }
 
 // Equal returns whether the two Spheres are the same
-func (a *Sphere) Equal(b *Sphere) bool {
-	return a != nil && b != nil && a.Transform.Equal(b.Transform) && a.material.Equal(b.material)
+func (a *Sphere) Equal(b Object) bool {
+	if sb, ok := b.(*Sphere); !ok {
+		return false
+	} else {
+		return a != nil && sb != nil && a.Transform.Equal(sb.Transform) && a.material.Equal(sb.material)
+	}
 }
 
 // Material returns the material for this Sphere
@@ -66,13 +70,12 @@ func (s *Sphere) Intersections(r *Ray) []*Intersection {
 	t1 := (-1*b - discriminantRoot) / (2 * a)
 	t2 := (-1*b + discriminantRoot) / (2 * a)
 
-	var object Object = s
 	if t1 < t2 {
-		i = append(i, NewIntersection(&object, t1))
-		i = append(i, NewIntersection(&object, t2))
+		i = append(i, NewIntersection(s, t1))
+		i = append(i, NewIntersection(s, t2))
 	} else {
-		i = append(i, NewIntersection(&object, t2))
-		i = append(i, NewIntersection(&object, t1))
+		i = append(i, NewIntersection(s, t2))
+		i = append(i, NewIntersection(s, t1))
 
 	}
 	return i

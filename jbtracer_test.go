@@ -22,7 +22,7 @@ var (
 	r1, r2                    *Ray
 	sph1                      *Sphere
 	i1, i2, i3, i4, i5        Intersections
-	o1                        *Object
+	o1                        Object
 	mat1, mat2                *Material
 	ppm                       *PPM
 	ok                        bool
@@ -34,7 +34,7 @@ var (
 	rays                      map[string]*Ray
 	spheres                   map[string]*Sphere
 	intersections             map[string][]*Intersection
-	objects                   map[string]*Object
+	objects                   map[string]Object
 	light                     *PointLight
 	materials                 map[string]*Material
 	w                         *World
@@ -140,7 +140,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← sphere\(\)$`, sphere)
 	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
-	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionObject)
+	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionsObject)
 	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, sphereNormalAt)
 	ctx.Step(`^(\w+) ← (\w+)\.material$`, sphereMaterial)
 	ctx.Step(`^(\w+)\.material ← (\w+)$`, sphereMaterial2)
@@ -150,7 +150,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← intersection\((-?\d+(?:\.\d+)?), (\w+)\)$`, intersection)
 	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+)\)$`, intersectionConcat)
 	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+), (\w+), (\w+)\)$`, intersectionConcat4)
-	ctx.Step(`^(\w+)\[(\d+)\](?:\.t)? = (-?\d+(?:\.\d+)?)$`, intersectionT)
+	ctx.Step(`^(\w+)\[(\d+)\](?:\.t)? = (-?\d+(?:\.\d+)?)$`, intersectionsT)
 	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
 	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
 	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
@@ -194,7 +194,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		rays = make(map[string]*Ray)
 		spheres = make(map[string]*Sphere)
 		intersections = make(map[string][]*Intersection)
-		objects = make(map[string]*Object)
+		objects = make(map[string]Object)
 		light = nil
 		c = nil
 		ppm = nil

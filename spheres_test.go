@@ -18,9 +18,7 @@ func rayPointVector(r1name string, xp, yp, zp, xv, yv, zv float32) error {
 func sphere(s1name string) error {
 	sph1 = NewSphere()
 	spheres[s1name] = sph1
-
-	var object Object = sph1
-	objects[s1name] = &object
+	objects[s1name] = sph1
 
 	return nil
 }

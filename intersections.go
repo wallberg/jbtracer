@@ -5,14 +5,14 @@ import (
 )
 
 type Intersection struct {
-	Object *Object
+	Object Object
 	T      float32
 }
 
 type Intersections []*Intersection
 
 // NewIntersection creates a new Intersection
-func NewIntersection(object *Object, t float32) *Intersection {
+func NewIntersection(object Object, t float32) *Intersection {
 	return &Intersection{
 		Object: object,
 		T:      t,
