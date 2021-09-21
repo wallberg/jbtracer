@@ -156,6 +156,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
 	ctx.Step(`^(\w+)\.transform = (\w+)$`, sphereEqualTransform)
 	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, sphereTransform)
+	ctx.Step(`^(\w+)\.object = (\w+)$`, intersectionObject)
+	ctx.Step(`^(\w+)\.t = (-?\d+(?:\.\d+)?)$`, intersectionT)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
