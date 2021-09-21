@@ -37,6 +37,7 @@ var (
 	objects                   map[string]*Object
 	light                     *PointLight
 	materials                 map[string]*Material
+	w                         *World
 )
 
 func init() {
@@ -139,17 +140,17 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← sphere\(\)$`, sphere)
 	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
-	ctx.Step(`^(\w+)\[(\d+)\] = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, sphereNormalAt)
 	ctx.Step(`^(\w+) ← (\w+)\.material$`, sphereMaterial)
 	ctx.Step(`^(\w+)\.material ← (\w+)$`, sphereMaterial2)
+	ctx.Step(`^(\w+) ← sphere\(\) with:$`, sphereWith)
 
 	// intersections
 	ctx.Step(`^(\w+) ← intersection\((-?\d+(?:\.\d+)?), (\w+)\)$`, intersection)
 	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+)\)$`, intersectionConcat)
 	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+), (\w+), (\w+)\)$`, intersectionConcat4)
-	ctx.Step(`^(\w+)\[(\d+)\].t = (\w+)$`, intersectionT)
+	ctx.Step(`^(\w+)\[(\d+)\](?:\.t)? = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
 	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
 	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
@@ -173,6 +174,15 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.ambient ← (-?\d+(?:\.\d+)?)$`, materialAmbient)
 	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+)\)$`, lighting)
 
+	// world
+	ctx.Step(`^w ← world\(\)$`, world)
+	ctx.Step(`^w contains no objects$`, worldContainsNoObjects)
+	ctx.Step(`^w has no light source$`, worldHasNoLightSource)
+	ctx.Step(`^w ← default_world\(\)$`, worldDefault)
+	ctx.Step(`^w contains (\w+)$`, worldContainsSphere)
+	ctx.Step(`^w\.light = light$`, worldLight)
+	ctx.Step(`^(\w+) ← intersect_world\(w, (\w+)\)$`, worldIntersect)
+
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
 		// Reset values before each scenario
@@ -189,6 +199,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		c = nil
 		ppm = nil
 		materials = make(map[string]*Material)
+		w = nil
 		return ctx, nil
 	})
 }

@@ -24,6 +24,11 @@ func (a *Sphere) String() string {
 	return fmt.Sprintf("%+v", *a)
 }
 
+// Equal returns whether the two Spheres are the same
+func (a *Sphere) Equal(b *Sphere) bool {
+	return a != nil && b != nil && a.Transform.Equal(b.Transform) && a.material.Equal(b.material)
+}
+
 // Material returns the material for this Sphere
 func (a *Sphere) Material() *Material {
 	return a.material

@@ -11,3 +11,7 @@ func NewPointLight(intensity *Color, position *Tuple) *PointLight {
 		Position:  position,
 	}
 }
+
+func (a *PointLight) Equal(b *PointLight) bool {
+	return a != nil && b != nil && a.Intensity.Equal(b.Intensity) && a.Position.Equal(b.Position)
+}
