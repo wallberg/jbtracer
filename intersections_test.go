@@ -198,3 +198,12 @@ func compEqualNormalV(x, y, z float32) error {
 	}
 	return nil
 }
+
+func compEqualInside(bool string) error {
+	expected := (bool == "true")
+	got := comps.Inside
+	if got != expected {
+		return fmt.Errorf("Expected comps.inside = %v; got %v", expected, got)
+	}
+	return nil
+}

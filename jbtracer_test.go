@@ -165,6 +165,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^comps\.point = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualPoint)
 	ctx.Step(`^comps\.eyev = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualEyeV)
 	ctx.Step(`^comps\.normalv = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualNormalV)
+	ctx.Step(`^comps\.inside = (true|false)$`, compEqualInside)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)

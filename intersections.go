@@ -17,6 +17,7 @@ type PreparedComputations struct {
 	Point   *Tuple
 	EyeV    *Tuple
 	NormalV *Tuple
+	Inside  bool
 }
 
 // NewIntersection creates a new Intersection
@@ -50,13 +51,20 @@ func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
 
 	Point := r.Position(i.T)
 
-	return &PreparedComputations{
+	comps := &PreparedComputations{
 		T:       i.T,
 		Object:  i.Object,
 		Point:   Point,
 		EyeV:    r.Direction.Multiply(-1),
 		NormalV: i.Object.NormalAt(Point),
 	}
+
+	if comps.NormalV.Dot(comps.EyeV) < 0 {
+		comps.Inside = true
+		comps.NormalV = comps.NormalV.Multiply(-1)
+	}
+
+	return comps
 }
 
 // String returns a string representation of the Intersection
