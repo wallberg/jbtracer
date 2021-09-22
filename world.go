@@ -20,13 +20,13 @@ func DefaultWorld() *World {
 	w.Light = NewPointLight(White, NewPoint(-10, 10, -10))
 
 	s := NewSphere()
-	s.Transform = Scaling(0.5, 0.5, 0.5)
-	w.AddObject(s)
-
-	s = NewSphere()
 	s.material.Color = NewColor(0.8, 1.0, 0.6)
 	s.material.Diffuse = 0.7
 	s.material.Specular = 0.2
+	w.AddObject(s)
+
+	s = NewSphere()
+	s.Transform = Scaling(0.5, 0.5, 0.5)
 	w.AddObject(s)
 
 	return w
@@ -39,7 +39,7 @@ func (w *World) AddObject(object Object) {
 
 // Intersections returns intersections of the Ray with every object
 // in the World, sorted in ascending Ray.T order
-func (w *World) Intersections(r *Ray) []*Intersection {
+func (w *World) Intersections(r *Ray) Intersections {
 
 	// Accumulate all of the intersections
 	is := make([]*Intersection, 0)
@@ -53,4 +53,32 @@ func (w *World) Intersections(r *Ray) []*Intersection {
 	})
 
 	return is
+}
+
+// ShadeHit returns the Color at the Intersection encapsulated by a PreparedComputations
+// in the given World
+func (w *World) ShadeHit(comps *PreparedComputations) *Color {
+	return comps.Object.Material().Lighting(
+		w.Light,
+		comps.Point,
+		comps.EyeV,
+		comps.NormalV,
+	)
+}
+
+// ColorAt returns the Color at the Point where the provided ray
+// intersects this World
+func (w *World) ColorAt(r *Ray) *Color {
+
+	// Get the intersections with the World
+	xs := w.Intersections(r)
+
+	// Get the hit
+	if hit := xs.Hit(); hit == nil {
+		return Black
+	} else {
+		// Return the Color at the intersection
+		comps := hit.PreparedComputations(r)
+		return w.ShadeHit(comps)
+	}
 }

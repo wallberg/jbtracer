@@ -38,7 +38,7 @@ var (
 	light                     *PointLight
 	materials                 map[string]*Material
 	w                         *World
-	comps                     PreparedComputations
+	comps                     *PreparedComputations
 )
 
 func init() {
@@ -192,6 +192,12 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^w contains (\w+)$`, worldContainsSphere)
 	ctx.Step(`^w\.light = light$`, worldLight)
 	ctx.Step(`^(\w+) ← intersect_world\(w, (\w+)\)$`, worldIntersect)
+	ctx.Step(`^(\w+) ← shade_hit\(w, comps\)$`, worldShadeHit)
+	ctx.Step(`^(\w+) ← the (first|second) object in w$`, worldToObject)
+	ctx.Step(`^w\.light ← point_light\(point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\), color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, worldPointLight)
+	ctx.Step(`^(\w+) ← color_at\(w, (\w+)\)$`, worldColorAt)
+	ctx.Step(`^(\w+) = (\w+)\.material\.color$`, objectEqualMaterialColor)
+	ctx.Step(`^(\w+)\.material\.ambient ← (-?\d+(?:\.\d+)?)$`, objectMaterialAmbient)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 

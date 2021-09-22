@@ -144,7 +144,7 @@ func comp(i1name, r1name string) error {
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
 	}
-	comps = *i1[0].PreparedComputations(r1)
+	comps = i1[0].PreparedComputations(r1)
 	return nil
 }
 

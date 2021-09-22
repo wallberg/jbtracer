@@ -73,6 +73,7 @@ func (a *Intersections) String() string {
 }
 
 // Hit returns the smallest positive intersection from the list
+// TODO: determine if we can assume the slice is sorted
 func (is Intersections) Hit() *Intersection {
 	var hit *Intersection
 	for _, i := range is {

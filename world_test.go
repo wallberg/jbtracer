@@ -61,3 +61,34 @@ func worldIntersect(i1name, r1name string) error {
 	intersections[i1name] = w.Intersections(r1)
 	return nil
 }
+
+func worldPointLight(x, y, z, red, green, blue float32) error {
+	c1 = &Color{red, green, blue}
+	t1 = NewPoint(x, y, z)
+	w.Light = NewPointLight(c1, t1)
+	return nil
+}
+
+func worldShadeHit(c1name string) error {
+	colors[c1name] = w.ShadeHit(comps)
+	return nil
+}
+
+func worldToObject(o1name, sindex string) error {
+	var index int
+	if sindex == "first" {
+		index = 0
+	} else {
+		index = 1
+	}
+	objects[o1name] = w.Objects[index]
+	return nil
+}
+
+func worldColorAt(c1name, r1name string) error {
+	if r1, ok = rays[r1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", r1name)
+	}
+	colors[c1name] = w.ColorAt(r1)
+	return nil
+}
