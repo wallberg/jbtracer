@@ -11,6 +11,14 @@ type Intersection struct {
 
 type Intersections []*Intersection
 
+type PreparedComputations struct {
+	T       float32
+	Object  Object
+	Point   *Tuple
+	EyeV    *Tuple
+	NormalV *Tuple
+}
+
 // NewIntersection creates a new Intersection
 func NewIntersection(object Object, t float32) *Intersection {
 	return &Intersection{
@@ -34,6 +42,21 @@ func (a *Intersection) Equal(b *Intersection) bool {
 		return false
 	}
 	return true
+}
+
+// PreparedComputations generates a PreparedComputations object for the intersection
+// of the provide Ray with this Intersection
+func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
+
+	Point := r.Position(i.T)
+
+	return &PreparedComputations{
+		T:       i.T,
+		Object:  i.Object,
+		Point:   Point,
+		EyeV:    r.Direction.Multiply(-1),
+		NormalV: i.Object.NormalAt(Point),
+	}
 }
 
 // String returns a string representation of the Intersection

@@ -38,6 +38,7 @@ var (
 	light                     *PointLight
 	materials                 map[string]*Material
 	w                         *World
+	comps                     PreparedComputations
 )
 
 func init() {
@@ -158,6 +159,12 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, sphereTransform)
 	ctx.Step(`^(\w+)\.object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+)\.t = (-?\d+(?:\.\d+)?)$`, intersectionT)
+	ctx.Step(`^comps ← prepare_computations\((\w+), (\w+)\)$`, comp)
+	ctx.Step(`^comps\.object = (\w+)\.object$`, compEqualObject)
+	ctx.Step(`^comps\.t = (\w+)\.t$`, compEqualT)
+	ctx.Step(`^comps\.point = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualPoint)
+	ctx.Step(`^comps\.eyev = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualEyeV)
+	ctx.Step(`^comps\.normalv = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualNormalV)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
