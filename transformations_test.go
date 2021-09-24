@@ -56,3 +56,17 @@ func tupleEqual(t1name, t2name string) error {
 	}
 	return nil
 }
+
+func matrixViewTransform(m1name, t1name, t2name, t3name string) error {
+	if t1, ok = tuples[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t1name)
+	}
+	if t2, ok = tuples[t2name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t2name)
+	}
+	if t3, ok = tuples[t3name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t3name)
+	}
+	matrices[m1name] = ViewTransform(t1, t2, t3)
+	return nil
+}

@@ -64,3 +64,25 @@ func Shearing(xY, xZ, yX, yZ, zX, zY float32) *Matrix {
 	a.Set(2, 1, zY)
 	return a
 }
+
+// ViewTransform returns the tranformation matrix that orients the world relative to the
+// eye
+func ViewTransform(from, to, up *Tuple) *Matrix {
+	forward := to.Subtract(from).Normalize()
+	upn := up.Normalize()
+	left := forward.Cross(upn)
+	trueUp := left.Cross(forward)
+
+	orientation := IdentityMatrix()
+	orientation.Set(0, 0, left.X)
+	orientation.Set(0, 1, left.Y)
+	orientation.Set(0, 2, left.Z)
+	orientation.Set(1, 0, trueUp.X)
+	orientation.Set(1, 1, trueUp.Y)
+	orientation.Set(1, 2, trueUp.Z)
+	orientation.Set(2, 0, -1*forward.X)
+	orientation.Set(2, 1, -1*forward.Y)
+	orientation.Set(2, 2, -1*forward.Z)
+
+	return orientation.Multiply(Translation(-1*from.X, -1*from.Y, -1*from.Z))
+}

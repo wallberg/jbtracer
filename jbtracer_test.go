@@ -102,6 +102,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) = normalize\((\w+)\)$`, tupleEqualNormalize)
 	ctx.Step(`^(\w+) ← reflect\((\w+), (\w+)\)$`, vectorReflect)
 	ctx.Step(`^(\w+) = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, colorEqual)
+	ctx.Step(`^(\w+) = tuple (\w+)$`, tupleEqual)
 
 	// matrices
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
@@ -126,7 +127,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← rotation_([xyz])\((-?\d+(?:\.\d+)?)\)$`, matrixRotation)
 	ctx.Step(`^(\w+) ← shearing\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, matrixShearing)
 	ctx.Step(`^(\w+) ← (\w+) \* tuple (\w+)$`, tupleMatrixAssign)
-	ctx.Step(`^(\w+) = tuple (\w+)$`, tupleEqual)
+	ctx.Step(`^(\w+) ← view_transform\((\w+), (\w+), (\w+)\)$`, matrixViewTransform)
 
 	// rays
 	ctx.Step(`^(\w+) ← ray\((\w+), (\w+)\)$`, ray)
