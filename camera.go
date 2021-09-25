@@ -66,3 +66,19 @@ func (camera *Camera) RayForPixel(x, y int) *Ray {
 
 	return NewRay(origin, direction)
 }
+
+// Render uses this Camera to render an image of the provided World
+func (camera *Camera) Render(world *World) *Canvas {
+
+	image := NewCanvas(camera.Hsize, camera.Vsize)
+
+	for y := 0; y < camera.Vsize; y++ {
+		for x := 0; x < camera.Hsize; x++ {
+			ray := camera.RayForPixel(x, y)
+			color := world.ColorAt(ray)
+			image.Grid[x][y] = color
+		}
+	}
+
+	return image
+}

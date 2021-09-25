@@ -68,3 +68,8 @@ func cameraTransform(m1name string) error {
 func cameraRayForPixel(r1name string, x, y int) {
 	rays[r1name] = cam.RayForPixel(x, y)
 }
+
+func render() error {
+	c = cam.Render(w)
+	return nil
+}

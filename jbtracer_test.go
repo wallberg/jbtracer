@@ -96,7 +96,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^c ← canvas\((\d+), (\d+)\)$`, canvas)
 	ctx.Step(`^c\.(width|height) = (\d+)$`, equalsCanvasField)
 	ctx.Step(`^every pixel of c is color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, allCanvasColors)
-	ctx.Step(`^pixel_at\(c, (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\) = (\w+)$`, pixelAt)
+	ctx.Step(`^pixel_at\(c, (\d+), (\d+)\) = (\w+)$`, pixelAt)
 	ctx.Step(`^write_pixel\(c, (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (\w+)\)$`, writePixel)
 	ctx.Step(`^ppm ← canvas_to_ppm\(c\)$`, canvasToPPM)
 	ctx.Step(`^lines (\d+)-(\d+) of ppm are$`, linesOfPPM)
@@ -213,6 +213,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^c\.pixel_size = (-?\d+(?:\.\d+)?)$`, cameraEqualPixelSize)
 	ctx.Step(`^c\.transform ← (\w+)$`, cameraTransform)
 	ctx.Step(`^(\w+) ← ray_for_pixel\(c, (\d+), (\d+)\)$`, cameraRayForPixel)
+	ctx.Step(`^c ← render\(c, w\)$`, render)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
