@@ -42,6 +42,7 @@ var (
 	materials                 map[string]*Material
 	w                         *World
 	comps                     *PreparedComputations
+	cam                       *Camera
 )
 
 func init() {
@@ -159,7 +160,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
 	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
 	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
-	ctx.Step(`^(\w+)\.transform = (\w+)$`, sphereEqualTransform)
+	ctx.Step(`^(s)\.transform = (\w+)$`, sphereEqualTransform)
 	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, sphereTransform)
 	ctx.Step(`^(\w+)\.object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+)\.t = (-?\d+(?:\.\d+)?)$`, intersectionT)
@@ -203,6 +204,13 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) = (\w+)\.material\.color$`, objectEqualMaterialColor)
 	ctx.Step(`^(\w+)\.material\.ambient ← (-?\d+(?:\.\d+)?)$`, objectMaterialAmbient)
 
+	// camera
+	ctx.Step(`^c ← camera\((\d+), (\d+), (-?\d+(?:\.\d+)?)\)$`, camera)
+	ctx.Step(`^c\.hsize = (\d+)$`, cameraEqualHsize)
+	ctx.Step(`^c\.vsize = (\d+)$`, cameraEqualVsize)
+	ctx.Step(`^c\.field_of_view = (-?\d+(?:\.\d+)?)$`, cameraEqualFOV)
+	ctx.Step(`^c\.transform = (\w+)$`, cameraEqualTransform)
+
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
 		// Reset values before each scenario
@@ -220,6 +228,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		ppm = nil
 		materials = make(map[string]*Material)
 		w = nil
+		cam = nil
 		return ctx, nil
 	})
 }
