@@ -56,3 +56,15 @@ func cameraEqualPixelSize(pixelSize float32) error {
 	}
 	return nil
 }
+
+func cameraTransform(m1name string) error {
+	if m1, ok = matrices[m1name]; !ok {
+		return fmt.Errorf("Unknown symbol (matrix) %s", m1name)
+	}
+	cam.Transform = m1
+	return nil
+}
+
+func cameraRayForPixel(r1name string, x, y int) {
+	rays[r1name] = cam.RayForPixel(x, y)
+}

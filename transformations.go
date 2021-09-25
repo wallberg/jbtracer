@@ -40,7 +40,7 @@ func Rotation(axis int, radians float32) *Matrix {
 		a.Set(2, 1, sin)
 		a.Set(2, 2, cos)
 	case Axis_Y:
-		a.Set(0, 1, cos)
+		a.Set(0, 0, cos)
 		a.Set(0, 2, sin)
 		a.Set(2, 0, -1*sin)
 		a.Set(2, 2, cos)
