@@ -11,7 +11,10 @@ import (
 	"github.com/spf13/pflag"
 )
 
-var opts = godog.Options{Output: godogcolors.Colored(os.Stdout)}
+var opts = godog.Options{
+	Output: godogcolors.Colored(os.Stdout),
+	Format: "progress",
+}
 
 var (
 	t1, t2, t3, expected, got *Tuple
