@@ -47,3 +47,12 @@ func cameraEqualTransform(m1name string) error {
 	}
 	return nil
 }
+
+func cameraEqualPixelSize(pixelSize float32) error {
+	expected := pixelSize
+	got := cam.PixelSize
+	if got != expected {
+		return fmt.Errorf("Expected c.pixel_size = %v; got %v", expected, got)
+	}
+	return nil
+}

@@ -210,6 +210,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^c\.vsize = (\d+)$`, cameraEqualVsize)
 	ctx.Step(`^c\.field_of_view = (-?\d+(?:\.\d+)?)$`, cameraEqualFOV)
 	ctx.Step(`^c\.transform = (\w+)$`, cameraEqualTransform)
+	ctx.Step(`^c\.pixel_size = (-?\d+(?:\.\d+)?)$`, cameraEqualPixelSize)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
