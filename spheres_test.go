@@ -88,7 +88,7 @@ func sphereMaterial2(sph1name, mat1name string) error {
 func sphereWith(sph1name string, table *godog.Table) error {
 	reTuple := regexp.MustCompile(`^\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
 	reScalar := regexp.MustCompile(`^(-?\d+(?:\.\d+)?)$`)
-	reScaling := regexp.MustCompile(`^scaling\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
+	reTransform := regexp.MustCompile(`^(scaling|translation)\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
 
 	rows := len(table.Rows)
 	if rows < 1 {
@@ -153,30 +153,36 @@ func sphereWith(sph1name string, table *godog.Table) error {
 				sph1.Material().Specular = specular
 			}
 		case "transform":
-			if m := reScaling.FindStringSubmatch(value); m == nil {
-				return fmt.Errorf("Unable to extract scaling from %s", value)
+			if m := reTransform.FindStringSubmatch(value); m == nil {
+				return fmt.Errorf("Unable to extract transform from %s", value)
 			} else {
 				var x, y, z float32
-				if f, err := strconv.ParseFloat(m[1], 32); err != nil {
+				if f, err := strconv.ParseFloat(m[2], 32); err != nil {
 					return err
 				} else {
 					x = float32(f)
 				}
-				if f, err := strconv.ParseFloat(m[2], 32); err != nil {
+				if f, err := strconv.ParseFloat(m[3], 32); err != nil {
 					return err
 				} else {
 					y = float32(f)
 				}
-				if f, err := strconv.ParseFloat(m[3], 32); err != nil {
+				if f, err := strconv.ParseFloat(m[4], 32); err != nil {
 					return err
 				} else {
 					z = float32(f)
 				}
-				sph1.Transform = Scaling(x, y, z)
+				switch m[1] {
+				case "scaling":
+					sph1.Transform = Scaling(x, y, z)
+				case "translation":
+					sph1.Transform = Translation(x, y, z)
+				}
 			}
 		}
 	}
 
 	spheres[sph1name] = sph1
+	objects[sph1name] = sph1
 	return nil
 }

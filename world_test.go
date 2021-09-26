@@ -92,3 +92,26 @@ func worldColorAt(c1name, r1name string) error {
 	colors[c1name] = w.ColorAt(r1)
 	return nil
 }
+
+func worldIsShadowed(t1name, flag string) error {
+	if t1, ok = tuples[t1name]; !ok {
+		return fmt.Errorf("Unknown symbol (tuple) %s", t1name)
+	}
+	expected := true
+	if flag == "false" {
+		expected = false
+	}
+	got := w.IsShadowed(t1)
+	if got != expected {
+		return fmt.Errorf("Expected point %s in shadow = %v; got %v", t1name, expected, got)
+	}
+	return nil
+}
+
+func worldAddObject(o1name string) error {
+	if o1, ok = objects[o1name]; !ok {
+		return fmt.Errorf("Unknown symbol (object) %s", o1name)
+	}
+	w.AddObject(o1)
+	return nil
+}

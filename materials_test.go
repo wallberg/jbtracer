@@ -103,6 +103,15 @@ func lighting(c1name, mat1name, t1name, t2name, t3name string) error {
 	if t3, ok = tuples[t3name]; !ok {
 		return fmt.Errorf("Unknown symbol (tuple) %s", t3name)
 	}
-	colors[c1name] = mat1.Lighting(light, t1, t2, t3)
+	colors[c1name] = mat1.Lighting(light, t1, t2, t3, inShadow)
+	return nil
+}
+
+func materialInShadow(f string) error {
+	if f == "true" {
+		inShadow = true
+	} else {
+		inShadow = false
+	}
 	return nil
 }

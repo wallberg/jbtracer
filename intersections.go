@@ -12,12 +12,13 @@ type Intersection struct {
 type Intersections []*Intersection
 
 type PreparedComputations struct {
-	T       float32
-	Object  Object
-	Point   *Tuple
-	EyeV    *Tuple
-	NormalV *Tuple
-	Inside  bool
+	T         float32
+	Object    Object
+	Point     *Tuple
+	EyeV      *Tuple
+	NormalV   *Tuple
+	Inside    bool
+	OverPoint *Tuple
 }
 
 // NewIntersection creates a new Intersection
@@ -63,6 +64,8 @@ func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
 		comps.Inside = true
 		comps.NormalV = comps.NormalV.Multiply(-1)
 	}
+
+	comps.OverPoint = comps.Point.Add(comps.NormalV.Multiply(Epsilon))
 
 	return comps
 }

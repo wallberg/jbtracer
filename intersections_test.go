@@ -207,3 +207,21 @@ func compEqualInside(bool string) error {
 	}
 	return nil
 }
+
+func compOverPointZLessThanEpsilon() error {
+	expected := true
+	got := comps.OverPoint.Z < -1*Epsilon/2
+	if got != expected {
+		return fmt.Errorf("Expected comps.over_point.z < -EPSILON/2 = %v; got %v", expected, got)
+	}
+	return nil
+}
+
+func compPointZGreaterThanOverPointZ() error {
+	expected := true
+	got := comps.Point.Z > comps.OverPoint.Z
+	if got != expected {
+		return fmt.Errorf("Expected comps.point. z > comps.over_point.z = %v; got %v", expected, got)
+	}
+	return nil
+}

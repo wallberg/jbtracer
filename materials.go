@@ -39,7 +39,8 @@ func (a *Material) Equal(b *Material) bool {
 
 // Lighting uses the Phong Reflection Model to simulate the lighting on a single
 // point on the Material
-func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tuple) *Color {
+func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tuple, inShadow bool) *Color {
+
 	// combine the surface color with the light's color/intensity
 	effectiveColor := material.Color.Multiply(light.Intensity)
 
@@ -48,6 +49,11 @@ func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tupl
 
 	// compute the ambient contribution
 	ambient := effectiveColor.MultiplyScalar(material.Ambient)
+
+	// if we are in shadow diffuse and specular do not contribute
+	if inShadow {
+		return ambient
+	}
 
 	// light_dot_normal represents the cosine of the angle between the
 	// light vector and the normal vector. A negative number means the

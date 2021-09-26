@@ -43,6 +43,7 @@ var (
 	w                         *World
 	comps                     *PreparedComputations
 	cam                       *Camera
+	inShadow                  bool
 )
 
 func init() {
@@ -171,6 +172,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^comps\.eyev = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualEyeV)
 	ctx.Step(`^comps\.normalv = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualNormalV)
 	ctx.Step(`^comps\.inside = (true|false)$`, compEqualInside)
+	ctx.Step(`^comps\.over_point\.z < -EPSILON\/2$`, compOverPointZLessThanEpsilon)
+	ctx.Step(`^comps\.point\.z > comps\.over_point\.z$`, compPointZGreaterThanOverPointZ)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
@@ -187,7 +190,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.specular = (-?\d+(?:\.\d+)?)$`, materialEqualSpecular)
 	ctx.Step(`^(\w+) = material (\w+)$`, materialEqual)
 	ctx.Step(`^(\w+)\.ambient ← (-?\d+(?:\.\d+)?)$`, materialAmbient)
-	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+)\)$`, lighting)
+	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+), in_shadow\)$`, lighting)
+	ctx.Step(`^in_shadow ← (true|false)$`, materialInShadow)
 
 	// world
 	ctx.Step(`^w ← world\(\)$`, world)
@@ -203,6 +207,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← color_at\(w, (\w+)\)$`, worldColorAt)
 	ctx.Step(`^(\w+) = (\w+)\.material\.color$`, objectEqualMaterialColor)
 	ctx.Step(`^(\w+)\.material\.ambient ← (-?\d+(?:\.\d+)?)$`, objectMaterialAmbient)
+	ctx.Step(`^is_shadowed\(w, (\w+)\) is (true|false)$`, worldIsShadowed)
+	ctx.Step(`^(\w+) is added to w$`, worldAddObject)
 
 	// camera
 	ctx.Step(`^c ← camera\((\d+), (\d+), (-?\d+(?:\.\d+)?)\)$`, camera)
@@ -233,6 +239,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		materials = make(map[string]*Material)
 		w = nil
 		cam = nil
+		inShadow = false
 		return ctx, nil
 	})
 }

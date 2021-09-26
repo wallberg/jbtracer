@@ -58,11 +58,15 @@ func (w *World) Intersections(r *Ray) Intersections {
 // ShadeHit returns the Color at the Intersection encapsulated by a PreparedComputations
 // in the given World
 func (w *World) ShadeHit(comps *PreparedComputations) *Color {
+
+	shadowed := w.IsShadowed(comps.OverPoint)
+
 	return comps.Object.Material().Lighting(
 		w.Light,
-		comps.Point,
+		comps.OverPoint,
 		comps.EyeV,
 		comps.NormalV,
+		shadowed,
 	)
 }
 
@@ -80,5 +84,21 @@ func (w *World) ColorAt(r *Ray) *Color {
 		// Return the Color at the intersection
 		comps := hit.PreparedComputations(r)
 		return w.ShadeHit(comps)
+	}
+}
+
+// IsShadowed determines if a Point in this World is in shadow
+func (w *World) IsShadowed(point *Tuple) bool {
+	v := w.Light.Position.Subtract(point)
+	distance := v.Magnitude()
+	direction := v.Normalize()
+
+	r := NewRay(point, direction)
+	xs := w.Intersections(r)
+
+	if hit := xs.Hit(); hit != nil && hit.T < distance {
+		return true
+	} else {
+		return false
 	}
 }
