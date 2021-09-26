@@ -6,6 +6,18 @@ const (
 	Axis_X = iota
 	Axis_Y
 	Axis_Z
+	Degrees180 = 3.1415926536 // pi
+	Degrees90  = 1.5707963268 // pi/2
+	Degrees60  = 1.0471975512 // pi/3
+	Degrees45  = 0.7853981634 // pi/4
+	Degrees30  = 0.5235987756 // pi/6
+	Degrees10  = 0.1745329252 // pi/18
+	Pi         = 3.1415926536 // pi
+	Pi2        = 1.5707963268 // pi/2
+	Pi3        = 1.0471975512 // pi/3
+	Pi4        = 0.7853981634 // pi/4
+	Pi6        = 0.5235987756 // pi/6
+	Pi18       = 0.1745329252 // pi/18
 )
 
 // Translation returns a translation matrix for vector(x, y, z)
