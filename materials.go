@@ -57,31 +57,28 @@ func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tupl
 
 	// light_dot_normal represents the cosine of the angle between the
 	// light vector and the normal vector. A negative number means the
-	// light is on the other side of the surface.
+	// light is on the other side of the surface; again diffuse and Specular
+	// do not contribute
 	lightDotNormal := lightv.Dot(normalv)
-	var diffuse, specular *Color
 	if lightDotNormal < 0 {
-		diffuse = Black
-		specular = Black
-
-	} else {
-		// compute the diffuse contribution
-		diffuse = effectiveColor.MultiplyScalar(material.Diffuse).MultiplyScalar(lightDotNormal)
-
-		// reflect_dot_eye represents the cosine of the angle between the
-		// reflection vector and the eye vector. A negative number means the
-		// light reflects away from the eye.
-		reflectv := lightv.Multiply(-1).Reflect(normalv)
-		reflectDotEye := reflectv.Dot(eyev)
-
-		if reflectDotEye <= 0 {
-			specular = Black
-		} else {
-			// compute the specular contribution
-			factor := float32(math.Pow(float64(reflectDotEye), float64(material.Shininess)))
-			specular = light.Intensity.MultiplyScalar(material.Specular).MultiplyScalar(factor)
-		}
+		return ambient
 	}
+
+	// compute the diffuse contribution
+	diffuse := effectiveColor.MultiplyScalar(material.Diffuse).MultiplyScalar(lightDotNormal)
+
+	// reflect_dot_eye represents the cosine of the angle between the
+	// reflection vector and the eye vector. A negative number means the
+	// light reflects away from the eye; specular does not contribute.
+	reflectv := lightv.Multiply(-1).Reflect(normalv)
+	reflectDotEye := reflectv.Dot(eyev)
+	if reflectDotEye <= 0 {
+		return ambient.Add(diffuse)
+	}
+
+	// compute the specular contribution
+	factor := float32(math.Pow(float64(reflectDotEye), float64(material.Shininess)))
+	specular := light.Intensity.MultiplyScalar(material.Specular).MultiplyScalar(factor)
 
 	// Add the three contributions together to get the final shading
 	return ambient.Add(diffuse).Add(specular)
