@@ -25,19 +25,19 @@ func intersectionCount(i1name string, count int) error {
 	return nil
 }
 
-func intersectionsT(i1name string, index int, t float32) error {
+func intersectionsT(i1name string, index int, t float64) error {
 	if i1, ok = intersections[i1name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
 	}
 	expected := t
 	got := i1[index].T
-	if !EqualFloat32(got, expected) {
+	if !EqualFloat64(got, expected) {
 		return fmt.Errorf("Expected %s[%d].t = %f; got %f", i1name, index, expected, got)
 	}
 	return nil
 }
 
-func intersectionT(i1name string, t float32) error {
+func intersectionT(i1name string, t float64) error {
 	return intersectionsT(i1name, 0, t)
 }
 
@@ -60,7 +60,7 @@ func intersectionObject(i1name, o1name string) error {
 	return intersectionsObject(i1name, 0, o1name)
 }
 
-func intersection(i1name string, t float32, o1name string) error {
+func intersection(i1name string, t float64, o1name string) error {
 	if o1, ok = objects[o1name]; !ok {
 		return fmt.Errorf("Unknown symbol (object) %s", o1name)
 	}
@@ -172,7 +172,7 @@ func compEqualT(i1name string) error {
 	return nil
 }
 
-func compEqualPoint(x, y, z float32) error {
+func compEqualPoint(x, y, z float64) error {
 	expected := NewPoint(x, y, z)
 	got := comps.Point
 	if !got.Equal(expected) {
@@ -181,7 +181,7 @@ func compEqualPoint(x, y, z float32) error {
 	return nil
 }
 
-func compEqualEyeV(x, y, z float32) error {
+func compEqualEyeV(x, y, z float64) error {
 	expected := NewVector(x, y, z)
 	got := comps.EyeV
 	if !got.Equal(expected) {
@@ -190,7 +190,7 @@ func compEqualEyeV(x, y, z float32) error {
 	return nil
 }
 
-func compEqualNormalV(x, y, z float32) error {
+func compEqualNormalV(x, y, z float64) error {
 	expected := NewVector(x, y, z)
 	got := comps.NormalV
 	if !got.Equal(expected) {

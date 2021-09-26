@@ -7,7 +7,7 @@ func material(m1name string) error {
 	return nil
 }
 
-func materialEqualColor(mat1name string, red, green, blue float32) error {
+func materialEqualColor(mat1name string, red, green, blue float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (color) %s", mat1name)
 	}
@@ -19,7 +19,7 @@ func materialEqualColor(mat1name string, red, green, blue float32) error {
 	return nil
 }
 
-func materialEqualAmbient(mat1name string, scalar float32) error {
+func materialEqualAmbient(mat1name string, scalar float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
 	}
@@ -31,7 +31,7 @@ func materialEqualAmbient(mat1name string, scalar float32) error {
 	return nil
 }
 
-func materialEqualDiffuse(mat1name string, scalar float32) error {
+func materialEqualDiffuse(mat1name string, scalar float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
 	}
@@ -43,7 +43,7 @@ func materialEqualDiffuse(mat1name string, scalar float32) error {
 	return nil
 }
 
-func materialEqualSpecular(mat1name string, scalar float32) error {
+func materialEqualSpecular(mat1name string, scalar float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
 	}
@@ -55,7 +55,7 @@ func materialEqualSpecular(mat1name string, scalar float32) error {
 	return nil
 }
 
-func materialEqualShininess(mat1name string, scalar float32) error {
+func materialEqualShininess(mat1name string, scalar float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
 	}
@@ -67,7 +67,7 @@ func materialEqualShininess(mat1name string, scalar float32) error {
 	return nil
 }
 
-func materialAmbient(mat1name string, scalar float32) error {
+func materialAmbient(mat1name string, scalar float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
 	}

@@ -2,17 +2,17 @@ package jbtracer
 
 import "fmt"
 
-func matrixTranslation(m1name string, x, y, z float32) error {
+func matrixTranslation(m1name string, x, y, z float64) error {
 	matrices[m1name] = Translation(x, y, z)
 	return nil
 }
 
-func matrixScaling(m1name string, x, y, z float32) error {
+func matrixScaling(m1name string, x, y, z float64) error {
 	matrices[m1name] = Scaling(x, y, z)
 	return nil
 }
 
-func matrixRotation(m1name, axis string, radians float32) error {
+func matrixRotation(m1name, axis string, radians float64) error {
 	var axisInt int
 	switch axis {
 	case "x":
@@ -26,7 +26,7 @@ func matrixRotation(m1name, axis string, radians float32) error {
 	return nil
 }
 
-func matrixShearing(m1name string, xY, xZ, yX, yZ, zX, zY float32) error {
+func matrixShearing(m1name string, xY, xZ, yX, yZ, zX, zY float64) error {
 	matrices[m1name] = Shearing(xY, xZ, yX, yZ, zX, zY)
 	return nil
 }

@@ -18,7 +18,7 @@ func objectEqualMaterialColor(c1name, o1name string) error {
 	return nil
 }
 
-func objectMaterialAmbient(o1name string, scalar float32) error {
+func objectMaterialAmbient(o1name string, scalar float64) error {
 	if o1, ok = objects[o1name]; !ok {
 		return fmt.Errorf("Unknown symbol (object) %s", o1name)
 	}

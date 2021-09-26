@@ -25,7 +25,7 @@ func equalsCanvasField(field string, expected int) error {
 	return nil
 }
 
-func allCanvasColors(red, green, blue float32) error {
+func allCanvasColors(red, green, blue float64) error {
 
 	expected := &Color{red, green, blue}
 
@@ -77,7 +77,7 @@ func linesOfPPM(start, stop int, expected string) error {
 	return nil
 }
 
-func assignCanvasAllColors(red, green, blue float32) error {
+func assignCanvasAllColors(red, green, blue float64) error {
 	c.SetColorAll(&Color{red, green, blue})
 	return nil
 }

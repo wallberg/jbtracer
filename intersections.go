@@ -6,13 +6,13 @@ import (
 
 type Intersection struct {
 	Object Object
-	T      float32
+	T      float64
 }
 
 type Intersections []*Intersection
 
 type PreparedComputations struct {
-	T         float32
+	T         float64
 	Object    Object
 	Point     *Tuple
 	EyeV      *Tuple
@@ -22,7 +22,7 @@ type PreparedComputations struct {
 }
 
 // NewIntersection creates a new Intersection
-func NewIntersection(object Object, t float32) *Intersection {
+func NewIntersection(object Object, t float64) *Intersection {
 	return &Intersection{
 		Object: object,
 		T:      t,
@@ -40,7 +40,7 @@ func (a *Intersection) Equal(b *Intersection) bool {
 		return false
 	} else if a.Object != b.Object {
 		return false
-	} else if !EqualFloat32(a.T, b.T) {
+	} else if !EqualFloat64(a.T, b.T) {
 		return false
 	}
 	return true

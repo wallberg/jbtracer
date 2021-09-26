@@ -17,10 +17,10 @@ func tableToMatrix(table *godog.Table) (*Matrix, error) {
 	m := NewMatrix(rows)
 	for i, row := range table.Rows {
 		for j, col := range row.Cells {
-			if f, err := strconv.ParseFloat(col.Value, 32); err != nil {
+			if f, err := strconv.ParseFloat(col.Value, 64); err != nil {
 				return nil, err
 			} else {
-				m.Set(i, j, (float32)(f))
+				m.Set(i, j, f)
 			}
 		}
 	}
@@ -39,12 +39,12 @@ func matrix(m1name string, table *godog.Table) error {
 	return nil
 }
 
-func matrixCellEqual(m1name string, i, j int, expected float32) error {
+func matrixCellEqual(m1name string, i, j int, expected float64) error {
 	if m1, ok = matrices[m1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", m1name)
 	}
 	got := m1.Get(i, j)
-	if !EqualFloat32(got, expected) {
+	if !EqualFloat64(got, expected) {
 		return fmt.Errorf("Expected %s[%d,%d] = %v; got %v", m1name, i, j, expected, got)
 	}
 	return nil
@@ -140,7 +140,7 @@ func matrixDeterminant(s1name, m1name string) error {
 	return nil
 }
 
-func scalar(s1name string, value float32) error {
+func scalar(s1name string, value float64) error {
 	scalars[s1name] = value
 	return nil
 }
@@ -150,10 +150,10 @@ func scalarEqual(s1name, s2name string) error {
 		return fmt.Errorf("Unknown symbol %s", s1name)
 	}
 	if s2, ok = scalars[s2name]; !ok {
-		if f, err := strconv.ParseFloat(s2name, 32); err != nil {
+		if f, err := strconv.ParseFloat(s2name, 64); err != nil {
 			return fmt.Errorf("Unknown symbol %s", s2name)
 		} else {
-			s2 = (float32)(f)
+			s2 = f
 		}
 	}
 

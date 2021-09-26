@@ -18,7 +18,7 @@ func (a *Ray) String() string {
 }
 
 // Position returns the Point at time t along the Ray
-func (a *Ray) Position(t float32) *Tuple {
+func (a *Ray) Position(t float64) *Tuple {
 	return a.Direction.Multiply(t).Add(a.Origin)
 }
 

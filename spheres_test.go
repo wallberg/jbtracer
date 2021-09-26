@@ -8,7 +8,7 @@ import (
 	"github.com/cucumber/godog"
 )
 
-func rayPointVector(r1name string, xp, yp, zp, xv, yv, zv float32) error {
+func rayPointVector(r1name string, xp, yp, zp, xv, yv, zv float64) error {
 	p := NewPoint(xp, yp, zp)
 	v := NewVector(xv, yv, zv)
 	rays[r1name] = NewRay(p, v)
@@ -56,7 +56,7 @@ func sphereTransform(sph1name, m1name string) error {
 
 }
 
-func sphereNormalAt(t1name, sph1name string, x, y, z float32) error {
+func sphereNormalAt(t1name, sph1name string, x, y, z float64) error {
 	if sph1, ok = spheres[sph1name]; !ok {
 		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
 	}
@@ -101,6 +101,7 @@ func sphereWith(sph1name string, table *godog.Table) error {
 	}
 
 	sph1 = NewSphere()
+	var err error
 	for _, row := range table.Rows {
 		name := row.Cells[0].Value
 		value := row.Cells[1].Value
@@ -110,21 +111,15 @@ func sphereWith(sph1name string, table *godog.Table) error {
 			if m := reTuple.FindStringSubmatch(value); m == nil {
 				return fmt.Errorf("Unable to extract tuple from %s", value)
 			} else {
-				var red, green, blue float32
-				if f, err := strconv.ParseFloat(m[1], 32); err != nil {
+				var red, green, blue float64
+				if red, err = strconv.ParseFloat(m[1], 64); err != nil {
 					return err
-				} else {
-					red = float32(f)
 				}
-				if f, err := strconv.ParseFloat(m[2], 32); err != nil {
+				if green, err = strconv.ParseFloat(m[2], 64); err != nil {
 					return err
-				} else {
-					green = float32(f)
 				}
-				if f, err := strconv.ParseFloat(m[3], 32); err != nil {
+				if blue, err = strconv.ParseFloat(m[3], 64); err != nil {
 					return err
-				} else {
-					blue = float32(f)
 				}
 				sph1.Material().Color = NewColor(red, green, blue)
 			}
@@ -132,11 +127,9 @@ func sphereWith(sph1name string, table *godog.Table) error {
 			if m := reScalar.FindStringSubmatch(value); m == nil {
 				return fmt.Errorf("Unable to extract scalar from %s", value)
 			} else {
-				var diffuse float32
-				if f, err := strconv.ParseFloat(m[1], 32); err != nil {
+				var diffuse float64
+				if diffuse, err = strconv.ParseFloat(m[1], 64); err != nil {
 					return err
-				} else {
-					diffuse = float32(f)
 				}
 				sph1.Material().Diffuse = diffuse
 			}
@@ -144,11 +137,9 @@ func sphereWith(sph1name string, table *godog.Table) error {
 			if m := reScalar.FindStringSubmatch(value); m == nil {
 				return fmt.Errorf("Unable to extract scalar from %s", value)
 			} else {
-				var specular float32
-				if f, err := strconv.ParseFloat(m[1], 32); err != nil {
+				var specular float64
+				if specular, err = strconv.ParseFloat(m[1], 64); err != nil {
 					return err
-				} else {
-					specular = float32(f)
 				}
 				sph1.Material().Specular = specular
 			}
@@ -156,21 +147,15 @@ func sphereWith(sph1name string, table *godog.Table) error {
 			if m := reTransform.FindStringSubmatch(value); m == nil {
 				return fmt.Errorf("Unable to extract transform from %s", value)
 			} else {
-				var x, y, z float32
-				if f, err := strconv.ParseFloat(m[2], 32); err != nil {
+				var x, y, z float64
+				if x, err = strconv.ParseFloat(m[2], 64); err != nil {
 					return err
-				} else {
-					x = float32(f)
 				}
-				if f, err := strconv.ParseFloat(m[3], 32); err != nil {
+				if y, err = strconv.ParseFloat(m[3], 64); err != nil {
 					return err
-				} else {
-					y = float32(f)
 				}
-				if f, err := strconv.ParseFloat(m[4], 32); err != nil {
+				if z, err = strconv.ParseFloat(m[4], 64); err != nil {
 					return err
-				} else {
-					z = float32(f)
 				}
 				switch m[1] {
 				case "scaling":

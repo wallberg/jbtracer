@@ -9,8 +9,8 @@ import (
 const Epsilon = 0.00001
 
 type Tuple struct {
-	X, Y, Z float32 // 3D coordinates
-	W       float32 // 1.0 when a point, 0.0 when a vector
+	X, Y, Z float64 // 3D coordinates
+	W       float64 // 1.0 when a point, 0.0 when a vector
 }
 
 // String returns a string representation of the tuple
@@ -26,7 +26,7 @@ func (a *Tuple) String() string {
 
 // IsPoint returns true if this Tuple is a point
 func (a *Tuple) IsPoint() bool {
-	return math.Abs((float64)(a.W)-1.0) < Epsilon
+	return math.Abs(a.W-1.0) < Epsilon
 }
 
 // IsVector returns true if this Tuple is a vector
@@ -36,7 +36,7 @@ func (a *Tuple) IsVector() bool {
 
 // Equal determines if two Tuples are the same
 func (a *Tuple) Equal(b *Tuple) bool {
-	return EqualFloat32(a.X, b.X) && EqualFloat32(a.Y, b.Y) && EqualFloat32(a.Z, b.Z) && EqualFloat32(a.W, b.W)
+	return EqualFloat64(a.X, b.X) && EqualFloat64(a.Y, b.Y) && EqualFloat64(a.Z, b.Z) && EqualFloat64(a.W, b.W)
 }
 
 // Add adds one tuple to another
@@ -70,7 +70,7 @@ func (a *Tuple) Negate() *Tuple {
 }
 
 // Multiply multiplies a tuple by a scalar
-func (a *Tuple) Multiply(scalar float32) *Tuple {
+func (a *Tuple) Multiply(scalar float64) *Tuple {
 	return &Tuple{
 		X: a.X * scalar,
 		Y: a.Y * scalar,
@@ -80,7 +80,7 @@ func (a *Tuple) Multiply(scalar float32) *Tuple {
 }
 
 // Divide divides a tuple by a scalar
-func (a *Tuple) Divide(scalar float32) *Tuple {
+func (a *Tuple) Divide(scalar float64) *Tuple {
 	return &Tuple{
 		X: a.X / scalar,
 		Y: a.Y / scalar,
@@ -90,12 +90,8 @@ func (a *Tuple) Divide(scalar float32) *Tuple {
 }
 
 // Magnitude returns the magnitude (or length) of the tuple
-func (a *Tuple) Magnitude() float32 {
-	x := (float64)(a.X)
-	y := (float64)(a.Y)
-	z := (float64)(a.Z)
-	w := (float64)(a.W)
-	return (float32)(math.Sqrt(x*x + y*y + z*z + w*w))
+func (a *Tuple) Magnitude() float64 {
+	return math.Sqrt(a.X*a.X + a.Y*a.Y + a.Z*a.Z + a.W*a.W)
 }
 
 // Normalize returns a normalized unit vector
@@ -110,7 +106,7 @@ func (a *Tuple) Normalize() *Tuple {
 }
 
 // Dot returns the dot product of this vector with the provided vector
-func (a *Tuple) Dot(b *Tuple) float32 {
+func (a *Tuple) Dot(b *Tuple) float64 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
 }
 
@@ -123,9 +119,9 @@ func (a *Tuple) Cross(b *Tuple) *Tuple {
 	)
 }
 
-// EqualFloat determines if two float32 values are the within Epsilon of each other
-func EqualFloat32(a, b float32) bool {
-	return math.Abs((float64)(a)-(float64)(b)) < Epsilon
+// EqualFloat64 determines if two float64 values are the within Epsilon of each other
+func EqualFloat64(a, b float64) bool {
+	return math.Abs(a-b) < Epsilon
 }
 
 // Reflect reflects vector v around the normal n
@@ -134,7 +130,7 @@ func (v *Tuple) Reflect(n *Tuple) *Tuple {
 }
 
 // NewPoint creates a new Tuple of type point
-func NewPoint(X, Y, Z float32) *Tuple {
+func NewPoint(X, Y, Z float64) *Tuple {
 	point := &Tuple{
 		X: X,
 		Y: Y,
@@ -146,7 +142,7 @@ func NewPoint(X, Y, Z float32) *Tuple {
 }
 
 // NewVector creates a new Tuple of type vector
-func NewVector(X, Y, Z float32) *Tuple {
+func NewVector(X, Y, Z float64) *Tuple {
 	vector := &Tuple{
 		X: X,
 		Y: Y,
@@ -158,7 +154,7 @@ func NewVector(X, Y, Z float32) *Tuple {
 }
 
 type Color struct {
-	Red, Green, Blue float32
+	Red, Green, Blue float64
 }
 
 var (
@@ -166,7 +162,7 @@ var (
 	White *Color = &Color{1, 1, 1}
 )
 
-func NewColor(red, green, blue float32) *Color {
+func NewColor(red, green, blue float64) *Color {
 	return &Color{
 		Red:   red,
 		Green: green,
@@ -176,7 +172,7 @@ func NewColor(red, green, blue float32) *Color {
 
 // Equal determines if two Colors are the same
 func (a *Color) Equal(b *Color) bool {
-	return EqualFloat32(a.Red, b.Red) && EqualFloat32(a.Green, b.Green) && EqualFloat32(a.Blue, b.Blue)
+	return EqualFloat64(a.Red, b.Red) && EqualFloat64(a.Green, b.Green) && EqualFloat64(a.Blue, b.Blue)
 }
 
 // Add adds one Color to another
@@ -207,7 +203,7 @@ func (a *Color) Multiply(b *Color) *Color {
 }
 
 // MultiplyScalar multiplies this Color by a scalar
-func (a *Color) MultiplyScalar(scalar float32) *Color {
+func (a *Color) MultiplyScalar(scalar float64) *Color {
 	return &Color{
 		Red:   a.Red * scalar,
 		Green: a.Green * scalar,

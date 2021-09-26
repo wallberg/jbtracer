@@ -4,10 +4,10 @@ import "math"
 
 type Material struct {
 	Color     *Color
-	Ambient   float32
-	Diffuse   float32
-	Specular  float32
-	Shininess float32
+	Ambient   float64
+	Diffuse   float64
+	Specular  float64
+	Shininess float64
 }
 
 func NewMaterial() *Material {
@@ -25,13 +25,13 @@ func (a *Material) Equal(b *Material) bool {
 		return false
 	} else if !a.Color.Equal(b.Color) {
 		return false
-	} else if !EqualFloat32(a.Ambient, b.Ambient) {
+	} else if !EqualFloat64(a.Ambient, b.Ambient) {
 		return false
-	} else if !EqualFloat32(a.Diffuse, b.Diffuse) {
+	} else if !EqualFloat64(a.Diffuse, b.Diffuse) {
 		return false
-	} else if !EqualFloat32(a.Specular, b.Specular) {
+	} else if !EqualFloat64(a.Specular, b.Specular) {
 		return false
-	} else if !EqualFloat32(a.Shininess, b.Shininess) {
+	} else if !EqualFloat64(a.Shininess, b.Shininess) {
 		return false
 	}
 	return true
@@ -77,7 +77,7 @@ func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tupl
 	}
 
 	// compute the specular contribution
-	factor := float32(math.Pow(float64(reflectDotEye), float64(material.Shininess)))
+	factor := float64(math.Pow(float64(reflectDotEye), float64(material.Shininess)))
 	specular := light.Intensity.MultiplyScalar(material.Specular).MultiplyScalar(factor)
 
 	// Add the three contributions together to get the final shading

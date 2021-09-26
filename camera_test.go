@@ -2,7 +2,7 @@ package jbtracer
 
 import "fmt"
 
-func camera(hsize, vsize int, fov float32) error {
+func camera(hsize, vsize int, fov float64) error {
 	cam = NewCamera(hsize, vsize, fov)
 	return nil
 }
@@ -25,7 +25,7 @@ func cameraEqualVsize(vsize int) error {
 	return nil
 }
 
-func cameraEqualFOV(fov float32) error {
+func cameraEqualFOV(fov float64) error {
 	expected := fov
 	got := cam.FieldOfView
 	if got != expected {
@@ -48,10 +48,10 @@ func cameraEqualTransform(m1name string) error {
 	return nil
 }
 
-func cameraEqualPixelSize(pixelSize float32) error {
+func cameraEqualPixelSize(pixelSize float64) error {
 	expected := pixelSize
 	got := cam.PixelSize
-	if got != expected {
+	if !EqualFloat64(got, expected) {
 		return fmt.Errorf("Expected c.pixel_size = %v; got %v", expected, got)
 	}
 	return nil

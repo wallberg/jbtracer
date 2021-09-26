@@ -62,7 +62,7 @@ func worldIntersect(i1name, r1name string) error {
 	return nil
 }
 
-func worldPointLight(x, y, z, red, green, blue float32) error {
+func worldPointLight(x, y, z, red, green, blue float64) error {
 	c1 = &Color{red, green, blue}
 	t1 = NewPoint(x, y, z)
 	w.Light = NewPointLight(c1, t1)

@@ -21,7 +21,7 @@ const (
 )
 
 // Translation returns a translation matrix for vector(x, y, z)
-func Translation(x, y, z float32) *Matrix {
+func Translation(x, y, z float64) *Matrix {
 	a := IdentityMatrix()
 	a.Set(0, 3, x)
 	a.Set(1, 3, y)
@@ -30,7 +30,7 @@ func Translation(x, y, z float32) *Matrix {
 }
 
 // Scaling returns a scaling matrix for vector(x, y, z)
-func Scaling(x, y, z float32) *Matrix {
+func Scaling(x, y, z float64) *Matrix {
 	a := IdentityMatrix()
 	a.Set(0, 0, x)
 	a.Set(1, 1, y)
@@ -40,10 +40,10 @@ func Scaling(x, y, z float32) *Matrix {
 
 // Rotation returns the rotation matrix around the x, y, or z axis by
 // the provided radians
-func Rotation(axis int, radians float32) *Matrix {
+func Rotation(axis int, radians float64) *Matrix {
 	a := IdentityMatrix()
-	sin := (float32)(math.Sin((float64)(radians)))
-	cos := (float32)(math.Cos((float64)(radians)))
+	sin := math.Sin(radians)
+	cos := math.Cos(radians)
 
 	switch axis {
 	case Axis_X:
@@ -66,7 +66,7 @@ func Rotation(axis int, radians float32) *Matrix {
 }
 
 // Shearing returns the shearing matrix
-func Shearing(xY, xZ, yX, yZ, zX, zY float32) *Matrix {
+func Shearing(xY, xZ, yX, yZ, zX, zY float64) *Matrix {
 	a := IdentityMatrix()
 	a.Set(0, 1, xY)
 	a.Set(0, 2, xZ)

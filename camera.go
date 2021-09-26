@@ -8,15 +8,15 @@ import (
 type Camera struct {
 	Hsize       int
 	Vsize       int
-	FieldOfView float32
-	HalfHeight  float32
-	HalfWidth   float32
-	PixelSize   float32
+	FieldOfView float64
+	HalfHeight  float64
+	HalfWidth   float64
+	PixelSize   float64
 	Transform   *Matrix
 }
 
 // NewCamera returns a new Camera, with default Transform
-func NewCamera(hsize, vsize int, fov float32) *Camera {
+func NewCamera(hsize, vsize int, fov float64) *Camera {
 	camera := &Camera{
 		Hsize:       hsize,
 		Vsize:       vsize,
@@ -25,8 +25,8 @@ func NewCamera(hsize, vsize int, fov float32) *Camera {
 	}
 
 	// Compute HalfHeight, HalfWidth, and PixelSize
-	halfView := float32(math.Tan(float64(fov) / 2))
-	aspect := float32(hsize) / float32(vsize)
+	halfView := math.Tan(fov / 2)
+	aspect := float64(hsize) / float64(vsize)
 	if aspect >= 1 {
 		camera.HalfWidth = halfView
 		camera.HalfHeight = halfView / aspect
@@ -34,7 +34,7 @@ func NewCamera(hsize, vsize int, fov float32) *Camera {
 		camera.HalfWidth = halfView * aspect
 		camera.HalfHeight = halfView
 	}
-	camera.PixelSize = (camera.HalfWidth * 2) / float32(hsize)
+	camera.PixelSize = (camera.HalfWidth * 2) / float64(hsize)
 
 	return camera
 }
@@ -44,8 +44,8 @@ func NewCamera(hsize, vsize int, fov float32) *Camera {
 func (camera *Camera) RayForPixel(x, y int) *Ray {
 
 	// the offset from the edge of the canvas to the pixel's center
-	offsetX := (float32(x) + 0.5) * camera.PixelSize
-	offsetY := (float32(y) + 0.5) * camera.PixelSize
+	offsetX := (float64(x) + 0.5) * camera.PixelSize
+	offsetY := (float64(y) + 0.5) * camera.PixelSize
 
 	// the untransformed coordinates of the pixel in world space.
 	// (remember that the camera looks toward -z, so +x is to the *left*.)

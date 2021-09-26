@@ -47,7 +47,7 @@ Scenario: Lighting with eye in the path of the reflection vector
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 10, -10), color(1, 1, 1))
   When result ← lighting(m, light, position, eyev, normalv, in_shadow)
-  Then result = color(1.63638, 1.63638, 1.63638)
+  Then result = color(1.6364, 1.6364, 1.6364)
 
 Scenario: Lighting with the light behind the surface
   Given eyev ← vector(0, 0, -1)

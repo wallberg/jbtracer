@@ -32,7 +32,7 @@ func rayEqualField(r1name, op, t1name string) error {
 	return nil
 }
 
-func rayPositionEqualPoint(r1name string, t, x, y, z float32) error {
+func rayPositionEqualPoint(r1name string, t, x, y, z float64) error {
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", r1name)
 	}
@@ -55,7 +55,7 @@ func transform(r1name, r2name, m1name string) error {
 	return nil
 }
 
-func rayEqualOriginPoint(r1name string, x, y, z float32) error {
+func rayEqualOriginPoint(r1name string, x, y, z float64) error {
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", r1name)
 	}
@@ -67,7 +67,7 @@ func rayEqualOriginPoint(r1name string, x, y, z float32) error {
 	return nil
 }
 
-func rayEqualDirectionVector(r1name string, x, y, z float32) error {
+func rayEqualDirectionVector(r1name string, x, y, z float64) error {
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol (ray) %s", r1name)
 	}

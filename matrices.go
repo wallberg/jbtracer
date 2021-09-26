@@ -6,24 +6,24 @@ import (
 
 type Matrix struct {
 	size  int
-	cells []float32
+	cells []float64
 }
 
 // NewMatrix returns a newly initialized size x size matrix
 func NewMatrix(size int) *Matrix {
 	return &Matrix{
 		size:  size,
-		cells: make([]float32, size*size),
+		cells: make([]float64, size*size),
 	}
 }
 
 // Set sets the value of the matrix cell at (x,y)
-func (m *Matrix) Set(i, j int, value float32) {
+func (m *Matrix) Set(i, j int, value float64) {
 	m.cells[i*m.size+j] = value
 }
 
 // Get returns the value of the matrix cell at (x,y)
-func (m *Matrix) Get(i, j int) float32 {
+func (m *Matrix) Get(i, j int) float64 {
 	return m.cells[i*m.size+j]
 }
 
@@ -33,7 +33,7 @@ func (a *Matrix) Equal(b *Matrix) bool {
 		return false
 	}
 	for i, value := range a.cells {
-		if !EqualFloat32(b.cells[i], value) {
+		if !EqualFloat64(b.cells[i], value) {
 			return false
 		}
 	}
@@ -47,7 +47,7 @@ func (a *Matrix) Multiply(b *Matrix) *Matrix {
 	// Iterate over the cells of matrix C
 	for i := 0; i < c.size; i++ {
 		for j := 0; j < c.size; j++ {
-			var value float32 = 0.0
+			var value float64 = 0.0
 			// Iterate over a row of A and a column of C
 			for k := 0; k < c.size; k++ {
 				value += a.Get(i, k) * b.Get(k, j)
@@ -106,12 +106,12 @@ func (a *Matrix) Transpose() *Matrix {
 }
 
 // Determinant returns the determinant of this matrix
-func (a *Matrix) Determinant() float32 {
+func (a *Matrix) Determinant() float64 {
 	if a.size == 2 {
 		return a.Get(0, 0)*a.Get(1, 1) - a.Get(0, 1)*a.Get(1, 0)
 	}
 
-	var d float32 = 0
+	var d float64 = 0
 	for j := 0; j < a.size; j++ {
 		d += a.Get(0, j) * a.Cofactor(0, j)
 	}
@@ -142,12 +142,12 @@ func (a *Matrix) Submatrix(i, j int) *Matrix {
 
 // Minor returns the determinant of the submatrix at row i
 // and column j
-func (a *Matrix) Minor(i, j int) float32 {
+func (a *Matrix) Minor(i, j int) float64 {
 	return a.Submatrix(i, j).Determinant()
 }
 
 // Cofactor returns the cofactor of this matrix
-func (a *Matrix) Cofactor(i, j int) float32 {
+func (a *Matrix) Cofactor(i, j int) float64 {
 	m := a.Minor(i, j)
 	if (i+j)%2 == 1 {
 		m *= -1
@@ -162,7 +162,7 @@ func (a *Matrix) Cofactor(i, j int) float32 {
 // is not invertible
 func (a *Matrix) Inverse() (*Matrix, error) {
 	d := a.Determinant()
-	if EqualFloat32(d, 0) {
+	if EqualFloat64(d, 0) {
 		return nil, fmt.Errorf("matrix is not invertible")
 	}
 

@@ -2,7 +2,6 @@ package jbtracer
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 )
 
@@ -46,12 +45,12 @@ func isNotVector(t1name string) error {
 	return nil
 }
 
-func tuple(t1name string, x, y, z, w float32) error {
+func tuple(t1name string, x, y, z, w float64) error {
 	tuples[t1name] = &Tuple{X: x, Y: y, Z: z, W: w}
 	return nil
 }
 
-func equalsTupleX(t1name string, x float32) error {
+func equalsTupleX(t1name string, x float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -61,7 +60,7 @@ func equalsTupleX(t1name string, x float32) error {
 	return nil
 }
 
-func equalsTupleY(t1name string, y float32) error {
+func equalsTupleY(t1name string, y float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -71,7 +70,7 @@ func equalsTupleY(t1name string, y float32) error {
 	return nil
 }
 
-func equalsTupleZ(t1name string, z float32) error {
+func equalsTupleZ(t1name string, z float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -81,7 +80,7 @@ func equalsTupleZ(t1name string, z float32) error {
 	return nil
 }
 
-func equalsTupleW(t1name string, w float32) error {
+func equalsTupleW(t1name string, w float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -91,17 +90,17 @@ func equalsTupleW(t1name string, w float32) error {
 	return nil
 }
 
-func point(t1name string, x, y, z float32) error {
+func point(t1name string, x, y, z float64) error {
 	tuples[t1name] = NewPoint(x, y, z)
 	return nil
 }
 
-func vector(t1name string, x, y, z float32) error {
+func vector(t1name string, x, y, z float64) error {
 	tuples[t1name] = NewVector(x, y, z)
 	return nil
 }
 
-func equalsTuple(t1name string, x, y, z, w float32) error {
+func equalsTuple(t1name string, x, y, z, w float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -112,7 +111,7 @@ func equalsTuple(t1name string, x, y, z, w float32) error {
 	return nil
 }
 
-func equalsTupleAdd(t1name string, t2name string, x, y, z, w float32) error {
+func equalsTupleAdd(t1name string, t2name string, x, y, z, w float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -127,7 +126,7 @@ func equalsTupleAdd(t1name string, t2name string, x, y, z, w float32) error {
 	return nil
 }
 
-func equalsTupleSubtract(t1name string, t2name string, ttype string, x, y, z float32) error {
+func equalsTupleSubtract(t1name string, t2name string, ttype string, x, y, z float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -146,7 +145,7 @@ func equalsTupleSubtract(t1name string, t2name string, ttype string, x, y, z flo
 	return nil
 }
 
-func equalsTupleNegate(t1name string, x, y, z, w float32) error {
+func equalsTupleNegate(t1name string, x, y, z, w float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -158,7 +157,7 @@ func equalsTupleNegate(t1name string, x, y, z, w float32) error {
 	return nil
 }
 
-func equalsTupleMultiply(t1name string, scalar float32, x, y, z, w float32) error {
+func equalsTupleMultiply(t1name string, scalar float64, x, y, z, w float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -170,7 +169,7 @@ func equalsTupleMultiply(t1name string, scalar float32, x, y, z, w float32) erro
 	return nil
 }
 
-func equalsTupleDivide(t1name string, scalar float32, x, y, z, w float32) error {
+func equalsTupleDivide(t1name string, scalar float64, x, y, z, w float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -182,12 +181,12 @@ func equalsTupleDivide(t1name string, scalar float32, x, y, z, w float32) error 
 	return nil
 }
 
-func equalsTupleMagnitude(t1name string, expected float32) error {
+func equalsTupleMagnitude(t1name string, expected float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
 	got := t1.Magnitude()
-	if math.Abs((float64)(got)-(float64)(expected)) >= Epsilon {
+	if !EqualFloat64(got, expected) {
 		return fmt.Errorf("Expected %s=%f; got %f", t1name, expected, got)
 	}
 	return nil
@@ -201,7 +200,7 @@ func normalize(t1name string, t2name string) error {
 	return nil
 }
 
-func equalsVectorNormalize(t1name string, x, y, z float32) error {
+func equalsVectorNormalize(t1name string, x, y, z float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -213,7 +212,7 @@ func equalsVectorNormalize(t1name string, x, y, z float32) error {
 	return nil
 }
 
-func equalsVectorDot(t1name string, t2name string, expected float32) error {
+func equalsVectorDot(t1name string, t2name string, expected float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -227,7 +226,7 @@ func equalsVectorDot(t1name string, t2name string, expected float32) error {
 	return nil
 }
 
-func equalsVectorCross(t1name string, t2name string, x, y, z float32) error {
+func equalsVectorCross(t1name string, t2name string, x, y, z float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
@@ -242,23 +241,23 @@ func equalsVectorCross(t1name string, t2name string, x, y, z float32) error {
 	return nil
 }
 
-func color(t1name string, red, green, blue float32) error {
+func color(t1name string, red, green, blue float64) error {
 	colors[t1name] = &Color{red, green, blue}
 	return nil
 }
 
-func equalsColorOp(c1name string, op string, c2name string, red, green, blue float32) error {
+func equalsColorOp(c1name string, op string, c2name string, red, green, blue float64) error {
 
 	if c1, ok = colors[c1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", c1name)
 	}
 
-	var scalar float32
+	var scalar float64
 	if c2, ok = colors[c2name]; !ok {
 		// Not a known symbol, see if this is a scalar
-		if f, err := strconv.ParseFloat(c2name, 32); err == nil {
+		if f, err := strconv.ParseFloat(c2name, 64); err == nil {
 			// It's a scalar
-			scalar = (float32)(f)
+			scalar = f
 			if op != "*" {
 				return fmt.Errorf("Can't perform %s operation on scalar", op)
 			}
@@ -290,12 +289,12 @@ func equalsColorOp(c1name string, op string, c2name string, red, green, blue flo
 	return nil
 }
 
-func equalsColorField(c1name string, field string, expected float32) error {
+func equalsColorField(c1name string, field string, expected float64) error {
 	if c1, ok = colors[c1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", c1name)
 	}
 
-	var got float32
+	var got float64
 	switch field {
 	case "red":
 		got = c1.Red
@@ -311,7 +310,7 @@ func equalsColorField(c1name string, field string, expected float32) error {
 	return nil
 }
 
-func colorEqual(c1name string, red, green, blue float32) error {
+func colorEqual(c1name string, red, green, blue float64) error {
 	if c1, ok = colors[c1name]; !ok {
 		return fmt.Errorf("Unknown symbol (color) %s", c1name)
 	}
@@ -323,7 +322,7 @@ func colorEqual(c1name string, red, green, blue float32) error {
 	return nil
 }
 
-func vectorEqual(t1name string, x, y, z float32) error {
+func vectorEqual(t1name string, x, y, z float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)
 	}
