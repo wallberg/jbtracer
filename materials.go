@@ -77,7 +77,7 @@ func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tupl
 	}
 
 	// compute the specular contribution
-	factor := float64(math.Pow(float64(reflectDotEye), float64(material.Shininess)))
+	factor := math.Pow(reflectDotEye, material.Shininess)
 	specular := light.Intensity.MultiplyScalar(material.Specular).MultiplyScalar(factor)
 
 	// Add the three contributions together to get the final shading
