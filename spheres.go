@@ -7,14 +7,14 @@ import (
 )
 
 type Sphere struct {
-	Transform *Matrix
+	transform *Matrix
 	material  *Material
 }
 
 // NewSphere creates a new Sphere
 func NewSphere() *Sphere {
 	return &Sphere{
-		Transform: IdentityMatrix(),
+		transform: IdentityMatrix(),
 		material:  NewMaterial(),
 	}
 }
@@ -24,12 +24,22 @@ func (a *Sphere) String() string {
 	return fmt.Sprintf("%+v", *a)
 }
 
+// Transform returns the transform for this Sphere
+func (a *Sphere) Transform() *Matrix {
+	return a.transform
+}
+
+// SetMaterial sets the material for this Sphere
+func (a *Sphere) SetTransform(transform *Matrix) {
+	a.transform = transform
+}
+
 // Equal returns whether the two Spheres are the same
-func (a *Sphere) Equal(b Object) bool {
+func (a *Sphere) Equal(b Shape) bool {
 	if sb, ok := b.(*Sphere); !ok {
 		return false
 	} else {
-		return a != nil && sb != nil && a.Transform.Equal(sb.Transform) && a.material.Equal(sb.material)
+		return a != nil && sb != nil && a.transform.Equal(sb.transform) && a.material.Equal(sb.material)
 	}
 }
 
@@ -45,11 +55,11 @@ func (a *Sphere) SetMaterial(material *Material) {
 
 // Intersections returns the intersections of the provided Ray
 // with the Sphere
-func (s *Sphere) Intersections(r *Ray) []*Intersection {
+func (s *Sphere) Intersections(r *Ray) Intersections {
 
 	// Instead of transforming the Sphere, apply the inverse
 	// of the transform to the Ray
-	if inv, err := s.Transform.Inverse(); err != nil {
+	if inv, err := s.transform.Inverse(); err != nil {
 		log.Fatal(err)
 	} else {
 		r = r.Transform(inv)
@@ -83,9 +93,9 @@ func (s *Sphere) Intersections(r *Ray) []*Intersection {
 
 // NormalAt returns the surface normal to the sphere at the given Point.
 func (s *Sphere) NormalAt(worldPoint *Tuple) *Tuple {
-	transformInverse, err := s.Transform.Inverse()
+	transformInverse, err := s.transform.Inverse()
 	if err != nil {
-		log.Fatalf("Matrix s.Transform=%v is not invertible", s.Transform)
+		log.Fatalf("Matrix s.Transform()=%v is not invertible", s.Transform())
 	}
 
 	objectPoint := transformInverse.MultiplyTuple(worldPoint)

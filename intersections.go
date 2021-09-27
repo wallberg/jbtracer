@@ -5,7 +5,7 @@ import (
 )
 
 type Intersection struct {
-	Object Object
+	Object Shape
 	T      float64
 }
 
@@ -13,7 +13,7 @@ type Intersections []*Intersection
 
 type PreparedComputations struct {
 	T         float64
-	Object    Object
+	Object    Shape
 	Point     *Tuple
 	EyeV      *Tuple
 	NormalV   *Tuple
@@ -22,7 +22,7 @@ type PreparedComputations struct {
 }
 
 // NewIntersection creates a new Intersection
-func NewIntersection(object Object, t float64) *Intersection {
+func NewIntersection(object Shape, t float64) *Intersection {
 	return &Intersection{
 		Object: object,
 		T:      t,

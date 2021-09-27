@@ -4,13 +4,13 @@ import "sort"
 
 type World struct {
 	Light   *PointLight
-	Objects []Object
+	Objects []Shape
 }
 
 // NewWorld returns a new, empty World
 func NewWorld() *World {
 	w := &World{}
-	w.Objects = make([]Object, 0)
+	w.Objects = make([]Shape, 0)
 	return w
 }
 
@@ -26,14 +26,14 @@ func DefaultWorld() *World {
 	w.AddObject(s)
 
 	s = NewSphere()
-	s.Transform = Scaling(0.5, 0.5, 0.5)
+	s.SetTransform(Scaling(0.5, 0.5, 0.5))
 	w.AddObject(s)
 
 	return w
 }
 
 // AddObject adds a new Object to the World
-func (w *World) AddObject(object Object) {
+func (w *World) AddObject(object Shape) {
 	w.Objects = append(w.Objects, object)
 }
 

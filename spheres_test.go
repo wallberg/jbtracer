@@ -18,7 +18,7 @@ func rayPointVector(r1name string, xp, yp, zp, xv, yv, zv float64) error {
 func sphere(s1name string) error {
 	sph1 = NewSphere()
 	spheres[s1name] = sph1
-	objects[s1name] = sph1
+	shapes[s1name] = sph1
 
 	return nil
 }
@@ -32,7 +32,7 @@ func sphereEqualTransform(sph1name, m1name string) error {
 	}
 
 	expected := m1
-	got := sph1.Transform
+	got := sph1.Transform()
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected %s.transform = %v; got %v", sph1name, expected, got)
 	}
@@ -48,10 +48,7 @@ func sphereTransform(sph1name, m1name string) error {
 		return fmt.Errorf("Unknown symbol (matrix) %s", m1name)
 	}
 
-	sph1.Transform = m1
-	// if sph1.Transform, err = m1.Inverse(); err != nil {
-	// 	return fmt.Errorf("Matrix %s is not invertible", m1name)
-	// }
+	sph1.SetTransform(m1)
 	return nil
 
 }
@@ -159,15 +156,15 @@ func sphereWith(sph1name string, table *godog.Table) error {
 				}
 				switch m[1] {
 				case "scaling":
-					sph1.Transform = Scaling(x, y, z)
+					sph1.SetTransform(Scaling(x, y, z))
 				case "translation":
-					sph1.Transform = Translation(x, y, z)
+					sph1.SetTransform(Translation(x, y, z))
 				}
 			}
 		}
 	}
 
 	spheres[sph1name] = sph1
-	objects[sph1name] = sph1
+	shapes[sph1name] = sph1
 	return nil
 }

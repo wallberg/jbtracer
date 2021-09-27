@@ -81,7 +81,7 @@ func worldToObject(o1name, sindex string) error {
 	} else {
 		index = 1
 	}
-	objects[o1name] = w.Objects[index]
+	shapes[o1name] = w.Objects[index]
 	return nil
 }
 
@@ -109,9 +109,9 @@ func worldIsShadowed(t1name, flag string) error {
 }
 
 func worldAddObject(o1name string) error {
-	if o1, ok = objects[o1name]; !ok {
+	if sh1, ok = shapes[o1name]; !ok {
 		return fmt.Errorf("Unknown symbol (object) %s", o1name)
 	}
-	w.AddObject(o1)
+	w.AddObject(sh1)
 	return nil
 }

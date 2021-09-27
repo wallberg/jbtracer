@@ -25,7 +25,7 @@ var (
 	r1, r2                    *Ray
 	sph1                      *Sphere
 	i1, i2, i3, i4, i5        Intersections
-	o1                        Object
+	sh1                       Shape
 	mat1, mat2                *Material
 	ppm                       *PPM
 	ok                        bool
@@ -37,7 +37,7 @@ var (
 	rays                      map[string]*Ray
 	spheres                   map[string]*Sphere
 	intersections             map[string][]*Intersection
-	objects                   map[string]Object
+	shapes                    map[string]Shape
 	light                     *PointLight
 	materials                 map[string]*Material
 	w                         *World
@@ -232,7 +232,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		rays = make(map[string]*Ray)
 		spheres = make(map[string]*Sphere)
 		intersections = make(map[string][]*Intersection)
-		objects = make(map[string]Object)
+		shapes = make(map[string]Shape)
 		light = nil
 		c = nil
 		ppm = nil
@@ -264,7 +264,7 @@ func BenchmarkFloatOps(b *testing.B) {
 		transform := Rotation(Axis_Y, 0.78539)
 		transform = transform.Multiply(Scaling(0.4, 1, 1))
 		transform = transform.Multiply(Translation(0.4, 0, 0))
-		sphere.Transform = transform
+		sphere.SetTransform(transform)
 
 		// Iterate over canvas points
 		for y := 0; y < canvasPixels; y++ {

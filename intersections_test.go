@@ -45,10 +45,10 @@ func intersectionsObject(i1name string, index int, o1name string) error {
 	if i1, ok = intersections[i1name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersections) %s", i1name)
 	}
-	if o1, ok = objects[o1name]; !ok {
+	if sh1, ok = shapes[o1name]; !ok {
 		return fmt.Errorf("Unknown symbol (object): %s", o1name)
 	}
-	expected := o1
+	expected := sh1
 	got := i1[index].Object
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected %s[%d].object = %v; got %v", i1name, index, expected, got)
@@ -61,10 +61,10 @@ func intersectionObject(i1name, o1name string) error {
 }
 
 func intersection(i1name string, t float64, o1name string) error {
-	if o1, ok = objects[o1name]; !ok {
+	if sh1, ok = shapes[o1name]; !ok {
 		return fmt.Errorf("Unknown symbol (object) %s", o1name)
 	}
-	intersections[i1name] = []*Intersection{NewIntersection(o1, t)}
+	intersections[i1name] = []*Intersection{NewIntersection(sh1, t)}
 	return nil
 }
 
