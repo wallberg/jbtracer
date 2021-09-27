@@ -2,7 +2,6 @@ package jbtracer
 
 import (
 	"fmt"
-	"log"
 	"math"
 )
 
@@ -57,50 +56,39 @@ func (a *Sphere) SetMaterial(material *Material) {
 // with the Sphere
 func (s *Sphere) Intersections(r *Ray) Intersections {
 
-	// Instead of transforming the Sphere, apply the inverse
-	// of the transform to the Ray
-	if inv, err := s.transform.Inverse(); err != nil {
-		log.Fatal(err)
-	} else {
-		r = r.Transform(inv)
-	}
+	return IntersectionsCommon(s, r, func(r *Ray) Intersections {
 
-	sphereToRay := r.Origin.Subtract(NewPoint(0, 0, 0))
-	a := r.Direction.Dot(r.Direction)
-	b := 2 * r.Direction.Dot(sphereToRay)
-	c := sphereToRay.Dot(sphereToRay) - 1
-	discriminant := b*b - 4*a*c
+		sphereToRay := r.Origin.Subtract(NewPoint(0, 0, 0))
+		a := r.Direction.Dot(r.Direction)
+		b := 2 * r.Direction.Dot(sphereToRay)
+		c := sphereToRay.Dot(sphereToRay) - 1
+		discriminant := b*b - 4*a*c
 
-	i := make([]*Intersection, 0)
-	if discriminant < 0 {
+		i := make([]*Intersection, 0)
+		if discriminant < 0 {
+			return i
+		}
+
+		discriminantRoot := math.Sqrt(discriminant)
+		t1 := (-1*b - discriminantRoot) / (2 * a)
+		t2 := (-1*b + discriminantRoot) / (2 * a)
+
+		if t1 < t2 {
+			i = append(i, NewIntersection(s, t1))
+			i = append(i, NewIntersection(s, t2))
+		} else {
+			i = append(i, NewIntersection(s, t2))
+			i = append(i, NewIntersection(s, t1))
+
+		}
 		return i
-	}
-
-	discriminantRoot := math.Sqrt(discriminant)
-	t1 := (-1*b - discriminantRoot) / (2 * a)
-	t2 := (-1*b + discriminantRoot) / (2 * a)
-
-	if t1 < t2 {
-		i = append(i, NewIntersection(s, t1))
-		i = append(i, NewIntersection(s, t2))
-	} else {
-		i = append(i, NewIntersection(s, t2))
-		i = append(i, NewIntersection(s, t1))
-
-	}
-	return i
+	})
 }
 
 // NormalAt returns the surface normal to the sphere at the given Point.
 func (s *Sphere) NormalAt(worldPoint *Tuple) *Tuple {
-	transformInverse, err := s.transform.Inverse()
-	if err != nil {
-		log.Fatalf("Matrix s.Transform()=%v is not invertible", s.Transform())
-	}
 
-	objectPoint := transformInverse.MultiplyTuple(worldPoint)
-	objectNormal := objectPoint.Subtract(NewPoint(0, 0, 0))
-	worldNormal := transformInverse.Transpose().MultiplyTuple(objectNormal)
-	worldNormal.W = 0
-	return worldNormal.Normalize()
+	return NormalAtCommon(s, worldPoint, func(objectPoint *Tuple) *Tuple {
+		return objectPoint.Subtract(NewPoint(0, 0, 0))
+	})
 }
