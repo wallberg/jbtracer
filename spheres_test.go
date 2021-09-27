@@ -23,36 +23,6 @@ func sphere(s1name string) error {
 	return nil
 }
 
-func sphereEqualTransform(sph1name, m1name string) error {
-	if sph1, ok = spheres[sph1name]; !ok {
-		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
-	}
-	if m1, ok = matrices[m1name]; !ok {
-		return fmt.Errorf("Unknown symbol (matrix) %s", m1name)
-	}
-
-	expected := m1
-	got := sph1.Transform()
-	if !got.Equal(expected) {
-		return fmt.Errorf("Expected %s.transform = %v; got %v", sph1name, expected, got)
-	}
-	return nil
-
-}
-
-func sphereTransform(sph1name, m1name string) error {
-	if sph1, ok = spheres[sph1name]; !ok {
-		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
-	}
-	if m1, ok = matrices[m1name]; !ok {
-		return fmt.Errorf("Unknown symbol (matrix) %s", m1name)
-	}
-
-	sph1.SetTransform(m1)
-	return nil
-
-}
-
 func sphereNormalAt(t1name, sph1name string, x, y, z float64) error {
 	if sph1, ok = spheres[sph1name]; !ok {
 		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
@@ -61,25 +31,6 @@ func sphereNormalAt(t1name, sph1name string, x, y, z float64) error {
 	tuples[t1name] = sph1.NormalAt(NewPoint(x, y, z))
 	return nil
 
-}
-
-func sphereMaterial(mat1name, sph1name string) error {
-	if sph1, ok = spheres[sph1name]; !ok {
-		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
-	}
-	materials[mat1name] = sph1.material
-	return nil
-}
-
-func sphereMaterial2(sph1name, mat1name string) error {
-	if sph1, ok = spheres[sph1name]; !ok {
-		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
-	}
-	if mat1, ok = materials[mat1name]; !ok {
-		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
-	}
-	sph1.material = mat1
-	return nil
 }
 
 func sphereWith(sph1name string, table *godog.Table) error {

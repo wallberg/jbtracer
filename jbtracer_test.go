@@ -149,8 +149,6 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionsObject)
 	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, sphereNormalAt)
-	ctx.Step(`^(\w+) ← (\w+)\.material$`, sphereMaterial)
-	ctx.Step(`^(\w+)\.material ← (\w+)$`, sphereMaterial2)
 	ctx.Step(`^(\w+) ← sphere\(\) with:$`, sphereWith)
 
 	// intersections
@@ -161,8 +159,6 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
 	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
 	ctx.Step(`^(\w+) is nothing$`, intersectionEmpty)
-	ctx.Step(`^(s)\.transform = (\w+)$`, sphereEqualTransform)
-	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, sphereTransform)
 	ctx.Step(`^(\w+)\.object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+)\.t = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^comps ← prepare_computations\((\w+), (\w+)\)$`, comp)
@@ -220,6 +216,14 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^c\.transform ← (\w+)$`, cameraTransform)
 	ctx.Step(`^(\w+) ← ray_for_pixel\(c, (\d+), (\d+)\)$`, cameraRayForPixel)
 	ctx.Step(`^c ← render\(c, w\)$`, render)
+
+	// shapes
+	ctx.Step(`^s ← test_shape\(\)$`, shape)
+	ctx.Step(`^(s)\.transform = (\w+)$`, shapeEqualTransform)
+	ctx.Step(`^set_transform\((\w+), (\w+)\)$`, shapeTransform)
+	ctx.Step(`^(\w+) ← (\w+)\.material$`, shapeMaterial)
+	ctx.Step(`^(\w+)\.material ← (\w+)$`, shapeMaterial2)
+	ctx.Step(`^(\w+)\.material = (\w+)$`, shapeEqualMaterial)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
