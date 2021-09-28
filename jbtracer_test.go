@@ -24,7 +24,7 @@ var (
 	s1, s2                    float64
 	r1, r2                    *Ray
 	sph1                      *Sphere
-	i1, i2, i3, i4, i5        Intersections
+	i1, i2, i3, i4, i5        IntersectionSlice
 	sh1                       Shape
 	mat1, mat2                *Material
 	ppm                       *PPM
@@ -283,7 +283,7 @@ func BenchmarkFloatOps(b *testing.B) {
 				ray := NewRay(rayOrigin, vector)
 
 				// Determine if the ray intersects the sphere
-				var xs Intersections = sphere.Intersections(ray)
+				var xs IntersectionSlice = sphere.Intersections(ray)
 				if hit := xs.Hit(); hit != nil {
 					c.Grid[x][y] = color
 				}

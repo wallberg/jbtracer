@@ -9,7 +9,7 @@ type Intersection struct {
 	T      float64
 }
 
-type Intersections []*Intersection
+type IntersectionSlice []*Intersection
 
 type PreparedComputations struct {
 	T         float64
@@ -57,7 +57,7 @@ func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
 		Object:  i.Object,
 		Point:   Point,
 		EyeV:    r.Direction.Multiply(-1),
-		NormalV: i.Object.NormalAt(Point),
+		NormalV: NormalAt(i.Object, Point),
 	}
 
 	if comps.NormalV.Dot(comps.EyeV) < 0 {
@@ -71,13 +71,13 @@ func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
 }
 
 // String returns a string representation of the Intersection
-func (a *Intersections) String() string {
+func (a *IntersectionSlice) String() string {
 	return fmt.Sprintf("%+v", *a)
 }
 
 // Hit returns the smallest positive intersection from the list
 // TODO: determine if we can assume the slice is sorted
-func (is Intersections) Hit() *Intersection {
+func (is IntersectionSlice) Hit() *Intersection {
 	var hit *Intersection
 	for _, i := range is {
 		if i.T > 0 && (hit == nil || i.T < hit.T) {
@@ -88,7 +88,7 @@ func (is Intersections) Hit() *Intersection {
 }
 
 // Equal returns true if the two Intersections objects are the same
-func (a Intersections) Equal(b Intersections) bool {
+func (a IntersectionSlice) Equal(b IntersectionSlice) bool {
 	if a == nil || b == nil {
 		return false
 	} else if len(a) != len(b) {

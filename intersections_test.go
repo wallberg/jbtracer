@@ -9,7 +9,7 @@ func intersect(i1name, sph1name, r1name string) error {
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
 	}
-	intersections[i1name] = sph1.Intersections(r1)
+	intersections[i1name] = Intersections(sph1, r1)
 	return nil
 }
 
@@ -103,7 +103,7 @@ func intersectionHits(i1name, i2name string) error {
 	if i2, ok = intersections[i2name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i2name)
 	}
-	hit := make(Intersections, 0)
+	hit := make(IntersectionSlice, 0)
 	i := i2.Hit()
 	if i != nil {
 		hit = append(hit, i)

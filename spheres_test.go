@@ -28,7 +28,7 @@ func sphereNormalAt(t1name, sph1name string, x, y, z float64) error {
 		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
 	}
 
-	tuples[t1name] = sph1.NormalAt(NewPoint(x, y, z))
+	tuples[t1name] = NormalAt(sph1, NewPoint(x, y, z))
 	return nil
 
 }

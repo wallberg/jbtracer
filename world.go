@@ -39,12 +39,12 @@ func (w *World) AddObject(object Shape) {
 
 // Intersections returns intersections of the Ray with every object
 // in the World, sorted in ascending Ray.T order
-func (w *World) Intersections(r *Ray) Intersections {
+func (w *World) Intersections(r *Ray) IntersectionSlice {
 
 	// Accumulate all of the intersections
 	is := make([]*Intersection, 0)
 	for _, object := range w.Objects {
-		is = append(is, object.Intersections(r)...)
+		is = append(is, Intersections(object, r)...)
 	}
 
 	// Sort by ascending T value

@@ -3,7 +3,7 @@ package jbtracer
 import "log"
 
 type Shape interface {
-	Intersections(*Ray) Intersections
+	Intersections(*Ray) IntersectionSlice
 	NormalAt(worldPoint *Tuple) *Tuple
 	Material() *Material
 	SetMaterial(*Material)
@@ -12,10 +12,9 @@ type Shape interface {
 	SetTransform(*Matrix)
 }
 
-// IntersectionsCommon provides the functionality common to every Shape which
-// implements Intersections(), wrapped around the call to local() which
-// is provided by the implementing type.
-func IntersectionsCommon(s Shape, r *Ray, local func(r *Ray) Intersections) Intersections {
+// Intersections provides the common functionality wrapped around every
+// Shape.Intersections() implemention.
+func Intersections(s Shape, r *Ray) IntersectionSlice {
 
 	// Instead of transforming the Sphere, apply the inverse
 	// of the transform to the Ray
@@ -25,20 +24,19 @@ func IntersectionsCommon(s Shape, r *Ray, local func(r *Ray) Intersections) Inte
 		r = r.Transform(inv)
 	}
 
-	return local(r)
+	return s.Intersections(r)
 }
 
-// NormalAtCommon provides the functionality common to every Shape which
-// implements NormalAt(), wrapped around the call to locat() which is provided
-// by the implementing type.
-func NormalAtCommon(s Shape, worldPoint *Tuple, local func(objectPoint *Tuple) (objectNormal *Tuple)) *Tuple {
+// NormalAt provides the common functionality wrapped around every
+// Shape.NormalAt() implemention.
+func NormalAt(s Shape, worldPoint *Tuple) *Tuple {
 	inv, err := s.Transform().Inverse()
 	if err != nil {
 		log.Fatalf("Matrix s.Transform()=%v is not invertible", s.Transform())
 	}
 
 	objectPoint := inv.MultiplyTuple(worldPoint)
-	objectNormal := local(objectPoint)
+	objectNormal := s.NormalAt(objectPoint)
 	worldNormal := inv.Transpose().MultiplyTuple(objectNormal)
 	worldNormal.W = 0
 

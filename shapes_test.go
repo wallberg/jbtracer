@@ -14,12 +14,12 @@ func NewTestShape() *TestShape {
 	}
 }
 
-func (s *TestShape) Intersections(ray *Ray) Intersections {
-	return make(Intersections, 0)
+func (s *TestShape) Intersections(ray *Ray) IntersectionSlice {
+	return make(IntersectionSlice, 0)
 }
 
-func (s *TestShape) NormalAt(worldPoint *Tuple) *Tuple {
-	return nil
+func (s *TestShape) NormalAt(objectPoint *Tuple) *Tuple {
+	return NewPoint(0, 0, 0)
 }
 
 func (s *TestShape) Material() *Material {
