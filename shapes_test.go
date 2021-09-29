@@ -157,6 +157,16 @@ func shapeNormalAt(t1name, sh1name string, x, y, z float64) error {
 
 }
 
+func shapeLocalNormalAt(t1name, sh1name string, x, y, z float64) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape) %s", sh1name)
+	}
+
+	tuples[t1name] = sh1.NormalAt(NewPoint(x, y, z))
+	return nil
+
+}
+
 func shapeEqualSavedRayOrigin(sh1name string, x, y, z float64) error {
 	if sh1, ok = shapes[sh1name]; !ok {
 		return fmt.Errorf("Unknown symbol (shape) %s", sh1name)
@@ -191,7 +201,7 @@ func shapeEqualSavedRayDirection(sh1name string, x, y, z float64) error {
 	return nil
 }
 
-func intersect(i1name, sh1name, r1name string) error {
+func shapeIntersect(i1name, sh1name, r1name string) error {
 	if sh1, ok = shapes[sh1name]; !ok {
 		return fmt.Errorf("Unknown symbol (shape): %s", sh1name)
 	}
@@ -199,5 +209,16 @@ func intersect(i1name, sh1name, r1name string) error {
 		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
 	}
 	intersections[i1name] = Intersections(sh1, r1)
+	return nil
+}
+
+func shapeLocalIntersect(i1name, sh1name, r1name string) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape): %s", sh1name)
+	}
+	if r1, ok = rays[r1name]; !ok {
+		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
+	}
+	intersections[i1name] = sh1.Intersections(r1)
 	return nil
 }

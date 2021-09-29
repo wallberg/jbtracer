@@ -225,7 +225,12 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, shapeNormalAt)
 	ctx.Step(`^(s)\.saved_ray\.origin = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, shapeEqualSavedRayOrigin)
 	ctx.Step(`^(s)\.saved_ray\.direction = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, shapeEqualSavedRayDirection)
-	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
+	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, shapeIntersect)
+	ctx.Step(`^(\w+) ← local_normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, shapeLocalNormalAt)
+	ctx.Step(`^(\w+) ← local_intersect\((\w+), (\w+)\)$`, shapeLocalIntersect)
+
+	// planes
+	ctx.Step(`^(\w+) ← plane\(\)$`, plane)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
