@@ -23,16 +23,6 @@ func sphere(s1name string) error {
 	return nil
 }
 
-func sphereNormalAt(t1name, sph1name string, x, y, z float64) error {
-	if sph1, ok = spheres[sph1name]; !ok {
-		return fmt.Errorf("Unknown symbol (sphere) %s", sph1name)
-	}
-
-	tuples[t1name] = NormalAt(sph1, NewPoint(x, y, z))
-	return nil
-
-}
-
 func sphereWith(sph1name string, table *godog.Table) error {
 	reTuple := regexp.MustCompile(`^\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
 	reScalar := regexp.MustCompile(`^(-?\d+(?:\.\d+)?)$`)

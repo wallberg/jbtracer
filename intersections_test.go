@@ -2,17 +2,6 @@ package jbtracer
 
 import "fmt"
 
-func intersect(i1name, sph1name, r1name string) error {
-	if sph1, ok = spheres[sph1name]; !ok {
-		return fmt.Errorf("Unknown symbol (sphere): %s", sph1name)
-	}
-	if r1, ok = rays[r1name]; !ok {
-		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
-	}
-	intersections[i1name] = Intersections(sph1, r1)
-	return nil
-}
-
 func intersectionCount(i1name string, count int) error {
 	if i1, ok = intersections[i1name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)

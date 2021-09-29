@@ -5,6 +5,7 @@ import "fmt"
 type TestShape struct {
 	transform *Matrix
 	material  *Material
+	savedRay  *Ray
 }
 
 func NewTestShape() *TestShape {
@@ -15,11 +16,16 @@ func NewTestShape() *TestShape {
 }
 
 func (s *TestShape) Intersections(ray *Ray) IntersectionSlice {
+	s.savedRay = ray
 	return make(IntersectionSlice, 0)
 }
 
 func (s *TestShape) NormalAt(objectPoint *Tuple) *Tuple {
-	return NewPoint(0, 0, 0)
+	return NewVector(
+		objectPoint.X,
+		objectPoint.Y,
+		objectPoint.Z,
+	)
 }
 
 func (s *TestShape) Material() *Material {
@@ -139,4 +145,59 @@ func shapeEqualMaterial(sh1name, mat1name string) error {
 	}
 	return nil
 
+}
+
+func shapeNormalAt(t1name, sh1name string, x, y, z float64) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape) %s", sh1name)
+	}
+
+	tuples[t1name] = NormalAt(sh1, NewPoint(x, y, z))
+	return nil
+
+}
+
+func shapeEqualSavedRayOrigin(sh1name string, x, y, z float64) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape) %s", sh1name)
+	}
+
+	if tsh, ok := sh1.(*TestShape); !ok {
+		return fmt.Errorf("Expected shape %s to be a TestShape", sh1name)
+	} else {
+		expected := NewPoint(x, y, z)
+		got := tsh.savedRay.Origin
+		if !got.Equal(expected) {
+			return fmt.Errorf("Expected saved_ray.origin = %v; got %v", expected, got)
+		}
+	}
+	return nil
+}
+
+func shapeEqualSavedRayDirection(sh1name string, x, y, z float64) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape) %s", sh1name)
+	}
+
+	if tsh, ok := sh1.(*TestShape); !ok {
+		return fmt.Errorf("Expected shape %s to be a TestShape", sh1name)
+	} else {
+		expected := NewVector(x, y, z)
+		got := tsh.savedRay.Direction
+		if !got.Equal(expected) {
+			return fmt.Errorf("Expected saved_ray.direction = %v; got %v", expected, got)
+		}
+	}
+	return nil
+}
+
+func intersect(i1name, sh1name, r1name string) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape): %s", sh1name)
+	}
+	if r1, ok = rays[r1name]; !ok {
+		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
+	}
+	intersections[i1name] = Intersections(sh1, r1)
+	return nil
 }

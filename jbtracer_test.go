@@ -139,16 +139,14 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.(origin|direction) = (\w+)$`, rayEqualField)
 	ctx.Step(`^position\((\w+), (-?\d+(?:\.\d+)?)\) = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayPositionEqualPoint)
 	ctx.Step(`^(\w+) ← transform\((\w+), (\w+)\)$`, transform)
-	ctx.Step(`(\w+)\.direction = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayEqualDirectionVector)
-	ctx.Step(`^(\w+)\.origin = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayEqualOriginPoint)
+	ctx.Step(`^([a-zA-Z0-9_]+)\.direction = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayEqualDirectionVector)
+	ctx.Step(`^([a-zA-Z0-9_]+)\.origin = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, rayEqualOriginPoint)
 
 	// spheres
 	ctx.Step(`^(\w+) ← ray\(point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\), vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, rayPointVector)
 	ctx.Step(`^(\w+) ← sphere\(\)$`, sphere)
-	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionsObject)
-	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, sphereNormalAt)
 	ctx.Step(`^(\w+) ← sphere\(\) with:$`, sphereWith)
 
 	// intersections
@@ -224,6 +222,10 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← (\w+)\.material$`, shapeMaterial)
 	ctx.Step(`^(\w+)\.material ← (\w+)$`, shapeMaterial2)
 	ctx.Step(`^(\w+)\.material = (\w+)$`, shapeEqualMaterial)
+	ctx.Step(`^(\w+) ← normal_at\((\w+), point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, shapeNormalAt)
+	ctx.Step(`^(s)\.saved_ray\.origin = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, shapeEqualSavedRayOrigin)
+	ctx.Step(`^(s)\.saved_ray\.direction = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, shapeEqualSavedRayDirection)
+	ctx.Step(`^(\w+) ← intersect\((\w+), (\w+)\)$`, intersect)
 
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
