@@ -15,7 +15,7 @@ func main() {
 	world.Light = t.NewPointLight(t.White, t.NewPoint(-10, 10, -10))
 
 	// Configure the camera
-	camera := t.NewCamera(3000, 1500, t.Pi3)
+	camera := t.NewCamera(300, 150, t.Pi3)
 	camera.Transform = t.ViewTransform(
 		t.NewPoint(0, 1.5, -5),
 		t.NewPoint(0, 1, 0),
@@ -26,7 +26,7 @@ func main() {
 
 	// floor
 	floor := t.NewSphere()
-	floor.Transform = t.Scaling(10, 0.01, 10)
+	floor.SetTransform(t.Scaling(10, 0.01, 10))
 	material = t.NewMaterial()
 	material.Color = t.NewColor(1, 0.9, 0.9)
 	material.Specular = 0
@@ -35,33 +35,35 @@ func main() {
 
 	// left wall
 	leftWall := t.NewSphere()
-	leftWall.Transform =
+	leftWall.SetTransform(
 		t.Translation(0, 0, 5).Multiply(
 			t.Rotation(t.Axis_Y, -1*t.Pi4),
 		).Multiply(
 			t.Rotation(t.Axis_X, t.Pi2),
 		).Multiply(
 			t.Scaling(10, 0.01, 10),
-		)
+		),
+	)
 	leftWall.SetMaterial(floor.Material())
 	world.AddObject(leftWall)
 
 	// right wall
 	rightWall := t.NewSphere()
-	rightWall.Transform =
+	rightWall.SetTransform(
 		t.Translation(0, 0, 5).Multiply(
 			t.Rotation(t.Axis_Y, t.Pi4),
 		).Multiply(
 			t.Rotation(t.Axis_X, t.Pi2),
 		).Multiply(
 			t.Scaling(10, 0.01, 10),
-		)
+		),
+	)
 	rightWall.SetMaterial(floor.Material())
 	world.AddObject(rightWall)
 
 	// middle sphere
 	middle := t.NewSphere()
-	middle.Transform = t.Translation(-0.5, 1, 0.5)
+	middle.SetTransform(t.Translation(-0.5, 1, 0.5))
 	material = t.NewMaterial()
 	material.Color = t.NewColor(0.1, 1, 0.5)
 	material.Diffuse = 0.7
@@ -71,8 +73,10 @@ func main() {
 
 	// right sphere
 	right := t.NewSphere()
-	right.Transform = t.Translation(1.5, 0.5, -0.5).Multiply(
-		t.Scaling(0.5, 0.5, 0.5),
+	right.SetTransform(
+		t.Translation(1.5, 0.5, -0.5).Multiply(
+			t.Scaling(0.5, 0.5, 0.5),
+		),
 	)
 	material = t.NewMaterial()
 	material.Color = t.NewColor(0.5, 1, 0.1)
@@ -83,8 +87,9 @@ func main() {
 
 	// left sphere
 	left := t.NewSphere()
-	left.Transform = t.Translation(-1.5, 0.33, -0.75).Multiply(
+	left.SetTransform(t.Translation(-1.5, 0.33, -0.75).Multiply(
 		t.Scaling(0.33, 0.33, 0.33),
+	),
 	)
 	material = t.NewMaterial()
 	material.Color = t.NewColor(1, 0.8, 0.1)

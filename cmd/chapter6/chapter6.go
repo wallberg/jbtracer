@@ -10,20 +10,20 @@ func main() {
 
 	// world settings
 	rayOrigin := t.NewPoint(0, 0, -5)
-	var wallZ float32 = 10
-	var wallSize float32 = 7
+	var wallZ float64 = 10
+	var wallSize float64 = 7
 	wallZHalf := wallSize / 2
 
 	// canvas settings
 	canvasPixels := 500
-	pixelSize := wallSize / float32(canvasPixels)
+	pixelSize := wallSize / float64(canvasPixels)
 	c := t.NewCanvas(canvasPixels, canvasPixels)
 
 	sphere := t.NewSphere()
 	// transform := t.Rotation(t.Axis_Y, 0.78539)
 	// transform = transform.Multiply(t.Scaling(0.4, 1, 1))
 	// transform = transform.Multiply(t.Translation(0.4, 0, 0))
-	// sphere.Transform = transform
+	// sphere.SetTransform(transform)
 	material := t.NewMaterial()
 	material.Color = t.NewColor(1, 0.2, 1)
 	// material.Shininess = 10
@@ -37,10 +37,10 @@ func main() {
 
 	// Iterate over canvas points
 	for y := 0; y < canvasPixels; y++ {
-		worldY := wallZHalf - pixelSize*float32(y)
+		worldY := wallZHalf - pixelSize*float64(y)
 
 		for x := 0; x < canvasPixels; x++ {
-			worldX := -1*wallZHalf + pixelSize*float32(x)
+			worldX := -1*wallZHalf + pixelSize*float64(x)
 
 			// Create a ray from the light source to the canvas point
 			position := t.NewPoint(worldX, worldY, wallZ)
@@ -48,13 +48,13 @@ func main() {
 			ray := t.NewRay(rayOrigin, vector)
 
 			// Determine if the ray intersects the sphere
-			var xs t.Intersections = sphere.Intersections(ray)
+			var xs t.IntersectionSlice = sphere.Intersections(ray)
 			if hit := xs.Hit(); hit != nil {
-				object := (*hit.Object)
+				object := hit.Object
 				point := ray.Position(hit.T)
 				normal := object.NormalAt(point)
 				eye := ray.Direction.Multiply(-1)
-				color := object.Material().Lighting(light, point, eye, normal)
+				color := object.Material().Lighting(light, point, eye, normal, false)
 				c.Grid[x][y] = color
 			}
 		}
