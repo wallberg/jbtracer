@@ -13,14 +13,14 @@ func main() {
 
 	// Configure the world
 	world := t.NewWorld()
-	world.Light = t.NewPointLight(t.White, t.NewPoint(-10, 10, -10))
+	world.Light = t.NewPointLight(t.White, t.NewPoint(-10, 5, -10))
 
 	// Configure the camera
-	camera := t.NewCamera(200, 100, t.Pi/1.5)
+	camera := t.NewCamera(3000, 1500, t.Pi/1.5)
 	camera.Transform = t.ViewTransform(
-		t.NewPoint(0, 3, -10),
-		t.NewPoint(0, -1, 0),
-		t.NewVector(0, 1, 1),
+		t.NewPoint(5, 15, 5),
+		t.NewPoint(0, 0, 0),
+		t.NewVector(0, 0.1, 1),
 	)
 
 	// Add the world objects
@@ -34,10 +34,11 @@ func main() {
 	world.AddObject(floor)
 
 	// walls
-	const wallRadius = 30
-	for i := 0; i < 6; i++ {
+	const wallRadius = 15
+	const numWalls = 6
+	for i := 0; i < numWalls; i++ {
 		wall := t.NewPlane()
-		angle := math.Pi / 3 * float64(i)
+		angle := 2 * math.Pi / numWalls * float64(i)
 
 		wall.SetTransform(
 			t.Rotation(t.Axis_Y, angle).Multiply(
@@ -47,7 +48,7 @@ func main() {
 			),
 		)
 		material = t.NewMaterial()
-		c := float64(i) / 6
+		c := float64(i) / numWalls
 		material.Color = t.NewColor(c, c, c)
 		wall.SetMaterial(material)
 
