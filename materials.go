@@ -8,6 +8,7 @@ type Material struct {
 	Diffuse   float64
 	Specular  float64
 	Shininess float64
+	Pattern   Pattern
 }
 
 func NewMaterial() *Material {
@@ -33,16 +34,26 @@ func (a *Material) Equal(b *Material) bool {
 		return false
 	} else if !EqualFloat64(a.Shininess, b.Shininess) {
 		return false
+	} else if a.Pattern != nil && b.Pattern != nil && !a.Pattern.Equal(b.Pattern) {
+		return false
 	}
 	return true
 }
 
 // Lighting uses the Phong Reflection Model to simulate the lighting on a single
 // point on the Material
-func (material *Material) Lighting(light *PointLight, point, eyev, normalv *Tuple, inShadow bool) *Color {
+func (material *Material) Lighting(light *PointLight, object Shape, point, eyev, normalv *Tuple, inShadow bool) *Color {
+
+	// Get the color, from a Pattern if there is one
+	var color *Color
+	if material.Pattern != nil {
+		color = PatternAt(material.Pattern, object, point)
+	} else {
+		color = material.Color
+	}
 
 	// combine the surface color with the light's color/intensity
-	effectiveColor := material.Color.Multiply(light.Intensity)
+	effectiveColor := color.Multiply(light.Intensity)
 
 	// find the direction to the light source
 	lightv := light.Position.Subtract(point).Normalize()

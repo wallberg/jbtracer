@@ -103,7 +103,7 @@ func lighting(c1name, mat1name, t1name, t2name, t3name string) error {
 	if t3, ok = tuples[t3name]; !ok {
 		return fmt.Errorf("Unknown symbol (tuple) %s", t3name)
 	}
-	colors[c1name] = mat1.Lighting(light, t1, t2, t3, inShadow)
+	colors[c1name] = mat1.Lighting(light, NewSphere(), t1, t2, t3, inShadow)
 	return nil
 }
 
@@ -113,5 +113,29 @@ func materialInShadow(f string) error {
 	} else {
 		inShadow = false
 	}
+	return nil
+}
+
+func materialDiffuse(mat1name string, scalar float64) error {
+	if mat1, ok = materials[mat1name]; !ok {
+		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
+	}
+	mat1.Diffuse = scalar
+	return nil
+}
+
+func materialSpecular(mat1name string, scalar float64) error {
+	if mat1, ok = materials[mat1name]; !ok {
+		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
+	}
+	mat1.Specular = scalar
+	return nil
+}
+
+func materialPattern(mat1name string) error {
+	if mat1, ok = materials[mat1name]; !ok {
+		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
+	}
+	mat1.Pattern = pattern
 	return nil
 }

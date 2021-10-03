@@ -63,6 +63,7 @@ func (w *World) ShadeHit(comps *PreparedComputations) *Color {
 
 	return comps.Object.Material().Lighting(
 		w.Light,
+		comps.Object,
 		comps.OverPoint,
 		comps.EyeV,
 		comps.NormalV,

@@ -322,6 +322,22 @@ func colorEqual(c1name string, red, green, blue float64) error {
 	return nil
 }
 
+func colorEqual2(c1name, c2name string) error {
+	if c1, ok = colors[c1name]; !ok {
+		return fmt.Errorf("Unknown symbol (color) %s", c1name)
+	}
+	if c2, ok = colors[c2name]; !ok {
+		return fmt.Errorf("Unknown symbol (color) %s", c2name)
+	}
+
+	expected := c2
+	got := c1
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected %s = %v; got %v", c1name, expected, got)
+	}
+	return nil
+}
+
 func vectorEqual(t1name string, x, y, z float64) error {
 	if t1, ok = tuples[t1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", t1name)

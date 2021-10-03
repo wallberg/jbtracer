@@ -44,6 +44,8 @@ var (
 	comps                     *PreparedComputations
 	cam                       *Camera
 	inShadow                  bool
+	pattern                   Pattern
+	stripe                    *StripePattern
 )
 
 func init() {
@@ -108,6 +110,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← reflect\((\w+), (\w+)\)$`, vectorReflect)
 	ctx.Step(`^(\w+) = color\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, colorEqual)
 	ctx.Step(`^(\w+) = tuple (\w+)$`, tupleEqual)
+	ctx.Step(`^(\w+) = color (\w+)$`, colorEqual2)
 
 	// matrices
 	ctx.Step(`^the following (?:.+ )?matrix (\w+):$`, matrix)
@@ -186,6 +189,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.ambient ← (-?\d+(?:\.\d+)?)$`, materialAmbient)
 	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+), in_shadow\)$`, lighting)
 	ctx.Step(`^in_shadow ← (true|false)$`, materialInShadow)
+	ctx.Step(`^(\w+)\.diffuse ← (-?\d+(?:\.\d+)?)$`, materialDiffuse)
+	ctx.Step(`^(\w+)\.pattern ← pattern$`, materialPattern)
+	ctx.Step(`^(\w+)\.specular ← (-?\d+(?:\.\d+)?)$`, materialSpecular)
 
 	// world
 	ctx.Step(`^w ← world\(\)$`, world)
@@ -232,9 +238,18 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	// planes
 	ctx.Step(`^(\w+) ← plane\(\)$`, plane)
 
+	// patterns
+	ctx.Step(`^pattern ← stripe_pattern\((\w+), (\w+)\)$`, patternStripePattern)
+	ctx.Step(`^pattern\.a = (\w+)$`, patternEqualA)
+	ctx.Step(`^pattern\.b = (\w+)$`, patternEqualB)
+	ctx.Step(`^stripe_at\(pattern, point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\) = (\w+)$`, patternEqualStripeAt)
+	ctx.Step(`^(\w+) ← stripe_at_object\(pattern, (\w+), (\w+)\)$`, patternStripeAtObject)
+	ctx.Step(`^set_pattern_transform\(pattern, (\w+)\)$`, patternSetPatternTransform)
+
+	// Executed before each scenario
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
 
-		// Reset values before each scenario
+		// Reset all values
 		tuples = make(map[string]*Tuple)
 		colors = make(map[string]*Color)
 		matrices = make(map[string]*Matrix)
@@ -251,6 +266,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		w = nil
 		cam = nil
 		inShadow = false
+		pattern = nil
+		stripe = nil
+
 		return ctx, nil
 	})
 }
