@@ -243,8 +243,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^pattern\.a = (\w+)$`, patternEqualA)
 	ctx.Step(`^pattern\.b = (\w+)$`, patternEqualB)
 	ctx.Step(`^stripe_at\(pattern, point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\) = (\w+)$`, patternEqualStripeAt)
-	ctx.Step(`^(\w+) ← stripe_at_object\(pattern, (\w+), (\w+)\)$`, patternStripeAtObject)
+	ctx.Step(`^(\w+) ← stripe_at_object\(pattern, (\w+), (\w+)\)$`, patternPatternAtShape)
 	ctx.Step(`^set_pattern_transform\(pattern, (\w+)\)$`, patternSetPatternTransform)
+	ctx.Step(`^pattern ← test_pattern\(\)$`, patternTestPattern)
+	ctx.Step(`^pattern\.transform = (\w+)$`, patternEqualTransform)
+	ctx.Step(`^(\w+) ← pattern_at_shape\(pattern, (\w+), (\w+)\)$`, patternPatternAtShape)
 
 	// Executed before each scenario
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
