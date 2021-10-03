@@ -79,3 +79,17 @@ func patternTestPattern() error {
 	pattern = NewTestPattern()
 	return nil
 }
+
+func patternEqualPatternAt(x, y, z float64, c1name string) error {
+	if c1, ok = colors[c1name]; !ok {
+		return fmt.Errorf("Unknown symbol (color) %s", c1name)
+	}
+	point := NewPoint(x, y, z)
+
+	got := pattern.PatternAt(point)
+	expected := c1
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected pattern.PatternAt(%v)=%v; got %v", point, expected, got)
+	}
+	return nil
+}

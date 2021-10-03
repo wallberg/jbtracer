@@ -248,6 +248,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^pattern ← test_pattern\(\)$`, patternTestPattern)
 	ctx.Step(`^pattern\.transform = (\w+)$`, patternEqualTransform)
 	ctx.Step(`^(\w+) ← pattern_at_shape\(pattern, (\w+), (\w+)\)$`, patternPatternAtShape)
+	ctx.Step(`^pattern ← gradient_pattern\((\w+), (\w+)\)$`, patternGradientPattern)
+	ctx.Step(`^pattern_at\(pattern, point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\) = (\w+)$`, patternEqualPatternAt)
 
 	// Executed before each scenario
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
