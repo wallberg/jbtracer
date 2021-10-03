@@ -251,6 +251,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^pattern ← gradient_pattern\((\w+), (\w+)\)$`, patternGradientPattern)
 	ctx.Step(`^pattern_at\(pattern, point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\) = (\w+)$`, patternEqualPatternAt)
 	ctx.Step(`^pattern ← ring_pattern\((\w+), (\w+)\)$`, patternRingPattern)
+	ctx.Step(`^pattern ← checkers_pattern\((\w+), (\w+)\)$`, patternCheckersPattern)
 
 	// Executed before each scenario
 	ctx.Before(func(ctx context.Context, sc *messages.Pickle) (context.Context, error) {
