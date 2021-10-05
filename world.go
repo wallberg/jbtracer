@@ -103,3 +103,19 @@ func (w *World) IsShadowed(point *Tuple) bool {
 		return false
 	}
 }
+
+// ReflectedColor returns the color reflected from a ray reflecting off
+// the surface of an object.
+func (world *World) ReflectedColor(comps PreparedComputations) *Color {
+	reflective := comps.Object.Material().Reflective
+
+	if reflective == 0 {
+		// the material is not reflective
+		return Black
+	}
+
+	reflectRay := NewRay(comps.OverPoint, comps.ReflectV)
+	color := world.ColorAt(reflectRay)
+
+	return color.MultiplyScalar(reflective)
+}

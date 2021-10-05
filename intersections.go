@@ -19,6 +19,7 @@ type PreparedComputations struct {
 	NormalV   *Tuple
 	Inside    bool
 	OverPoint *Tuple
+	ReflectV  *Tuple
 }
 
 // NewIntersection creates a new Intersection
@@ -66,6 +67,7 @@ func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
 	}
 
 	comps.OverPoint = comps.Point.Add(comps.NormalV.Multiply(Epsilon))
+	comps.ReflectV = r.Direction.Reflect(comps.NormalV)
 
 	return comps
 }

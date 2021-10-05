@@ -171,6 +171,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^comps\.inside = (true|false)$`, compEqualInside)
 	ctx.Step(`^comps\.over_point\.z < -EPSILON\/2$`, compOverPointZLessThanEpsilon)
 	ctx.Step(`^comps\.point\.z > comps\.over_point\.z$`, compPointZGreaterThanOverPointZ)
+	ctx.Step(`^comps\.reflectv = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualReflectV)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
@@ -185,6 +186,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.diffuse = (-?\d+(?:\.\d+)?)$`, materialEqualDiffuse)
 	ctx.Step(`^(\w+)\.shininess = (-?\d+(?:\.\d+)?)$`, materialEqualShininess)
 	ctx.Step(`^(\w+)\.specular = (-?\d+(?:\.\d+)?)$`, materialEqualSpecular)
+	ctx.Step(`^(\w+)\.reflective = (-?\d+(?:\.\d+)?)$`, materialEqualReflective)
 	ctx.Step(`^(\w+) = material (\w+)$`, materialEqual)
 	ctx.Step(`^(\w+)\.ambient ← (-?\d+(?:\.\d+)?)$`, materialAmbient)
 	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+), in_shadow\)$`, lighting)
@@ -209,6 +211,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.material\.ambient ← (-?\d+(?:\.\d+)?)$`, objectMaterialAmbient)
 	ctx.Step(`^is_shadowed\(w, (\w+)\) is (true|false)$`, worldIsShadowed)
 	ctx.Step(`^(\w+) is added to w$`, worldAddObject)
+	ctx.Step(`^(\w+) ← reflected_color\(w, comps\)$`, worldReflectedColor)
 
 	// camera
 	ctx.Step(`^c ← camera\((\d+), (\d+), (-?\d+(?:\.\d+)?)\)$`, camera)
@@ -237,6 +240,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 
 	// planes
 	ctx.Step(`^(\w+) ← plane\(\)$`, plane)
+	ctx.Step(`^(\w+) ← plane\(\) with:$`, planeWith)
 
 	// patterns
 	ctx.Step(`^pattern ← stripe_pattern\((\w+), (\w+)\)$`, patternStripePattern)

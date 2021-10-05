@@ -3,21 +3,24 @@ package jbtracer
 import "math"
 
 type Material struct {
-	Color     *Color
-	Ambient   float64
-	Diffuse   float64
-	Specular  float64
-	Shininess float64
-	Pattern   Pattern
+	Color      *Color
+	Ambient    float64
+	Diffuse    float64
+	Specular   float64
+	Shininess  float64
+	Pattern    Pattern
+	Reflective float64
 }
 
 func NewMaterial() *Material {
 	return &Material{
-		Color:     White,
-		Ambient:   0.1,
-		Diffuse:   0.9,
-		Specular:  0.9,
-		Shininess: 200,
+		Color:      White,
+		Ambient:    0.1,
+		Diffuse:    0.9,
+		Specular:   0.9,
+		Shininess:  200,
+		Pattern:    nil,
+		Reflective: 0.0,
 	}
 }
 

@@ -179,6 +179,15 @@ func compEqualEyeV(x, y, z float64) error {
 	return nil
 }
 
+func compEqualReflectV(x, y, z float64) error {
+	expected := NewVector(x, y, z)
+	got := comps.ReflectV
+	if !got.Equal(expected) {
+		return fmt.Errorf("Expected comps.reflectv = %v; got %v", expected, got)
+	}
+	return nil
+}
+
 func compEqualNormalV(x, y, z float64) error {
 	expected := NewVector(x, y, z)
 	got := comps.NormalV

@@ -12,9 +12,9 @@ Scenario: The default material
     And m.specular = 0.9
     And m.shininess = 200.0
 
-# Scenario: Reflectivity for the default material
-#   Given m ← material()
-#   Then m.reflective = 0.0
+Scenario: Reflectivity for the default material
+  Given m ← material()
+  Then m.reflective = 0.0
 
 # Scenario: Transparency and Refractive Index for the default material
 #   Given m ← material()
