@@ -212,6 +212,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^is_shadowed\(w, (\w+)\) is (true|false)$`, worldIsShadowed)
 	ctx.Step(`^(\w+) is added to w$`, worldAddObject)
 	ctx.Step(`^(\w+) ← reflected_color\(w, comps\)$`, worldReflectedColor)
+	ctx.Step(`^(\w+) ← reflected_color\(w, comps, (\d+)\)$`, worldReflectedColorDepth)
+	ctx.Step(`^color_at\(w, (\w+)\) should terminate successfully$`, worldColorAtTerminates)
 
 	// camera
 	ctx.Step(`^c ← camera\((\d+), (\d+), (-?\d+(?:\.\d+)?)\)$`, camera)

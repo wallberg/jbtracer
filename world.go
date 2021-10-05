@@ -2,6 +2,10 @@ package jbtracer
 
 import "sort"
 
+const (
+	DefaultReflectedDepth = 5
+)
+
 type World struct {
 	Light   *PointLight
 	Objects []Shape
@@ -57,7 +61,7 @@ func (w *World) Intersections(r *Ray) IntersectionSlice {
 
 // ShadeHit returns the Color at the Intersection encapsulated by a PreparedComputations
 // in the given World
-func (w *World) ShadeHit(comps *PreparedComputations) *Color {
+func (w *World) ShadeHit(comps *PreparedComputations, depth int) *Color {
 
 	shadowed := w.IsShadowed(comps.OverPoint)
 
@@ -70,14 +74,14 @@ func (w *World) ShadeHit(comps *PreparedComputations) *Color {
 		shadowed,
 	)
 
-	reflected := w.ReflectedColor(comps)
+	reflected := w.ReflectedColor(comps, depth)
 
 	return surface.Add(reflected)
 }
 
 // ColorAt returns the Color at the Point where the provided ray
 // intersects this World
-func (w *World) ColorAt(r *Ray) *Color {
+func (w *World) ColorAt(r *Ray, depth int) *Color {
 
 	// Get the intersections with the World
 	xs := w.Intersections(r)
@@ -88,7 +92,7 @@ func (w *World) ColorAt(r *Ray) *Color {
 	} else {
 		// Return the Color at the intersection
 		comps := hit.PreparedComputations(r)
-		return w.ShadeHit(comps)
+		return w.ShadeHit(comps, depth)
 	}
 }
 
@@ -110,7 +114,11 @@ func (w *World) IsShadowed(point *Tuple) bool {
 
 // ReflectedColor returns the color reflected from a ray reflecting off
 // the surface of an object.
-func (world *World) ReflectedColor(comps *PreparedComputations) *Color {
+func (world *World) ReflectedColor(comps *PreparedComputations, depth int) *Color {
+	if depth <= 0 {
+		return Black
+	}
+
 	reflective := comps.Object.Material().Reflective
 
 	if reflective == 0 {
@@ -119,7 +127,7 @@ func (world *World) ReflectedColor(comps *PreparedComputations) *Color {
 	}
 
 	reflectRay := NewRay(comps.OverPoint, comps.ReflectV)
-	color := world.ColorAt(reflectRay)
+	color := world.ColorAt(reflectRay, depth-1)
 
 	return color.MultiplyScalar(reflective)
 }

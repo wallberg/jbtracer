@@ -75,7 +75,7 @@ func (camera *Camera) Render(world *World) *Canvas {
 	for y := 0; y < camera.Vsize; y++ {
 		for x := 0; x < camera.Hsize; x++ {
 			ray := camera.RayForPixel(x, y)
-			color := world.ColorAt(ray)
+			color := world.ColorAt(ray, DefaultReflectedDepth)
 			image.Grid[x][y] = color
 		}
 	}

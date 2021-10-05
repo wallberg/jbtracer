@@ -1,6 +1,9 @@
 package jbtracer
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func world() error {
 	w = NewWorld()
@@ -70,7 +73,7 @@ func worldPointLight(x, y, z, red, green, blue float64) error {
 }
 
 func worldShadeHit(c1name string) error {
-	colors[c1name] = w.ShadeHit(comps)
+	colors[c1name] = w.ShadeHit(comps, DefaultReflectedDepth)
 	return nil
 }
 
@@ -89,7 +92,7 @@ func worldColorAt(c1name, r1name string) error {
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol %s", r1name)
 	}
-	colors[c1name] = w.ColorAt(r1)
+	colors[c1name] = w.ColorAt(r1, DefaultReflectedDepth)
 	return nil
 }
 
@@ -117,6 +120,34 @@ func worldAddObject(o1name string) error {
 }
 
 func worldReflectedColor(c1name string) error {
-	colors[c1name] = w.ReflectedColor(comps)
+	colors[c1name] = w.ReflectedColor(comps, DefaultReflectedDepth)
+	return nil
+}
+
+func worldReflectedColorDepth(c1name string, depth int) error {
+	colors[c1name] = w.ReflectedColor(comps, depth)
+	return nil
+}
+
+func worldColorAtTerminates(r1name string) error {
+	if r1, ok = rays[r1name]; !ok {
+		return fmt.Errorf("Unknown symbol %s", r1name)
+	}
+
+	// Run ColorAt in a goroutine
+	c := make(chan bool)
+	go func() {
+		w.ColorAt(r1, DefaultReflectedDepth)
+		c <- true
+	}()
+
+	var n time.Duration = 1
+	timer := time.NewTimer(n * time.Second)
+	select {
+	case <-c:
+		// ColorAt terminated successfully
+	case <-timer.C:
+		return fmt.Errorf("w.ColorAt() did not terminate within %d second(s)", n)
+	}
 	return nil
 }
