@@ -117,6 +117,6 @@ func worldAddObject(o1name string) error {
 }
 
 func worldReflectedColor(c1name string) error {
-	colors[c1name] = w.ReflectedColor(*comps)
+	colors[c1name] = w.ReflectedColor(comps)
 	return nil
 }

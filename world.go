@@ -61,7 +61,7 @@ func (w *World) ShadeHit(comps *PreparedComputations) *Color {
 
 	shadowed := w.IsShadowed(comps.OverPoint)
 
-	return comps.Object.Material().Lighting(
+	surface := comps.Object.Material().Lighting(
 		w.Light,
 		comps.Object,
 		comps.OverPoint,
@@ -69,6 +69,10 @@ func (w *World) ShadeHit(comps *PreparedComputations) *Color {
 		comps.NormalV,
 		shadowed,
 	)
+
+	reflected := w.ReflectedColor(comps)
+
+	return surface.Add(reflected)
 }
 
 // ColorAt returns the Color at the Point where the provided ray
@@ -106,7 +110,7 @@ func (w *World) IsShadowed(point *Tuple) bool {
 
 // ReflectedColor returns the color reflected from a ray reflecting off
 // the surface of an object.
-func (world *World) ReflectedColor(comps PreparedComputations) *Color {
+func (world *World) ReflectedColor(comps *PreparedComputations) *Color {
 	reflective := comps.Object.Material().Reflective
 
 	if reflective == 0 {

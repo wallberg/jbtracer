@@ -126,17 +126,18 @@ Scenario: The reflected color for a reflective material
   # Then color = color(0.19032, 0.2379, 0.14274)
   Then color = color(0.19033, 0.23791, 0.14275)
 
-# Scenario: shade_hit() with a reflective material
-#   Given w ← default_world()
-#     And shape ← plane() with:
-#       | material.reflective | 0.5                   |
-#       | transform           | translation(0, -1, 0) |
-#     And shape is added to w
-#     And r ← ray(point(0, 0, -3), vector(0, -√2/2, √2/2))
-#     And i ← intersection(√2, shape)
-#   When comps ← prepare_computations(i, r)
-#     And color ← shade_hit(w, comps)
-#   Then color = color(0.87677, 0.92436, 0.82918)
+Scenario: shade_hit() with a reflective material
+  Given w ← default_world()
+    And shape ← plane() with:
+      | material.reflective | 0.5                   |
+      | transform           | translation(0, -1, 0) |
+    And shape is added to w
+    And r ← ray(point(0, 0, -3), vector(0, -0.7071067812, 0.7071067812))
+    And i ← intersection(1.4142135624, shape)
+  When comps ← prepare_computations(i, r)
+    And color ← shade_hit(w, comps)
+  # Then color = color(0.87677, 0.92436, 0.82918)
+  Then color = color(0.87676, 0.92434, 0.82917)
 
 # Scenario: color_at() with mutually reflective surfaces
 #   Given w ← world()
