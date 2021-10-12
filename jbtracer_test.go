@@ -148,6 +148,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	// spheres
 	ctx.Step(`^(\w+) ← ray\(point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\), vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)\)$`, rayPointVector)
 	ctx.Step(`^(\w+) ← sphere\(\)$`, sphere)
+	ctx.Step(`^(\w+) ← glass_sphere\(\)$`, sphereGlass)
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionsObject)
 	ctx.Step(`^(\w+) ← sphere\(\) with:$`, sphereWith)
@@ -187,6 +188,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.shininess = (-?\d+(?:\.\d+)?)$`, materialEqualShininess)
 	ctx.Step(`^(\w+)\.specular = (-?\d+(?:\.\d+)?)$`, materialEqualSpecular)
 	ctx.Step(`^(\w+)\.reflective = (-?\d+(?:\.\d+)?)$`, materialEqualReflective)
+	ctx.Step(`^(\w+)\.transparency = (-?\d+(?:\.\d+)?)$`, materialEqualTransparency)
+	ctx.Step(`^(\w+)\.refractive_index = (-?\d+(?:\.\d+)?)$`, materialEqualRefractiveIndex)
 	ctx.Step(`^(\w+) = material (\w+)$`, materialEqual)
 	ctx.Step(`^(\w+)\.ambient ← (-?\d+(?:\.\d+)?)$`, materialAmbient)
 	ctx.Step(`^(\w+) ← lighting\((\w+), light, (\w+), (\w+), (\w+), in_shadow\)$`, lighting)

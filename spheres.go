@@ -18,6 +18,14 @@ func NewSphere() *Sphere {
 	}
 }
 
+// NewGlassSphere creates a new glass Sphere
+func NewGlassSphere() *Sphere {
+	sphere := NewSphere()
+	sphere.material.Transparency = 1.0
+	sphere.material.RefractiveIndex = 1.5
+	return sphere
+}
+
 // String returns a string representation of the Sphere
 func (a *Sphere) String() string {
 	return fmt.Sprintf("%+v", *a)

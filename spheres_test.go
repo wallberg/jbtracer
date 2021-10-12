@@ -23,6 +23,14 @@ func sphere(s1name string) error {
 	return nil
 }
 
+func sphereGlass(s1name string) error {
+	sph1 = NewGlassSphere()
+	spheres[s1name] = sph1
+	shapes[s1name] = sph1
+
+	return nil
+}
+
 func sphereWith(sph1name string, table *godog.Table) error {
 	reTuple := regexp.MustCompile(`^\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
 	reScalar := regexp.MustCompile(`^(-?\d+(?:\.\d+)?)$`)

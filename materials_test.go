@@ -79,6 +79,30 @@ func materialEqualReflective(mat1name string, scalar float64) error {
 	return nil
 }
 
+func materialEqualTransparency(mat1name string, scalar float64) error {
+	if mat1, ok = materials[mat1name]; !ok {
+		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
+	}
+	expected := scalar
+	got := mat1.Transparency
+	if got != expected {
+		return fmt.Errorf("Expected %s.Reflective=%v; got %v", mat1name, expected, got)
+	}
+	return nil
+}
+
+func materialEqualRefractiveIndex(mat1name string, scalar float64) error {
+	if mat1, ok = materials[mat1name]; !ok {
+		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
+	}
+	expected := scalar
+	got := mat1.RefractiveIndex
+	if got != expected {
+		return fmt.Errorf("Expected %s.Reflective=%v; got %v", mat1name, expected, got)
+	}
+	return nil
+}
+
 func materialAmbient(mat1name string, scalar float64) error {
 	if mat1, ok = materials[mat1name]; !ok {
 		return fmt.Errorf("Unknown symbol (material) %s", mat1name)
