@@ -152,11 +152,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.count = (\d+)$`, intersectionCount)
 	ctx.Step(`^(\w+)\[(\d+)\].object = (\w+)$`, intersectionsObject)
 	ctx.Step(`^(\w+) ← sphere\(\) with:$`, sphereWith)
+	ctx.Step(`^(\w+) ← glass_sphere\(\) with:$`, sphereGlassWith)
 
 	// intersections
 	ctx.Step(`^(\w+) ← intersection\((-?\d+(?:\.\d+)?), (\w+)\)$`, intersection)
-	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+)\)$`, intersectionConcat)
-	ctx.Step(`^(\w+) ← intersections\((\w+), (\w+), (\w+), (\w+)\)$`, intersectionConcat4)
+	ctx.Step(`^(\w+) ← intersections\((.*)\)$`, intersectionConcat)
 	ctx.Step(`^(\w+)\[(\d+)\](?:\.t)? = (-?\d+(?:\.\d+)?)$`, intersectionsT)
 	ctx.Step(`^(\w+) ← hit\((\w+)\)$`, intersectionHits)
 	ctx.Step(`^(\w+) = intersection (\w+)$`, intersectionEqual)
@@ -164,6 +164,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+)\.t = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^comps ← prepare_computations\((\w+), (\w+)\)$`, comp)
+	ctx.Step(`^comps ← prepare_computations\(xs\[(\d+)\], (\w+), (\w+)\)$`, compIndex)
 	ctx.Step(`^comps\.object = (\w+)\.object$`, compEqualObject)
 	ctx.Step(`^comps\.t = (\w+)\.t$`, compEqualT)
 	ctx.Step(`^comps\.point = point\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualPoint)
@@ -173,6 +174,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^comps\.over_point\.z < -EPSILON\/2$`, compOverPointZLessThanEpsilon)
 	ctx.Step(`^comps\.point\.z > comps\.over_point\.z$`, compPointZGreaterThanOverPointZ)
 	ctx.Step(`^comps\.reflectv = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualReflectV)
+	ctx.Step(`^comps\.n1 = (-?\d+(?:\.\d+)?)$`, compEqualN1)
+	ctx.Step(`^comps\.n2 = (-?\d+(?:\.\d+)?)$`, compEqualN2)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)

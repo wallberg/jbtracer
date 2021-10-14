@@ -20,6 +20,8 @@ type PreparedComputations struct {
 	Inside    bool
 	OverPoint *Tuple
 	ReflectV  *Tuple
+	N1        float64
+	N2        float64
 }
 
 // NewIntersection creates a new Intersection
@@ -47,18 +49,18 @@ func (a *Intersection) Equal(b *Intersection) bool {
 	return true
 }
 
-// PreparedComputations generates a PreparedComputations object for the intersection
-// of the provide Ray with this Intersection
-func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
+// PreparedComputations generates a PreparedComputations object for the
+// intersection (hit) of the provide Ray with this Intersection
+func (hit *Intersection) PreparedComputations(r *Ray, xs IntersectionSlice) *PreparedComputations {
 
-	Point := r.Position(i.T)
+	Point := r.Position(hit.T)
 
 	comps := &PreparedComputations{
-		T:       i.T,
-		Object:  i.Object,
+		T:       hit.T,
+		Object:  hit.Object,
 		Point:   Point,
 		EyeV:    r.Direction.Multiply(-1),
-		NormalV: NormalAt(i.Object, Point),
+		NormalV: NormalAt(hit.Object, Point),
 	}
 
 	if comps.NormalV.Dot(comps.EyeV) < 0 {
@@ -68,6 +70,52 @@ func (i *Intersection) PreparedComputations(r *Ray) *PreparedComputations {
 
 	comps.OverPoint = comps.Point.Add(comps.NormalV.Multiply(Epsilon))
 	comps.ReflectV = r.Direction.Reflect(comps.NormalV)
+
+	// Compute N1 and N2
+	if xs == nil {
+		xs = IntersectionSlice{hit}
+	}
+
+	var containers []Shape
+
+	for _, i := range xs {
+		if i == hit {
+			if len(containers) == 0 {
+				comps.N1 = 1.0
+			} else {
+				comps.N1 = containers[len(containers)-1].Material().RefractiveIndex
+			}
+		}
+
+		// Look for i in containers
+		found := false
+		for j := 0; j < len(containers) && !found; j++ {
+			if i.Object == containers[j] {
+				found = true
+
+				// remove i.object from containers
+				copy(containers[j:], containers[j+1:])
+				containers[len(containers)-1] = nil
+				containers = containers[:len(containers)-1]
+
+			}
+		}
+		if !found {
+			// append i.object onto containers
+			containers = append(containers, i.Object)
+		}
+
+		if i == hit {
+			if len(containers) == 0 {
+				comps.N2 = 1.0
+			} else {
+				comps.N2 = containers[len(containers)-1].Material().RefractiveIndex
+			}
+
+			// terminate loop
+			return comps
+		}
+	}
 
 	return comps
 }

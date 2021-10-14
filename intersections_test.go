@@ -1,6 +1,10 @@
 package jbtracer
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 func intersectionCount(i1name string, count int) error {
 	if i1, ok = intersections[i1name]; !ok {
@@ -57,34 +61,38 @@ func intersection(i1name string, t float64, o1name string) error {
 	return nil
 }
 
-func intersectionConcat4(i1name, i2name, i3name, i4name, i5name string) error {
-	if i2, ok = intersections[i2name]; !ok {
-		return fmt.Errorf("Unknown symbol (intersection) %s", i2name)
-	}
-	if i3, ok = intersections[i3name]; !ok {
-		return fmt.Errorf("Unknown symbol (intersection) %s", i3name)
-	}
-	if i4, ok = intersections[i4name]; !ok {
-		return fmt.Errorf("Unknown symbol (intersection) %s", i4name)
-	}
-	if i5, ok = intersections[i5name]; !ok {
-		return fmt.Errorf("Unknown symbol (intersection) %s", i5name)
-	}
-	is := append(i2, i3...)
-	is = append(is, i4...)
-	is = append(is, i5...)
-	intersections[i1name] = is
-	return nil
-}
+func intersectionConcat(i1name, xsList string) error {
+	for _, xsString := range strings.Split(xsList, ", ") {
+		s := strings.Split(xsString, ":")
 
-func intersectionConcat(i1name, i2name, i3name string) error {
-	if i2, ok = intersections[i2name]; !ok {
-		return fmt.Errorf("Unknown symbol (intersection) %s", i2name)
+		if len(s) == 1 {
+			// s[0] contains an intersection symbol
+			i2name := s[0]
+			if i2, ok = intersections[i2name]; !ok {
+				return fmt.Errorf("Unknown symbol (intersection) %s", i2name)
+			}
+			intersections[i1name] = append(intersections[i1name], i2...)
+
+		} else if len(s) == 2 {
+			// s[0] contains a scalar t value
+			// s[1] contains a shape symbol
+			var t float64
+			var err error
+			if t, err = strconv.ParseFloat(s[0], 64); err != nil {
+				return fmt.Errorf("Invalid t value: %s", s[0])
+			}
+			sh1name := s[1]
+			if sh1, ok = shapes[sh1name]; !ok {
+				return fmt.Errorf("Unknown symbol (shape) %s", sh1name)
+			}
+			xs := NewIntersection(sh1, t)
+			intersections[i1name] = append(intersections[i1name], xs)
+
+		} else {
+			return fmt.Errorf("Unrecognized intersection format: %s", xsString)
+		}
+
 	}
-	if i3, ok = intersections[i3name]; !ok {
-		return fmt.Errorf("Unknown symbol (intersection) %s", i3name)
-	}
-	intersections[i1name] = append(i2, i3...)
 	return nil
 }
 
@@ -127,13 +135,17 @@ func intersectionEmpty(i1name string) error {
 }
 
 func comp(i1name, r1name string) error {
+	return compIndex(0, r1name, i1name)
+}
+
+func compIndex(index int, r1name, i1name string) error {
 	if i1, ok = intersections[i1name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
 	}
 	if r1, ok = rays[r1name]; !ok {
 		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
 	}
-	comps = i1[0].PreparedComputations(r1)
+	comps = i1[index].PreparedComputations(r1, i1)
 	return nil
 }
 
@@ -193,6 +205,22 @@ func compEqualNormalV(x, y, z float64) error {
 	got := comps.NormalV
 	if !got.Equal(expected) {
 		return fmt.Errorf("Expected comps.normalv = %v; got %v", expected, got)
+	}
+	return nil
+}
+
+func compEqualN1(expected float64) error {
+	got := comps.N1
+	if got != expected {
+		return fmt.Errorf("Expected comps.n1 = %v; got %v", expected, got)
+	}
+	return nil
+}
+
+func compEqualN2(expected float64) error {
+	got := comps.N2
+	if got != expected {
+		return fmt.Errorf("Expected comps.n2 = %v; got %v", expected, got)
 	}
 	return nil
 }

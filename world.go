@@ -91,7 +91,7 @@ func (w *World) ColorAt(r *Ray, depth int) *Color {
 		return Black
 	} else {
 		// Return the Color at the intersection
-		comps := hit.PreparedComputations(r)
+		comps := hit.PreparedComputations(r, xs)
 		return w.ShadeHit(comps, depth)
 	}
 }

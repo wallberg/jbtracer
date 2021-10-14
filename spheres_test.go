@@ -32,6 +32,14 @@ func sphereGlass(s1name string) error {
 }
 
 func sphereWith(sph1name string, table *godog.Table) error {
+	return sphereWithTable(sph1name, NewSphere(), table)
+}
+
+func sphereGlassWith(sph1name string, table *godog.Table) error {
+	return sphereWithTable(sph1name, NewGlassSphere(), table)
+}
+
+func sphereWithTable(sph1name string, sph1 *Sphere, table *godog.Table) error {
 	reTuple := regexp.MustCompile(`^\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
 	reScalar := regexp.MustCompile(`^(-?\d+(?:\.\d+)?)$`)
 	reTransform := regexp.MustCompile(`^(scaling|translation)\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
@@ -46,7 +54,6 @@ func sphereWith(sph1name string, table *godog.Table) error {
 		return fmt.Errorf("sphereWith() requires a table with 2 columns")
 	}
 
-	sph1 = NewSphere()
 	var err error
 	for _, row := range table.Rows {
 		name := row.Cells[0].Value
@@ -89,6 +96,16 @@ func sphereWith(sph1name string, table *godog.Table) error {
 				}
 				sph1.Material().Specular = specular
 			}
+		case "material.refractive_index":
+			if m := reScalar.FindStringSubmatch(value); m == nil {
+				return fmt.Errorf("Unable to extract scalar from %s", value)
+			} else {
+				var refractiveIndex float64
+				if refractiveIndex, err = strconv.ParseFloat(m[1], 64); err != nil {
+					return err
+				}
+				sph1.Material().RefractiveIndex = refractiveIndex
+			}
 		case "transform":
 			if m := reTransform.FindStringSubmatch(value); m == nil {
 				return fmt.Errorf("Unable to extract transform from %s", value)
@@ -110,6 +127,8 @@ func sphereWith(sph1name string, table *godog.Table) error {
 					sph1.SetTransform(Translation(x, y, z))
 				}
 			}
+		default:
+			return fmt.Errorf("Unknown field %s in sphereWithTable()", name)
 		}
 	}
 
