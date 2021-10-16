@@ -138,6 +138,22 @@ func comp(i1name, r1name string) error {
 	return compIndex(0, r1name, i1name)
 }
 
+func comp2(i1name, r1name, i2name string) error {
+	if i1, ok = intersections[i1name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
+	}
+	if i2, ok = intersections[i2name]; !ok {
+		return fmt.Errorf("Unknown symbol (intersection) %s", i2name)
+	}
+	var index int
+	for index = 0; index < len(i2); index++ {
+		if i1[0] == i2[index] {
+			break
+		}
+	}
+	return compIndex(index, r1name, i2name)
+}
+
 func compIndex(index int, r1name, i1name string) error {
 	if i1, ok = intersections[i1name]; !ok {
 		return fmt.Errorf("Unknown symbol (intersection) %s", i1name)
@@ -248,6 +264,24 @@ func compPointZGreaterThanOverPointZ() error {
 	got := comps.Point.Z > comps.OverPoint.Z
 	if got != expected {
 		return fmt.Errorf("Expected comps.point. z > comps.over_point.z = %v; got %v", expected, got)
+	}
+	return nil
+}
+
+func compUnderPointZGreaterThanEpsilon() error {
+	expected := true
+	got := comps.UnderPoint.Z > -1*Epsilon/2
+	if got != expected {
+		return fmt.Errorf("Expected comps.under_point.z > -EPSILON/2 = %v; got %v", expected, got)
+	}
+	return nil
+}
+
+func compPointZLessThanUnderPointZ() error {
+	expected := true
+	got := comps.Point.Z < comps.UnderPoint.Z
+	if got != expected {
+		return fmt.Errorf("Expected comps.point. z < comps.under_point.z = %v; got %v", expected, got)
 	}
 	return nil
 }

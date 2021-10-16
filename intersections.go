@@ -12,16 +12,17 @@ type Intersection struct {
 type IntersectionSlice []*Intersection
 
 type PreparedComputations struct {
-	T         float64
-	Object    Shape
-	Point     *Tuple
-	EyeV      *Tuple
-	NormalV   *Tuple
-	Inside    bool
-	OverPoint *Tuple
-	ReflectV  *Tuple
-	N1        float64
-	N2        float64
+	T          float64
+	Object     Shape
+	Point      *Tuple
+	EyeV       *Tuple
+	NormalV    *Tuple
+	Inside     bool
+	OverPoint  *Tuple
+	ReflectV   *Tuple
+	N1         float64
+	N2         float64
+	UnderPoint *Tuple
 }
 
 // NewIntersection creates a new Intersection
@@ -69,6 +70,7 @@ func (hit *Intersection) PreparedComputations(r *Ray, xs IntersectionSlice) *Pre
 	}
 
 	comps.OverPoint = comps.Point.Add(comps.NormalV.Multiply(Epsilon))
+	comps.UnderPoint = comps.Point.Subtract(comps.NormalV.Multiply(Epsilon))
 	comps.ReflectV = r.Direction.Reflect(comps.NormalV)
 
 	// Compute N1 and N2

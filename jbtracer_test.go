@@ -164,6 +164,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+)\.object = (\w+)$`, intersectionObject)
 	ctx.Step(`^(\w+)\.t = (-?\d+(?:\.\d+)?)$`, intersectionT)
 	ctx.Step(`^comps ← prepare_computations\((\w+), (\w+)\)$`, comp)
+	ctx.Step(`^comps ← prepare_computations\((\w+), (\w+), (\w+)\)$`, comp2)
 	ctx.Step(`^comps ← prepare_computations\(xs\[(\d+)\], (\w+), (\w+)\)$`, compIndex)
 	ctx.Step(`^comps\.object = (\w+)\.object$`, compEqualObject)
 	ctx.Step(`^comps\.t = (\w+)\.t$`, compEqualT)
@@ -176,6 +177,8 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^comps\.reflectv = vector\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`, compEqualReflectV)
 	ctx.Step(`^comps\.n1 = (-?\d+(?:\.\d+)?)$`, compEqualN1)
 	ctx.Step(`^comps\.n2 = (-?\d+(?:\.\d+)?)$`, compEqualN2)
+	ctx.Step(`^comps\.under_point\.z > EPSILON\/2$`, compUnderPointZGreaterThanEpsilon)
+	ctx.Step(`^comps\.point\.z < comps\.under_point\.z$`, compPointZLessThanUnderPointZ)
 
 	// lights
 	ctx.Step(`^light ← point_light\((\w+), (\w+)\)$`, pointLight)
