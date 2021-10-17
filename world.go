@@ -140,5 +140,15 @@ func (world *World) RefractedColor(comps *PreparedComputations, depth int) *Colo
 		return Black
 	}
 
+	// Check for total internal reflection
+	nRatio := comps.N1 / comps.N2
+	cosThetaI := comps.EyeV.Dot(comps.NormalV)
+	sinThetaTSquared := nRatio * nRatio * (1 - cosThetaI*cosThetaI)
+
+	if sinThetaTSquared > 1 {
+		// Total internal reflection
+		return Black
+	}
+
 	return White
 }
