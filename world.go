@@ -134,7 +134,9 @@ func (world *World) ReflectedColor(comps *PreparedComputations, depth int) *Colo
 
 // RefractedColor returns the color as the ray passes into a transparent object
 func (world *World) RefractedColor(comps *PreparedComputations, depth int) *Color {
-	if comps.Object.Material().Transparency == 0 {
+	if depth == 0 {
+		return Black
+	} else if comps.Object.Material().Transparency == 0 {
 		return Black
 	}
 

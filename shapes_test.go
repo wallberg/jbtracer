@@ -1,6 +1,12 @@
 package jbtracer
 
-import "fmt"
+import (
+	"fmt"
+	"regexp"
+	"strconv"
+
+	"github.com/cucumber/godog"
+)
 
 type TestShape struct {
 	transform *Matrix
@@ -220,5 +226,92 @@ func shapeLocalIntersect(i1name, sh1name, r1name string) error {
 		return fmt.Errorf("Unknown symbol (ray): %s", r1name)
 	}
 	intersections[i1name] = sh1.Intersections(r1)
+	return nil
+}
+
+func shapeHas(sh1name string, table *godog.Table) error {
+	if sh1, ok = shapes[sh1name]; !ok {
+		return fmt.Errorf("Unknown symbol (shape): %s", sh1name)
+	}
+	return shapeSettings(sh1, table)
+}
+
+func shapeSettings(sh1 Shape, table *godog.Table) error {
+	// reTuple := regexp.MustCompile(`^\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
+	reScalar := regexp.MustCompile(`^(-?\d+(?:\.\d+)?)$`)
+	reTransform := regexp.MustCompile(`^(translation)\((-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?), (-?\d+(?:\.\d+)?)\)$`)
+
+	rows := len(table.Rows)
+	if rows < 1 {
+		return fmt.Errorf("shapeSettings() requires a table with at least one row")
+	}
+
+	cols := len(table.Rows[0].Cells)
+	if cols != 2 {
+		return fmt.Errorf("shapeSettings() requires a table with 2 columns")
+	}
+
+	var err error
+	for _, row := range table.Rows {
+		name := row.Cells[0].Value
+		value := row.Cells[1].Value
+
+		switch name {
+		case "material.reflective":
+			if m := reScalar.FindStringSubmatch(value); m == nil {
+				return fmt.Errorf("Unable to extract scalar from %s", value)
+			} else {
+				var reflective float64
+				if reflective, err = strconv.ParseFloat(m[1], 64); err != nil {
+					return err
+				}
+				sh1.Material().Reflective = reflective
+			}
+		case "material.transparency":
+			if m := reScalar.FindStringSubmatch(value); m == nil {
+				return fmt.Errorf("Unable to extract scalar from %s", value)
+			} else {
+				var transparency float64
+				if transparency, err = strconv.ParseFloat(m[1], 64); err != nil {
+					return err
+				}
+				sh1.Material().Transparency = transparency
+			}
+		case "material.refractive_index":
+			if m := reScalar.FindStringSubmatch(value); m == nil {
+				return fmt.Errorf("Unable to extract scalar from %s", value)
+			} else {
+				var refractiveIndex float64
+				if refractiveIndex, err = strconv.ParseFloat(m[1], 64); err != nil {
+					return err
+				}
+				sh1.Material().RefractiveIndex = refractiveIndex
+			}
+		case "transform":
+			if m := reTransform.FindStringSubmatch(value); m == nil {
+				return fmt.Errorf("Unable to extract transform from %s", value)
+			} else {
+				var x, y, z float64
+				if x, err = strconv.ParseFloat(m[2], 64); err != nil {
+					return err
+				}
+				if y, err = strconv.ParseFloat(m[3], 64); err != nil {
+					return err
+				}
+				if z, err = strconv.ParseFloat(m[4], 64); err != nil {
+					return err
+				}
+				switch m[1] {
+				case "translation":
+					sh1.SetTransform(Translation(x, y, z))
+				default:
+					return fmt.Errorf("Unknown transform %s in shapeSettings()", m[1])
+				}
+			}
+		default:
+			return fmt.Errorf("Unknown field %s in shapeSettings()", name)
+		}
+	}
+
 	return nil
 }
