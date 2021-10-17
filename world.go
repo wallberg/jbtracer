@@ -131,3 +131,12 @@ func (world *World) ReflectedColor(comps *PreparedComputations, depth int) *Colo
 
 	return color.MultiplyScalar(reflective)
 }
+
+// RefractedColor returns the color as the ray passes into a transparent object
+func (world *World) RefractedColor(comps *PreparedComputations, depth int) *Color {
+	if comps.Object.Material().Transparency == 0 {
+		return Black
+	}
+
+	return White
+}

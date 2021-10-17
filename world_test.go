@@ -151,3 +151,8 @@ func worldColorAtTerminates(r1name string) error {
 	}
 	return nil
 }
+
+func worldRefractedColor(c1name string) error {
+	colors[c1name] = w.RefractedColor(comps, DefaultReflectedDepth)
+	return nil
+}

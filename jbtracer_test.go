@@ -223,6 +223,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^(\w+) ← reflected_color\(w, comps\)$`, worldReflectedColor)
 	ctx.Step(`^(\w+) ← reflected_color\(w, comps, (\d+)\)$`, worldReflectedColorDepth)
 	ctx.Step(`^color_at\(w, (\w+)\) should terminate successfully$`, worldColorAtTerminates)
+	ctx.Step(`^(\w+) ← refracted_color\(w, comps, (-?\d+(?:\.\d+)?)\)$`, worldRefractedColor)
 
 	// camera
 	ctx.Step(`^c ← camera\((\d+), (\d+), (-?\d+(?:\.\d+)?)\)$`, camera)
