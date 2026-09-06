@@ -1,3 +1,4 @@
 code/
 *.ppm
 cmd/test/*
+.DS_Store

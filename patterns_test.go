@@ -4,9 +4,7 @@ import (
 	"fmt"
 )
 
-//
 // TestPattern
-//
 type TestPattern struct {
 	transform *Matrix
 }

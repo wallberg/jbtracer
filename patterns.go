@@ -4,9 +4,7 @@ import (
 	"log"
 )
 
-//
 // Pattern
-//
 type Pattern interface {
 	Transform() *Matrix
 	SetTransform(transform *Matrix)
