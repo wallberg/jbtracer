@@ -8,10 +8,12 @@ A Go implementation of the ray tracer from *The Ray Tracer Challenge* by Jamis B
 
 ## Commands
 
+A `Taskfile.yml` wraps the commands below — run `task --list` to see them (`task build`, `task test`, `task test:feature FEATURE=spheres`, `task test:tag TAG=@wip`, `task vet`, `task render CHAPTER=chapter11`).
+
 - Build the engine: `go build .`
 - Run the full test suite (unit tests + Cucumber/godog scenarios): `go test .`
-- Run a single godog feature file: `go test . -run TestMain -- --godog.paths=features/spheres.feature`
-- Run godog scenarios by tag: `go test . -- --godog.tags=@wip`
+- Run a single godog feature file: `go test . -args features/spheres.feature` (paths are positional args, passed after `-args`, not a `--godog.paths` flag)
+- Run godog scenarios by tag: `go test . -args --godog.tags=@wip`
 - Run only Go unit tests matching a name: `go test . -run TestSphere` (only exercises Go `Test*` functions, not godog scenarios, since godog scenarios all run under `TestMain`)
 - Render a chapter's scene: `go run ./cmd/chapter11` (outputs a PPM image to stdout — redirect to a file, e.g. `go run ./cmd/chapter11 > out.ppm`)
 

@@ -1,0 +1,47 @@
+version: "3"
+
+vars:
+  CHAPTER: chapter11
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  build:
+    desc: Build the ray tracer engine (root package only)
+    cmds:
+      - go build .
+
+  test:
+    desc: Run the full test suite (Go unit tests + Cucumber/godog feature scenarios)
+    cmds:
+      - go test . -v
+
+  test:feature:
+    desc: Run a single godog feature file (FEATURE=spheres)
+    requires:
+      vars: [FEATURE]
+    cmds:
+      - go test . -args features/{{.FEATURE}}.feature
+
+  test:tag:
+    desc: Run godog scenarios matching a tag (TAG=@wip)
+    requires:
+      vars: [TAG]
+    cmds:
+      - go test . -args --godog.tags={{.TAG}}
+
+  vet:
+    desc: Vet the root package and the current chapter's cmd (CHAPTER=chapter11)
+    cmds:
+      - go vet .
+      - go vet ./cmd/{{.CHAPTER}}
+
+  render:
+    desc: Render a chapter's scene to a PPM file (CHAPTER=chapter11)
+    cmds:
+      - go run ./cmd/{{.CHAPTER}} > cmd/{{.CHAPTER}}/test.ppm
+    generates:
+      - cmd/{{.CHAPTER}}/test.ppm
